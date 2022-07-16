@@ -545,7 +545,7 @@ public class StoryManager : MonoSingleton<StoryManager>
 
     public void BeginAni()
     {
-        Mechanism.Instance.playState = PlayState.Story;
+        Mechanism.Instance.playState = PlayState.Black;
         SetPlayableAsset("Begin");
         pd.Play();
     }
@@ -621,6 +621,14 @@ public class StoryManager : MonoSingleton<StoryManager>
             switchBall_Instance.transform.localScale = new Vector3(scale, scale, scale);
             yield return null;
         }
+    }
+
+      public bool O_C_BeginAni()
+    {
+       
+            isBeginAni =!isBeginAni;
+        
+        return isBeginAni;
     }
 
 }

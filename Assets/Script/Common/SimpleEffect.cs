@@ -47,7 +47,10 @@ public class SimpleEffect : MonoBehaviour
     public GameObject TD_FX;
     float timer_TD;
     [HideInInspector] public bool isTD = false;
-
+    public GameObject AIDefFont;//AI的反制提示
+    float timer_AIDef;
+    [HideInInspector] public bool isAIDef = false;
+    public AnimationCurve anic_AIDef;
 
     private void Start()
     {
@@ -107,6 +110,7 @@ public class SimpleEffect : MonoBehaviour
             if (isBebuffed == false)//第一次
             {
                 Bebuffed_FX.SetActive(true);
+                RestartParticleSystem(Bebuffed_FX);
             }
             isBebuffed = true;
             timer_Bebuffed += Time.deltaTime;
@@ -116,6 +120,12 @@ public class SimpleEffect : MonoBehaviour
             yield return null;
         }
 
+    }
+    public void RestartParticleSystem(GameObject g)
+    {
+        ParticleSystem p = g.GetComponent<ParticleSystem>();
+        p.Pause();
+        p.Play();
     }
     public IEnumerator Buff()//buff别人会变色
     {
@@ -144,6 +154,7 @@ public class SimpleEffect : MonoBehaviour
             if (isBuff == false)//第一次
             {
                 Buff_FX.SetActive(true);
+                RestartParticleSystem(Buff_FX);
             }
             isBuff = true;
             timer_Buff += Time.deltaTime;
@@ -235,7 +246,7 @@ public class SimpleEffect : MonoBehaviour
             isTD = true;
             timer_TD += Time.deltaTime;
             float lerpFactor = timer_TD / scaleTime;
-            this.tmp.color=Color.Lerp(originTmpColor,Color.yellow,lerpFactor);
+            this.tmp.color = Color.Lerp(originTmpColor, Color.yellow, lerpFactor);
             yield return null;
         }
     }
@@ -246,12 +257,13 @@ public class SimpleEffect : MonoBehaviour
             Instantiate_FX.SetActive(true);
             // Instantiate_FX.GetComponent<ParticleSystem>().Play();
         }
+        RestartParticleSystem(Instantiate_FX);
 
         GameObject card_Fly = Instantiate(Card_Fly, Mechanism.Instance.InstantiateCardsGroup.transform);
         card_Fly.GetComponent<CardDisplay>().card = kidCard;
 
         Vector3 startWorldPos = this.transform.position + new Vector3(0, 0.1f, 0);//
-     
+
         Vector2 dir = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(0.5f, 1f));
         dir.Normalize();
         Vector3 destworldPos1 = startWorldPos + 0.2f * new Vector3(dir.x, dir.y, 0);
@@ -289,6 +301,29 @@ public class SimpleEffect : MonoBehaviour
         }
     }
 
-
+    public IEnumerator AIDef()
+    {
+        while (true)
+        {
+            if (timer_AIDef > scaleTime)
+            {
+                timer_AIDef = 0;
+                isAIDef = false;
+                AIDefFont.SetActive(false);
+                yield break;
+            }
+            timer_AIDef += Time.deltaTime;
+            if (!isAIDef)
+            {
+                AIDefFont.SetActive(true);
+            }
+            isAIDef=true;
+            float lerpFactor = timer_AIDef / scaleTime;
+            Debug.Log(lerpFactor);
+            TextMeshPro tmpp = AIDefFont.GetComponent<TextMeshPro>();
+            tmpp.color = new Color(1, 0, 0, anic_AIDef.Evaluate(lerpFactor));
+            yield return null;
+        }
+    }
 
 }

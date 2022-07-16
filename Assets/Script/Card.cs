@@ -67,7 +67,7 @@ public partial class Card
     public int TimeCounter = 0;
 
     //卡牌是否生效，如果没有，则直接跳过此卡牌的assign结算时间
-    public bool isEffect=false;//所有函数中只要生效过一次就不会跳过
+    public bool isEffect = false;//所有函数中只要生效过一次就不会跳过
 
     public Card()
     {
@@ -228,15 +228,16 @@ public partial class Card
                 {
                     ExecuteFunction(func);
                 }
-
             }
 
             if (this.executeQueue == 12)
             {
-
                 Mechanism.Instance.CreatText_AIDebuff(this);
-
             }
+        }
+        if (!isEffect)
+        {
+            Mechanism.Instance.SkipTime_Assign();
         }
     }
 
@@ -1002,6 +1003,11 @@ public partial class Card
         List<Card> allCards = new List<Card>();
         FindAllCards(originCards, range, allCards); //根据原始卡牌和范围，找到所有作用的对象
 
+        if (allCards.Count > 0)
+        {
+            isEffect = true;
+        }
+
         foreach (var allCard in allCards)
         {
             if (value >= 0)
@@ -1100,6 +1106,8 @@ public partial class Card
             }
             if (b)
             {
+                isEffect = true;
+
                 allCard.TimeCounter += (int)value;
                 allCard.AutoDescription();
                 allCards_Effect.Add(allCard);
@@ -1131,6 +1139,8 @@ public partial class Card
             }
             if (b)
             {
+                isEffect = true;
+
                 allCard.life += (int)(value + addLevelPower * addLevel);
                 allCards_Effect.Add(allCard);
             }
@@ -1145,6 +1155,7 @@ public partial class Card
         float value
     )
     {
+        isEffect = true;
         float referenceValue = 0;
         if (reference == "LV") //等级
         {
@@ -1313,15 +1324,8 @@ public partial class Card
 
         if (funcName.Contains("P"))
         {
-            FindAllCards_PorpertyRange(r,
-            "P",
-            allCards,
-            allCards_PropertyRange);
-            foreach (var
-                card
-                in
-                allCards_PropertyRange //修改数值
-            )
+            FindAllCards_PorpertyRange(r, "P", allCards, allCards_PropertyRange);
+            foreach (var card in allCards_PropertyRange)//修改数值
             {
                 card.functionEffect.physicalHealth =
                     (
@@ -1400,7 +1404,11 @@ public partial class Card
             }
         }
 
-        BuffBebuffedEffect(allCards_PropertyRange); //释放特效
+        if (allCards_PropertyRange.Count > 0)
+        {
+            isEffect = true;
+            BuffBebuffedEffect(allCards_PropertyRange);
+        }
 
     }
 
@@ -1427,7 +1435,6 @@ public partial class Card
                 Mechanism.Instance.KPINeed_EveryMonthText.text = Mechanism.Instance.KPINeed_EveryMonth.ToString();
             }
         }
-
 
         else if (funcName == "Mul")
         {
@@ -1458,6 +1465,7 @@ public partial class Card
             }
 
         }
+        isEffect = true;
         Buff(this);
     }
 
@@ -1520,6 +1528,7 @@ public partial class Card
                 value *
                 (1 + addLevelPower * this.addLevel));
         }
+        isEffect = true;
     }
 
     //D
@@ -1561,7 +1570,12 @@ public partial class Card
             }
         }
         // Buff(this);
-        DestroyEffect(cards_BeDesed, Color.red);
+        if (cards_BeDesed.Count > 0)
+        {
+            isEffect = true;
+            DestroyEffect(cards_BeDesed, Color.red);
+        }
+
     }
     void FindAllSpecialCards(List<Card> allCards, List<Card> allCards_by_n, int n)//专门用来找D和TR的最后一个参数对应的卡牌
     {
@@ -1661,15 +1675,23 @@ public partial class Card
 
             }
         }
-        BuffBebuffedEffect(allCards_by_n);
+
+        if (allCards_by_n.Count > 0)
+        {
+            isEffect = true;
+            BuffBebuffedEffect(allCards_by_n);
+        }
+
     }
     //TD
     void TimesDestroyCard(float value)
     {
+
         life--;
         this.AutoDescription();
         if (life > 0 && this.isAlive)//命还在 且 没有被其他卡牌给摧毁
         {
+            isEffect = true;
             List<Card> cards_BeDesed = new List<Card>();
             cards_BeDesed.Add(this);
             TDEffect();
@@ -1680,6 +1702,7 @@ public partial class Card
                 !Mechanism.Instance.cardsDestroyedThisTurn.Contains(this) //不能让一张卡牌被摧毁多次，不然三联数组会出问题
             )
             {
+                isEffect = true;
                 Mechanism.Instance.cardsDestroyedThisTurn.Add(this);
                 List<Card> cards_BeDesed = new List<Card>();
                 cards_BeDesed.Add(this);
@@ -1705,6 +1728,8 @@ public partial class Card
         float value
     )
     {
+        isEffect = true;
+
         List<Card> allCards = new List<Card>();
 
         int amount = int.Parse(range); //I方法的参数三——range是生成此卡牌的数量，value是生成的卡牌id
@@ -1798,12 +1823,19 @@ public partial class Card
                 allCards_Effect.Add(card);
             }
         }
-        BuffBebuffedEffect(allCards_Effect);
+
+        if (allCards_Effect.Count > 0)
+        {
+            isEffect = true;
+            BuffBebuffedEffect(allCards_Effect);
+        }
+
     }
 
     //F
     void Fortunate(float value)
     {
+        isEffect = true;
         int n = (int)value;
         FieldManager.Instance.luckyTimes += n;
     }

@@ -23,16 +23,6 @@ public enum Type//流派
     Revolting//叛乱
 
 }
-public enum AIAction //行为！！！！！！！！！后续还要加行为
-{
-    Work,//工作
-    Rest,//休息
-    Promote,//提升（工作能力）
-    Fish,//摸鱼
-    ConnetWork//连轴工作
-}
-
-
 
 //PSWK的消耗或者生产能力
 public struct PSWK_Ability
@@ -41,7 +31,6 @@ public struct PSWK_Ability
     public int S;
     public int W;
     public int K;
-
 }
 
 public class Buffer//每周会复制一份PSWK_Ability
@@ -57,16 +46,8 @@ public class Buffer//每周会复制一份PSWK_Ability
         this.S = 0;
         this.W = 0;
         this.K = 0;
-
     }
-    // public Buffer(int P1, int S1, int W1, int K1, int F1)
-    // {
-    //     this.P = P1;
-    //     this.S = S1;
-    //     this.W = W1;
-    //     this.K = K1;
-    //     this.F = F1;
-    // }
+
     public Buffer(PSWK_Ability pSWK_Ability)
     {
         this.P = pSWK_Ability.P;
@@ -91,12 +72,13 @@ public class AIData//对应PlayerData
     public int ranking = 1;
     public int favor = 100;
     public int joinWeek;//哪一周加入的
+    public float ATK_Desire = 0;//进攻欲望，0-100
+    public float Def_Ability = 0;//反制主角debuff的能力，0-100
 
     //内藏属性
-    [HideInInspector] public Personality personality;
+    // [HideInInspector] public Personality personality;
     [HideInInspector] public Type type;
     [HideInInspector] public PSWK_Ability PSWK_Ability;
-
     [HideInInspector] public Buffer buffer;
 
 
@@ -105,21 +87,32 @@ public class AIData//对应PlayerData
         this.AIid = AIid1;
         this.buffer = new Buffer();
         this.joinWeek = Mechanism.Instance.week;
+
+        //自动生成生成流派
+        AI_Personlity_Type();
         //自动生成名字
         AI_Name();
-        //自动生成性格，根据性格生成流派
-        AI_Personlity_Type();
-        //自动生成P、S、W数据
+        //自动生成P、S、W数据，还有一些潜藏数据ATK_Desire Def_Ability
         AI_PSW_Max();
         //自动根据W生成职位
         AI_PostLevel();
         //自动生成改变各项基础数值(PSWK)的能力
         AI_PSWK_Ability();
-
     }
-    void AI_Name()
+    void AI_Name()//根据流派来生成名字
     {
-        this.name = "AI" + Random.Range(1, 201);
+        if (AIMechanism.Instance.Type_AINames_Dic[type].Count > 0)
+        {
+            List<string> list = AIMechanism.Instance.Type_AINames_Dic[type];
+            string n = list[Random.Range(0, list.Count)];
+            this.name = n;
+            AIMechanism.Instance.Type_AINames_Dic[type].Remove(n);
+        }
+        else
+        {
+            this.name = "无名指" + Random.Range(1, 1000);
+        }
+
     }
     void AutoTypeProDic_PDF(Dictionary<Type, float> Type_Pro_Dic_PDF)//各个流派的比例
     {
@@ -128,6 +121,7 @@ public class AIData//对应PlayerData
         Type_Pro_Dic_PDF.Add(Type.OverLoad, 30);
         Type_Pro_Dic_PDF.Add(Type.Skilled, 15);
         Type_Pro_Dic_PDF.Add(Type.Snaky, 15);
+
         //25个
         Type_Pro_Dic_PDF.Add(Type.Tolerant, 10);
         Type_Pro_Dic_PDF.Add(Type.Sociable, 5);
@@ -135,10 +129,9 @@ public class AIData//对应PlayerData
         Type_Pro_Dic_PDF.Add(Type.Revolting, 3);
 
         //环境越卷，后期流派就越多,会告诉玩家卷没有用。前期确实卷了有用，因为越卷后期流派越多，可以暴揍后期流派。但是后期就没用了
-        // Type_Pro_Dic_PDF[Type.Tolerant] += (int)(Mechanism.Instance.envirRollValue * 0.1f);
-        // Type_Pro_Dic_PDF[Type.Sociable] += (int)(Mechanism.Instance.envirRollValue * 0.1f);
-        // Type_Pro_Dic_PDF[Type.Flexible] += (int)(Mechanism.Instance.envirRollValue * 0.1f);
-        // Type_Pro_Dic_PDF[Type.Revolting] += (int)(Mechanism.Instance.envirRollValue * 0.1f);
+        Type_Pro_Dic_PDF[Type.Sociable] += (int)(Mechanism.Instance.envirRollValue * 0.05f);
+        Type_Pro_Dic_PDF[Type.Flexible] += (int)(Mechanism.Instance.envirRollValue * 0.05f);
+        Type_Pro_Dic_PDF[Type.Revolting] += (int)(Mechanism.Instance.envirRollValue * 0.05f);
     }
 
     void AutoTypeProDic_CDF(Dictionary<Type, float> Type_Pro_Dic_PDF, Dictionary<Type, float> Type_Pro_Dic_CDF)
@@ -170,9 +163,10 @@ public class AIData//对应PlayerData
         for (int i = 0; i < keyList.Count; i++)
         {
             Type_Pro_Dic_CDF[keyList[i]] = Type_Pro_Dic_CDF[keyList[i]] / n;
-
         }
     }
+
+
     void AI_Personlity_Type()//影响因素，环境卷度
     {
         Dictionary<Type, float> Type_Pro_Dic_PDF = new Dictionary<Type, float>();
@@ -227,6 +221,56 @@ public class AIData//对应PlayerData
         this.workAbility = (int)(PlayerData.Instance.workAbility);//* Random.Range(0.8f, 1.2f)
         this.KPI = 0;
 
+        switch (this.type)
+        {
+            case Type.Fishlike:
+                this.ATK_Desire = 10;
+                this.Def_Ability = 0;
+                this.physicalHealthMax = (int)(this.physicalHealthMax * 1.2f);
+                this.spiritualHealthMax = (int)(this.spiritualHealthMax * 1.2f);
+                this.workAbility = (int)(this.workAbility * 0.5f);
+                break;
+            case Type.Flexible:
+                this.ATK_Desire = 0;
+                this.Def_Ability = 100;
+                this.spiritualHealthMax = (int)(this.spiritualHealthMax * 1.2f);
+                break;
+            case Type.OverLoad:
+                this.ATK_Desire = 10;
+                this.Def_Ability = 0;
+                this.physicalHealthMax = (int)(this.physicalHealthMax * 0.9f);
+                this.spiritualHealthMax = (int)(this.spiritualHealthMax * 0.9f);
+                this.workAbility = (int)(this.workAbility * 0.7f);
+                break;
+            case Type.Revolting:
+                this.ATK_Desire = 20;
+                this.Def_Ability = 40;
+                this.workAbility = (int)(this.workAbility * 1.3f);
+                break;
+            case Type.Skilled:
+                this.ATK_Desire = 0;
+                this.Def_Ability = 0;
+                this.workAbility = (int)(this.workAbility * 1.5f);
+                break;
+            case Type.Snaky:
+                this.ATK_Desire = 80;
+                this.Def_Ability = 0;
+                this.spiritualHealthMax = (int)(this.spiritualHealthMax * 1.2f);
+                this.workAbility = (int)(this.workAbility * 0.5f);
+                break;
+            case Type.Sociable:
+                this.ATK_Desire = 20;
+                this.Def_Ability = 40;
+                this.workAbility = (int)(this.workAbility * 1.3f);
+                break;
+            case Type.Tolerant:
+                this.ATK_Desire = 10;
+                this.Def_Ability = 20;
+                break;
+            default:
+                break;
+        }
+
         //受流派和周数影响的算法，暂时不写
         /*
            OverLoad,//过载
@@ -247,6 +291,7 @@ public class AIData//对应PlayerData
 
     void AI_PSWK_Ability()//影响因素：职位等级， AI流派因游戏时间而出现的特性，（每个流派在前中后期都有不同的发挥）//其实还和熟练度有关，不过刚来的人没有熟练度，这个可以每周增加
     {
+        int week = Mechanism.Instance.week;
         if (Mechanism.Instance.week <= 2)//2*工作 1*青椒
         {
             PSWK_Ability.P = -30;
@@ -257,10 +302,60 @@ public class AIData//对应PlayerData
         else
         {
             PSWK_Ability.P = (int)(Mechanism.Instance.physicalHealthAverage);//* Random.Range(0.8f, 1.2f)
+            PSWK_Ability.P = Mathf.Min(-30, PSWK_Ability.P);
 
             PSWK_Ability.S = (int)(Mechanism.Instance.spiritualHealthAverage);//* Random.Range(0.8f, 1.2f)
-            PSWK_Ability.W = (int)(Mechanism.Instance.workAbilityAverage);//* Random.Range(0.8f, 1.2f)
-            PSWK_Ability.K = (int)(Mechanism.Instance.KPIAverage);//* Random.Range(0.8f, 1.2f)
+            PSWK_Ability.S = Mathf.Min(-30, PSWK_Ability.S);
+
+            PSWK_Ability.W = (int)(Mechanism.Instance.workAbilityAverage * 1.2f);//* Random.Range(0.8f, 1.2f)
+            PSWK_Ability.K = (int)(Mechanism.Instance.KPIAverage * 1.2f);//* Random.Range(0.8f, 1.2f)
+        }
+        switch (this.type)
+        {
+            case Type.Fishlike:
+                PSWK_Ability.P = 0;
+                PSWK_Ability.S = 0;
+                PSWK_Ability.W = (int)(PSWK_Ability.W * 0.5f);
+                PSWK_Ability.K = (int)(PSWK_Ability.K * 0.5f);
+                break;
+            case Type.Flexible:
+                PSWK_Ability.P = (int)(PSWK_Ability.P * 0.7f);
+                PSWK_Ability.S = (int)(PSWK_Ability.S * 0.7f);
+                PSWK_Ability.K = (int)(PSWK_Ability.K * 0.9f);
+                break;
+            case Type.OverLoad:
+                PSWK_Ability.P = (int)(PSWK_Ability.P * 1.2f);
+                PSWK_Ability.S = (int)(PSWK_Ability.S * 1.2f);
+                PSWK_Ability.W = (int)(PSWK_Ability.W * 0.7f);
+                PSWK_Ability.K = (int)(PSWK_Ability.K * 1.2f);
+                break;
+            case Type.Revolting:
+                PSWK_Ability.W = (int)(PSWK_Ability.W * 1.3f);
+                PSWK_Ability.K = (int)(PSWK_Ability.K * 1.2f * (1 + week * 0.02f));
+                break;
+            case Type.Skilled:
+                PSWK_Ability.W = (int)(PSWK_Ability.W * 1.5f);
+                if (week <= 20)
+                {
+                    PSWK_Ability.K = (int)(PSWK_Ability.K * 1.1f * (1 + week * 0.02f));
+                }
+                else
+                {
+                    PSWK_Ability.K = (int)(PSWK_Ability.K * 1.2f);
+                }
+                break;
+            case Type.Snaky:
+                PSWK_Ability.W = (int)(PSWK_Ability.W * 0.5f);
+                PSWK_Ability.K = (int)(PSWK_Ability.K * 0.5f);
+                break;
+            case Type.Sociable:
+                PSWK_Ability.W = (int)(PSWK_Ability.W * 1.3f);
+                PSWK_Ability.K = (int)(PSWK_Ability.K * 1.2f * (1 + week * 0.02f));
+                break;
+            case Type.Tolerant:
+                break;
+            default:
+                break;
         }
 
         //受流派和周数影响的算法，暂时不写
@@ -297,24 +392,24 @@ public class AIData//对应PlayerData
         float n;
         if (Mechanism.Instance.week <= 1 + 2 * 4)
         {
-            n = 1.5f;
+            n = (Mechanism.Instance.KPI_Up_PerWeek_1_Min + Mechanism.Instance.KPI_Up_PerWeek_1_Max) / 2;
         }
         else
         {
-            n = 1.12f;
+            n = (Mechanism.Instance.KPI_Up_PerWeek_9_Min + Mechanism.Instance.KPI_Up_PerWeek_9_Max) / 2;
         }
         PSWK_Ability.P = (int)(PSWK_Ability.P * 1.02);//这部分还是需要看卡牌的统计数据
         PSWK_Ability.S = (int)(PSWK_Ability.S * 1.02);
         PSWK_Ability.W = (int)(PSWK_Ability.W * n);
         PSWK_Ability.K = (int)(PSWK_Ability.K * n);//这一项还会受环境卷度的影响
-        //受流派和周数影响的算法，暂时不写
+                                                   //受流派和周数影响的算法，暂时不写
     }
     public void AI_PSW_Max_Exchange_EveryWeek()//用buffer改变pswk 并且计算玩家释放的debuff！！！！！！！！！！！！！！！！！！！
     {
         int week = Mechanism.Instance.week;
-        int physicalHealthMaxAdd = (int)(physicalHealthMax * 0.1f);//* (1 + 0.1f * week)
+        int physicalHealthMaxAdd = (int)(physicalHealthMax * 0.05f);//* (1 + 0.1f * week)
         physicalHealthMax += physicalHealthMaxAdd;
-        int spiritualHealthMaxAdd = (int)(spiritualHealthMax * 0.1f);//* (1 + 0.1f * week)
+        int spiritualHealthMaxAdd = (int)(spiritualHealthMax * 0.05f);//* (1 + 0.1f * week)
         spiritualHealthMax += spiritualHealthMaxAdd;
         physicalHealth = Mathf.Clamp(physicalHealth + physicalHealthMaxAdd + buffer.P, -10000, physicalHealthMax);
         spiritualHealth = Mathf.Clamp(spiritualHealth + spiritualHealthMaxAdd + buffer.S, -10000, spiritualHealthMax);
@@ -337,11 +432,73 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
     public List<TextMeshPro> rankingTexts = new List<TextMeshPro>();
     public List<TextMeshPro> favorTexts = new List<TextMeshPro>();
     // public
-    
+    [HideInInspector] public List<AIData> AIDatas = new List<AIData>();
 
+    //AI
+    [Range(0, 1)]
+    public float AISendCardpro_Global = 0.5f;
 
+    public int AI_Appear_Week = 5;
 
-        [HideInInspector] public List<AIData> AIDatas = new List<AIData>();
+    //AIName
+    public TextAsset AIData;
+    public Dictionary<Type, List<string>> Type_AINames_Dic = new Dictionary<Type, List<string>>();
+    void Awake()
+    {
+        LoadAINameFormData();
+    }
+    void LoadAINameFormData()
+    {
+        string[] dataRows = AIData.text.Split("\r\n", System.StringSplitOptions.RemoveEmptyEntries);
+        Type_AINames_Dic.Add(Type.Fishlike, new List<string>());
+        Type_AINames_Dic.Add(Type.Flexible, new List<string>());
+        Type_AINames_Dic.Add(Type.OverLoad, new List<string>());
+        Type_AINames_Dic.Add(Type.Revolting, new List<string>());
+        Type_AINames_Dic.Add(Type.Skilled, new List<string>());
+        Type_AINames_Dic.Add(Type.Snaky, new List<string>());
+        Type_AINames_Dic.Add(Type.Sociable, new List<string>());
+        Type_AINames_Dic.Add(Type.Tolerant, new List<string>());
+        foreach (var dataRow in dataRows)
+        {
+            string[] elements = dataRow.Split(',');
+            if (elements[0] == "")//排除空行的影响
+            {
+                continue;
+            }
+            switch (elements[1])
+            {
+                case "摸鱼":
+                    Type_AINames_Dic[Type.Fishlike].Add(elements[0]);
+                    break;
+                case "隐世":
+                    Type_AINames_Dic[Type.Flexible].Add(elements[0]);
+                    break;
+                case "过载":
+                    Type_AINames_Dic[Type.OverLoad].Add(elements[0]);
+                    break;
+                case "叛乱":
+                    Type_AINames_Dic[Type.Revolting].Add(elements[0]);
+                    break;
+                case "精技":
+                    Type_AINames_Dic[Type.Skilled].Add(elements[0]);
+                    break;
+                case "暗算":
+                    Type_AINames_Dic[Type.Snaky].Add(elements[0]);
+                    break;
+                case "善舞":
+                    Type_AINames_Dic[Type.Sociable].Add(elements[0]);
+                    break;
+                case "忍耐":
+                    Type_AINames_Dic[Type.Tolerant].Add(elements[0]);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        Debug.Log(Type_AINames_Dic[Type.Flexible].Count);
+    }
+
     void UpdateAIData2UGUI()//更新现有AI数据到UI
     {
         foreach (var AIData in AIDatas)
@@ -385,7 +542,7 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
 
     public void AI_Exchange_OnClickButton()//在点击按钮时，自动将的pswkAbility给AI的buff
     {
-        if (Mechanism.Instance.week >= 5)
+        if (Mechanism.Instance.week >= AI_Appear_Week)//修改同事出现的时刻
         {
             FillAIDatas();    //增加新同事
         }
@@ -398,6 +555,12 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
     }
     public bool AI_Exchange_Assign_Queue16()//queue16发生//AI送主角屎的环节 //返回是否送屎
     {
+        if (Mechanism.Instance.week <= AI_Appear_Week)//AI出现的第一周不会有送屎环节
+        {
+            return false;
+        }
+
+
         bool isSend = false;
         List<AIData> AIDatas_Bad = new List<AIData>();//伤害主角的坏人
 
@@ -406,14 +569,15 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
         {
             float r = Random.Range(0f, 1);
             //事实上r还会因AI的流派而变化
-            if (r > 0.75f)//25%的概率使坏
+            if (r <= AISendCardpro_Global + AIData.ATK_Desire / 100f)//全局+个体的攻击欲望
             {
                 isSend = true;
                 Card card = CardStore.Instance.RandomCard_AI(AIData.postLevel);
                 card.creator = AIData.name;
+                card.AutoCardInfor();
                 PlayerData.Instance.playerCards.Add(card);
                 PlayerData.Instance.SortCards();
-                LibraryManager.Instance.UpdateLibrary();
+                // LibraryManager.Instance.UpdateLibrary();
                 AIDatas_Bad.Add(AIData);
                 //播放特效
                 SimpleEffect se = names_W_Gameobject[AIData.AIid].GetComponent<SimpleEffect>();
@@ -540,10 +704,10 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
             {
                 AIRemove(AIDatas_Temp[i], "排名过于靠后");
             }
-            else if (AIDatas_Temp[i].KPI < Mechanism.Instance.KPINeed_EveryMonth * (5 - AIDatas_Temp[i].joinWeek))//*(5-AIDatas_Temp[i].joinWeek)是为了保证月中来的AI不至于被光速淘汰
-            {
-                AIRemove(AIDatas_Temp[i], "未达成本月KPI");
-            }
+            // else if (AIDatas_Temp[i].KPI < Mechanism.Instance.KPINeed_EveryMonth * (5 - AIDatas_Temp[i].joinWeek % 4))//*(5-AIDatas_Temp[i].joinWeek)是为了保证月中来的AI不至于被光速淘汰
+            // {
+            //     AIRemove(AIDatas_Temp[i], "未达成本月KPI");
+            // }
         }
 
     }
@@ -558,7 +722,7 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
             }
         }
         PlayerData.Instance.SortCards();
-        LibraryManager.Instance.UpdateLibrary();
+        //LibraryManager.Instance.UpdateLibrary();
         AIDatas.Remove(AIData);
         names[AIData.AIid].text = "-";
         // names_W[AIData.AIid].text = "-";

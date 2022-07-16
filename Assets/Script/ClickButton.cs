@@ -115,7 +115,7 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
 
     void OnClickStart()
     {
-        if (!isPressed && font.text == "开始" && !LibraryManager.Instance.isDeleteMode)
+        if (!isPressed && font.text == "开始" && !LibraryManager.Instance.isDeleteMode&&!Mechanism.Instance.isAISendShit)
         {
             Mechanism.Instance.OnClickStart();
             JustPress();
@@ -274,12 +274,13 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
                     foreach (var obj in EffectObjs)
                     {
                         ClickButton cb = obj.GetComponent<ClickButton>();
+                        // if (cb.font.text == "选择卡牌")
+                        // {
+                        //     cb.font.text = "选择遗物";
+                        //     ButtonRecover();
+                        // }
+                        /*else*/
                         if (cb.font.text == "选择卡牌")
-                        {
-                            cb.font.text = "选择遗物";
-                            ButtonRecover();
-                        }
-                        else if (cb.font.text == "选择遗物")
                         {
                             cb.font.text = "岗位升级";
                             if (PlayerData.Instance.postLevel < 5)

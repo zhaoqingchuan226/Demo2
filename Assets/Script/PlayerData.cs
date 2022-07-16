@@ -4,6 +4,7 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public struct
 PlayerData_OnlyData //仅数字数据
@@ -120,7 +121,7 @@ public class PlayerData : MonoSingleton<PlayerData>
 
     public void LoadPlayerData()
     {
-
+        AssetDatabase.Refresh();//刷新
         string[] dataRows = playerDataCSV.text.Split("\r\n", System.StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var dataRow in dataRows)
@@ -153,113 +154,146 @@ public class PlayerData : MonoSingleton<PlayerData>
                     }
                 }
             }
+            else if (elements[0] == "isBeginAni")
+            {
+                if (elements[1] == "1")
+                {
+                 
+                    //默认是开的
+                }
+                else
+                {
+               
+                    StoryManager.Instance.isBeginAni = false;
+                    SettingsManager.Instance.beginAni_tmp.text = "关闭";
+                }
+
+            }
+            else if (elements[0] == "isGuide")
+            {
+                if (elements[1] == "1")
+                {
+                    //默认是开的
+                }
+                else
+                {
+                    TeachManager.Instance.isGuide = false;
+                    SettingsManager.Instance.guide_tmp.text = "关闭";
+                }
+            }
         }
     }
 
     public void SavePlayerData() //储存玩家信息至csv
     {
+
         //路径
         string path = Application.dataPath + "/Data/PlayerData.csv";
         datas.Clear();
-        datas.Add("money," + playerMoney.ToString());
-        datas.Add("money," + playerMoney.ToString());
-        datas.Add("money," + playerMoney.ToString());
-        datas.Add("#,id,title,description,qualitylevel,actionType,time,condition,func,,,,,,queue");
+        datas.Add("money," + 1000);
+        datas.Add("card,1");
+        datas.Add("card,1");
+        datas.Add("card,11");
+        datas.Add("isBeginAni,0");
+        datas.Add("isGuide,0");
+        // datas.Add("#,id,title,description,qualitylevel,actionType,time,condition,func,,,,,,queue");
 
-        SortCards();
+        // SortCards();
 
-        foreach (var playerCard in playerCards)
-        {
-            string actionType;
-            if (playerCard.actionType == Card.ActionType.Dynamic)
-            {
-                actionType = "动";
-            }
-            else if (playerCard.actionType == Card.ActionType.Static)
-            {
-                actionType = "静";
-            }
-            else
-            {
-                actionType = "未知";
-            }
-            string funcs = null;
-            for (int i = 0; i < playerCard.functions.Count; i++)
-            {
-                funcs += playerCard.functions[i] + ",";
-            }
+        /*
+                foreach (var playerCard in playerCards)
+                {
+                    string actionType;
+                    if (playerCard.actionType == Card.ActionType.Dynamic)
+                    {
+                        actionType = "动";
+                    }
+                    else if (playerCard.actionType == Card.ActionType.Static)
+                    {
+                        actionType = "静";
+                    }
+                    else
+                    {
+                        actionType = "未知";
+                    }
+                    string funcs = null;
+                    for (int i = 0; i < playerCard.functions.Count; i++)
+                    {
+                        funcs += playerCard.functions[i] + ",";
+                    }
 
-            string type = null;
-            switch (playerCard.type)
-            {
-                case Type.Fishlike:
-                    type = "摸鱼";
-                    break;
-                case Type.Flexible:
-                    type = "隐世";
-                    break;
-                case Type.OverLoad:
-                    type = "过载";
-                    break;
-                case Type.Revolting:
-                    type = "叛乱";
-                    break;
-                case Type.Skilled:
-                    type = "精技";
-                    break;
-                case Type.Snaky:
-                    type = "暗算";
-                    break;
-                case Type.Sociable:
-                    type = "善舞";
-                    break;
-                case Type.Tolerant:
-                    type = "忍耐";
-                    break;
-                default:
-                    type = "摸鱼";
-                    break;
-            }
+                    string type = null;
+                    switch (playerCard.type)
+                    {
+                        case Type.Fishlike:
+                            type = "摸鱼";
+                            break;
+                        case Type.Flexible:
+                            type = "隐世";
+                            break;
+                        case Type.OverLoad:
+                            type = "过载";
+                            break;
+                        case Type.Revolting:
+                            type = "叛乱";
+                            break;
+                        case Type.Skilled:
+                            type = "精技";
+                            break;
+                        case Type.Snaky:
+                            type = "暗算";
+                            break;
+                        case Type.Sociable:
+                            type = "善舞";
+                            break;
+                        case Type.Tolerant:
+                            type = "忍耐";
+                            break;
+                        default:
+                            type = "摸鱼";
+                            break;
+                    }
 
-            string str =
-                "card," +
-                playerCard.id.ToString() +
-                "," +
-                playerCard.title +
-                "," +
-                playerCard.description +
-                "," +
-                playerCard.qualityLevel.ToString() +
-                "," +
-                actionType +
-                "," +
-                playerCard.times +
-                "," +
-                playerCard.condition.ToString() +
-                "," +
-                funcs +
-                playerCard.executeQueue.ToString() +
-                "," +
-                type;
+                    string str =
+                        "card," +
+                        playerCard.id.ToString() +
+                        "," +
+                        playerCard.title +
+                        "," +
+                        playerCard.description +
+                        "," +
+                        playerCard.qualityLevel.ToString() +
+                        "," +
+                        actionType +
+                        "," +
+                        playerCard.times +
+                        "," +
+                        playerCard.condition.ToString() +
+                        "," +
+                        funcs +
+                        playerCard.executeQueue.ToString() +
+                        "," +
+                        type;
 
-            datas.Add(str);
-        }
-
+                    datas.Add(str);
+                }
+        */
         File.WriteAllLines(path, datas);
     }
 
-    //Initiate按钮触发。玩家数据初始化
-    public void InitiatePlayerData()
-    {
-        string path = Application.dataPath + "/Data/PlayerData.csv";
-        List<string> datas = new List<string>();
-        datas.Add("money,100");
 
-        //储存datas到路径，生成csv
-        File.WriteAllLines(path, datas);
-        playerMoney = 100;
-        playerCards.Clear();
-    }
+    // //Initiate按钮触发。玩家数据初始化
+    // public void InitiatePlayerData()
+    // {
+    //     string path = Application.dataPath + "/Data/PlayerData.csv";
+    //     List<string> datas = new List<string>();
+    //     datas.Add("money,100");
+
+    //     //储存datas到路径，生成csv
+    //     File.WriteAllLines(path, datas);
+    //     playerMoney = 100;
+    //     playerCards.Clear();
+    // }
 
     public void SortCards() //冒泡排序整理卡牌
     {
@@ -298,7 +332,7 @@ public class PlayerData : MonoSingleton<PlayerData>
         physicalHealthText.text = physicalHealth.ToString() + "/" + physicalHealthMax.ToString();
         spiritualHealthText.text = spiritualHealth.ToString() + "/" + spiritualHealthMax.ToString();
         workAbilityText.text = workAbility.ToString();
-        KPIText.text = KPI.ToString();
+        KPIText.text = KPI.ToString()+"/"+Mechanism.Instance.KPINeed_EveryMonth.ToString();
         rangkingText.text = ranking.ToString();
         JudgeRankingColor(ranking, rangkingText, KPIText);
         postLevelText.text = postLevel.ToString();
@@ -372,7 +406,7 @@ public class PlayerData : MonoSingleton<PlayerData>
             favorAll += AIData.favor;
         }
         favorAllText.text = favorAll.ToString();
-       
+
 
     }
 

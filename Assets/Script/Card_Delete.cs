@@ -14,7 +14,7 @@ public class Card_Delete : MonoBehaviour, IPointerClickHandler
             {
                 Debug.Log("Remove");
                 PlayerData.Instance.playerCards.Remove(card);
-                LibraryManager.Instance.UpdateLibrary();
+                // LibraryManager.Instance.UpdateLibrary();
                 LibraryManager.Instance.isDeleteMode = false;
                 LibraryManager.Instance.gameObject.transform.Find("ScrollView").gameObject.SetActive(false);
      

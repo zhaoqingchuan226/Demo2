@@ -7,7 +7,7 @@ public partial class Card
 {
 
     public List<AIData> AIDatas_Debuff = new List<AIData>();//要施加debuff的AI们
-
+    public float r_thisTur = 0;
     // [HideInInspector] public List<List<Action>> actions = new List<List<Action>>() { new List<Action>(), new List<Action>(), new List<Action>(), new List<Action>() };//四个AI的行为大全
     // [HideInInspector] public List<PSWK_Debuff> PSWK_Debuff_Buffer = new List<PSWK_Debuff> { new PSWK_Debuff(), new PSWK_Debuff(), new PSWK_Debuff(), new PSWK_Debuff() };//四个AI的PSWK修改
 
@@ -23,6 +23,7 @@ public partial class Card
         // range = Mathf.Clamp(range, 0, Mechanism.Instance.week * 3 + 2);//第一周不能改变某个对象的九个行为，因为第一周不可能有九个行为
         if (this.AIDatas_Debuff.Count == 0)//如果没有要祸害的AI，则填充
         {
+            r_thisTur = Random.Range(0, 1);
             List<AIData> AIDatas_Copy = new List<AIData>();//浅拷贝
             foreach (var AIData in AIMechanism.Instance.AIDatas)
             {
@@ -133,17 +134,20 @@ public partial class Card
             }
         }
 
-
-        if (funcName == "AI_Px" || funcName == "AI_Sx" || funcName == "AI_Wx" || funcName == "AI_Kx"
-        || funcName == "AI_Pb" || funcName == "AI_Sb" || funcName == "AI_Wb" || funcName == "AI_Kb"
-        || funcName == "AI_Pdb" || funcName == "AI_Sdb" || funcName == "AI_Wdb" || funcName == "AI_Kdb"
-        || funcName == "AI_F"//影响AI好感度
-        || funcName == "AI_L_K"//掠夺AIKPI
-        || funcName == "AI_PMx"//修改AI体力最大值
-        || funcName == "AI_Rem"
-        )
+        if (AIDatas_Debuff.Count > 0)
         {
-            BuffDebuffMulti_AI(funcName, AIDatas_Debuff, value);
+            isEffect = true;
+            if (funcName == "AI_Px" || funcName == "AI_Sx" || funcName == "AI_Wx" || funcName == "AI_Kx"
+            || funcName == "AI_Pb" || funcName == "AI_Sb" || funcName == "AI_Wb" || funcName == "AI_Kb"
+            || funcName == "AI_Pdb" || funcName == "AI_Sdb" || funcName == "AI_Wdb" || funcName == "AI_Kdb"
+            || funcName == "AI_F"//影响AI好感度
+            || funcName == "AI_L_K"//掠夺AIKPI
+            || funcName == "AI_PMx"//修改AI体力最大值
+            || funcName == "AI_Rem"
+            )
+            {
+                BuffDebuffMulti_AI(funcName, AIDatas_Debuff, value);
+            }
         }
     }
 
@@ -153,134 +157,153 @@ public partial class Card
         foreach (var AIData in AIDatas_Debuff)
         {
             bool b = false;
-            switch (funcName)
+
+
+            if (r_thisTur < AIData.Def_Ability / 100f && this.type == Type.Snaky)
             {
-                case "AI_Px":
-                    if (AIData.buffer.P != 0)
-                    {
-                        AIData.buffer.P = (int)(AIData.buffer.P * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Sx":
-                    if (AIData.buffer.S != 0)
-                    {
-                        AIData.buffer.S = (int)(AIData.buffer.S * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Wx":
-                    if (AIData.buffer.W != 0)
-                    {
-                        AIData.buffer.W = (int)(AIData.buffer.W * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Kx":
-                    if (AIData.buffer.K != 0)
-                    {
-                        AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Pb":
-                    if (AIData.buffer.P > 0)
-                    {
-                        AIData.buffer.P = (int)(AIData.buffer.P * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Sb":
-                    if (AIData.buffer.S > 0)
-                    {
-                        AIData.buffer.S = (int)(AIData.buffer.S * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Wb":
-                    if (AIData.buffer.W > 0)
-                    {
-                        AIData.buffer.W = (int)(AIData.buffer.W * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Kb":
-                    if (AIData.buffer.K > 0)
-                    {
-                        AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Pdb":
-                    if (AIData.buffer.P < 0)
-                    {
-                        AIData.buffer.P = (int)(AIData.buffer.P * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Sdb":
-                    if (AIData.buffer.S < 0)
-                    {
-                        AIData.buffer.S = (int)(AIData.buffer.S * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Wdb":
-                    if (AIData.buffer.W < 0)
-                    {
-                        AIData.buffer.W = (int)(AIData.buffer.W * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_Kdb":
-                    if (AIData.buffer.K < 0)
-                    {
-                        AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_F":
-                    AIData.favor += (int)(value * (1 + 0.2f * this.addLevel));
-                    b = true;
-                    break;
-                case "AI_L_K":
-                    if (AIData.buffer.K > 0)
-                    {
-                        int LootValue = (int)(AIData.buffer.K * (1 - Mathf.Pow(value, (1 + 0.2f * this.addLevel))));
-                        this.functionEffectEx.KPIAdd += LootValue;
-                        AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                        b = true;
-                    }
-                    break;
-                case "AI_PMx":
-                    AIData.physicalHealthMax = (int)(AIData.physicalHealthMax * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
-                    AIData.physicalHealth = Mathf.Min(AIData.physicalHealth, AIData.physicalHealthMax);
-                    b = true;
-                    break;
-                case "AI_Rem":
-                    FieldManager.Instance.AIDatas_Remove.Add(AIData);
-                    b = true;
-                    break;
-                default:
-                    break;
-            }
-            if (b)
-            {
-                SimpleEffect se1 = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this].GetComponent<SimpleEffect>();
-                if (!se1.isBuff)
+                SimpleEffect se = AIMechanism.Instance.names[AIData.AIid].GetComponentInParent<SimpleEffect>();
+                if (!se.isBuff)
                 {
-                    se1.StartCoroutine(se1.Buff());
+                    se.StartCoroutine(se.Buff());
+                }
+                if (!se.isAIDef)
+                {
+                    se.StartCoroutine(se.AIDef());
                 }
 
-                GameObject NPC_Name_Gameobj = AIMechanism.Instance.names_W_Gameobject[AIData.AIid];
-                SimpleEffect se2 = NPC_Name_Gameobj.GetComponent<SimpleEffect>();
-                if (!se2.isBebuffed)
-                {
-                    se1.StartCoroutine(se2.BeBuffed());
-                }
 
             }
+            else
+            {
+                switch (funcName)
+                {
+                    case "AI_Px":
+                        if (AIData.buffer.P != 0)
+                        {
+                            AIData.buffer.P = (int)(AIData.buffer.P * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Sx":
+                        if (AIData.buffer.S != 0)
+                        {
+                            AIData.buffer.S = (int)(AIData.buffer.S * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Wx":
+                        if (AIData.buffer.W != 0)
+                        {
+                            AIData.buffer.W = (int)(AIData.buffer.W * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Kx":
+                        if (AIData.buffer.K != 0)
+                        {
+                            AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Pb":
+                        if (AIData.buffer.P > 0)
+                        {
+                            AIData.buffer.P = (int)(AIData.buffer.P * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Sb":
+                        if (AIData.buffer.S > 0)
+                        {
+                            AIData.buffer.S = (int)(AIData.buffer.S * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Wb":
+                        if (AIData.buffer.W > 0)
+                        {
+                            AIData.buffer.W = (int)(AIData.buffer.W * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Kb":
+                        if (AIData.buffer.K > 0)
+                        {
+                            AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Pdb":
+                        if (AIData.buffer.P < 0)
+                        {
+                            AIData.buffer.P = (int)(AIData.buffer.P * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Sdb":
+                        if (AIData.buffer.S < 0)
+                        {
+                            AIData.buffer.S = (int)(AIData.buffer.S * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Wdb":
+                        if (AIData.buffer.W < 0)
+                        {
+                            AIData.buffer.W = (int)(AIData.buffer.W * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_Kdb":
+                        if (AIData.buffer.K < 0)
+                        {
+                            AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_F":
+                        AIData.favor += (int)(value * (1 + 0.2f * this.addLevel));
+                        b = true;
+                        break;
+                    case "AI_L_K":
+                        if (AIData.buffer.K > 0)
+                        {
+                            int LootValue = (int)(AIData.buffer.K * (1 - Mathf.Pow(value, (1 + 0.2f * this.addLevel))));
+                            this.functionEffectEx.KPIAdd += LootValue;
+                            AIData.buffer.K = (int)(AIData.buffer.K * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                            b = true;
+                        }
+                        break;
+                    case "AI_PMx":
+                        AIData.physicalHealthMax = (int)(AIData.physicalHealthMax * Mathf.Pow(value, (1 + 0.2f * this.addLevel)));
+                        AIData.physicalHealth = Mathf.Min(AIData.physicalHealth, AIData.physicalHealthMax);
+                        b = true;
+                        break;
+                    case "AI_Rem":
+                        FieldManager.Instance.AIDatas_Remove.Add(AIData);
+                        b = true;
+                        break;
+                    default:
+                        break;
+                }
+                // }
+                if (b)
+                {
+                    SimpleEffect se1 = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this].GetComponent<SimpleEffect>();
+                    if (!se1.isBuff)
+                    {
+                        se1.StartCoroutine(se1.Buff());
+                    }
 
+                    GameObject NPC_Name_Gameobj = AIMechanism.Instance.names_W_Gameobject[AIData.AIid];
+                    SimpleEffect se2 = NPC_Name_Gameobj.GetComponent<SimpleEffect>();
+                    if (!se2.isBebuffed)
+                    {
+                        se1.StartCoroutine(se2.BeBuffed());
+                    }
+
+                }
+            }
 
         }
 

@@ -36,14 +36,17 @@ public class SceneControler : MonoSingleton<SceneControler>
     }
     public void OnClickButton(int sceneID)
     {
+        PlayerData.Instance.SavePlayerData();
         SceneManager.LoadScene(sceneID);
     }
 
     public void OnClickExitButton()
     {
 #if UNITY_EDITOR
+        PlayerData.Instance.SavePlayerData();
         EditorApplication.isPlaying = false;
 #else
+ PlayerData.Instance.SavePlayerData();
         Application.Quit();
 #endif
     }

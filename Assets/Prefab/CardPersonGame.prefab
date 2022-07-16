@@ -727,7 +727,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.21697998
+      time: 0
       value: 0
       inSlope: 1
       outSlope: 1
@@ -736,25 +736,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.6046436
-      value: 1.3599894
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.84139055
-      value: 0.647132
-      inSlope: -1.1041714
-      outSlope: -1.1041714
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
+      time: 0.642334
       value: 1
       inSlope: 1
       outSlope: 1
@@ -842,6 +824,14 @@ MonoBehaviour:
   Des_EndPos: {fileID: 4904972805368854533}
   TD_FX: {fileID: 6714032669981121156}
   isTD: 0
+  AIDefFont: {fileID: 0}
+  isAIDef: 0
+  anic_AIDef:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4333808852128897868
 GameObject:
   m_ObjectHideFlags: 0

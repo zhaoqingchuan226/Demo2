@@ -95,7 +95,7 @@ public class FunctionEffectEx//连轴专用
 
 public partial class Mechanism : MonoSingleton<Mechanism>
 {
-    public PlayState playState = PlayState.MainMenu;
+    public PlayState playState;
 
     //<<<<<Global>>>>>
     public Camera cam;//主相机
@@ -138,7 +138,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     public GameObject TripletGroup;//三连提示的文字存放的group
 
     //Start
-    bool isAISendShit = false;
+    [HideInInspector] public bool isAISendShit = false;
 
     //<<<<<CreatCardAnimation>>>>>
     float animationTimer;//计算时间//CreatCardAnimation()
@@ -160,11 +160,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     //<<<<<Assign>>>>>
     float animationTimer2;//计算时间，生成的字体位移动画协程专用&&用户面板数字增长专用
     List<GameObject> cardPersonalGamePrefabs_CurrentQueue = new List<GameObject>();//现在执行的队列
-    public float StayTime = 2f;//普通卡牌生成的数值停留时间
-    public float ConnectingTime = 1f;//连轴卡牌生成的数值停留时间
-    public float buffTime = 0.5f;//一次buff的时间
-    public float AI_Debuff_Time = 1f;//queue12的AIdebuff卡牌的Assign动画时间
-    public float NormalCard_Time = 1f;//queue10的正常卡牌的Assign动画时间
+
+    // public float ConnectingTime = 1f;//连轴卡牌生成的数值停留时间
+    // public float buffTime = 0.1f;//一次buff的时间
+    // public float AI_Debuff_Time = 1f;//queue12的AIdebuff卡牌的Assign动画时间
+    public float NormalCard_Time = 1.2f;//queue10的正常卡牌的Assign动画时间
     public float GiveTime = 1f;//数值最后的位移时间
     public float PlayerDataChangeTime = 2;//UI上玩家数据改变的时间
     public GameObject textPrefab;
@@ -208,9 +208,21 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     public GameObject Warning_Panel;//用于显示死亡，警告信息的面板
     public TextMeshProUGUI warningText;
     public GameObject BackMainMenuButton;//游戏结束，返回主菜单
+
+    //KPINeed数据测试
+    public float KPI_Up_PerWeek_1_Min;
+    public float KPI_Up_PerWeek_1_Max;
+    public float KPI_Up_PerWeek_9_Min;
+    public float KPI_Up_PerWeek_9_Max;
+
+
+
     private void Awake()
     {
-        Application.targetFrameRate = 120;
+        playState = PlayState.MainMenu;
+        Application.targetFrameRate = 60;
+        // Screen.SetResolution(1920, 1080, true);
+        // Screen.SetResolution(Mathf.Min(1920,Screen.width) ,Mathf.Min(1080,Screen.height),false);
         // WeekdayPannel.SetActive(true);
         // HolidayPannel.SetActive(false);
         // Scene.SetActive(true);
@@ -246,22 +258,13 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
         //PlayerDataLast的赋值
         PlayerDataLastTransfer();
-        AIMechanism.Instance.AI_Exchange_OnClickButton();
-        // AI_Debuff_Sign_Pannel.SetActive(false);
-        AI_Debuff_BUff_Text.text = null;
-        AI_Debuff_BUff_Text2.text = null;
-        bool isSend = AIMechanism.Instance.AI_Exchange_Assign_Queue16();//塞屎环节
-        if (isSend)
-        {
-            isAISendShit = true;
-            StartCoroutine(WaitAISendShit());
-        }
-        else
-        {
-            phase = Phase.CreatCardAnimation;
-            CameraManager.Instance.SetVirtualCam("ChessFeatureCam");
-            CameraManager.Instance.SetVirtualCamFollow(roots[0]);
-        }
+
+        // else
+        // {
+        phase = Phase.CreatCardAnimation;
+        CameraManager.Instance.SetVirtualCam("ChessFeatureCam");
+        CameraManager.Instance.SetVirtualCamFollow(roots[0]);
+        // }
 
 
         //Field特效一回合体验卡到期归零
@@ -361,7 +364,9 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             if (animationTimer > 2.5f)
             {
                 animationTimer = 0;
-                phase = Phase.CreatCardAnimation;
+                // phase = Phase.CreatCardAnimation;
+                // CameraManager.Instance.SetVirtualCam("ChessFeatureCam");
+                // CameraManager.Instance.SetVirtualCamFollow(roots[0]);
                 isAISendShit = false;
                 yield break;
             }
@@ -370,6 +375,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     private void Update()
     {
+        Debug.Log(playState.ToString());
         // if(Input.GetKeyDown(KeyCode.K))
         // {
         //      CameraManager.Instance.SetVirtualCam("ChessCam");
@@ -436,6 +442,17 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             {
                 buttonActive = true;
                 Rotate_RotatePannel();
+
+                AIMechanism.Instance.AI_Exchange_OnClickButton();
+                AI_Debuff_BUff_Text.text = null;
+                AI_Debuff_BUff_Text2.text = null;
+                bool isSend = AIMechanism.Instance.AI_Exchange_Assign_Queue16();//塞屎环节
+                if (isSend)
+                {
+                    isAISendShit = true;
+                    StartCoroutine(WaitAISendShit());
+                }
+
                 if (week == 2)
                 {
                     TeachManager.Instance.TeachEventTrigger("公告栏介绍");
@@ -495,9 +512,6 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 animationCounter = 0;
                 CameraManager.Instance.SetVirtualCam("ChessCam");
                 phase = Phase.Calculate;
-
-
-                // StopAllCoroutines();
                 return;
             }
 
@@ -506,7 +520,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             {
                 if (playerCards_Night.Count == 0)
                 {
-                    // StopAllCoroutines();
+                    SkipTime_Create();
                     return;
                 }
                 else
@@ -524,7 +538,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                     }
                     else
                     {
-                        // StopAllCoroutines();
+                        SkipTime_Create();
                         return;
                     }
 
@@ -538,7 +552,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             {
                 if (playerCards_Others.Count == 0)//其他时刻
                 {
-                    // StopAllCoroutines();
+                    SkipTime_Create();
                     return;
                 }
                 else
@@ -550,9 +564,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }//赋值
     void Assign()
     {
-
         animationTimer += Time.deltaTime;
-
         if (animationCounter == 21)//第二十二次，也就是全部生成完毕，开始移动和修改PlayerData的数据
         {
             CardStore.Instance.probability = new Probability(PlayerData.Instance.postLevel);
@@ -872,16 +884,9 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
 
             }
-            float t = buffTime;
-            if (animationCounter == 12)
-            {
-                t = AI_Debuff_Time;
-            }
-            else if (animationCounter == 10)
-            {
-                t = NormalCard_Time;
-            }
-            if (animationTimer > t)
+
+
+            if (animationTimer > NormalCard_Time)
             {
                 animationTimer = 0;
                 isFirstGive2 = true;//下一张进行
@@ -958,7 +963,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 }
 
             }
-            if (animationTimer > ConnectingTime)//如果大于连轴时间
+            if (animationTimer > NormalCard_Time)//如果大于连轴时间
             {
                 animationTimer = 0;
                 isFirstGive2 = true;//下一张进行
@@ -1000,8 +1005,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                     {
                         GameObject TextPrefab = Instantiate(textPrefab, roots[card.posNum - 1]);
                         TextPrefab.transform.localScale *= 0.5f;
-                        TextPrefab.transform.localPosition = new Vector3(0, 0.3f*0.03f, 0);
-                        Destroy(TextPrefab, ConnectingTime);//在ConnectingTime结束后销毁对象
+                        TextPrefab.transform.localPosition = new Vector3(0, 0.3f * 0.03f, 0);
+                        Destroy(TextPrefab, NormalCard_Time);//在ConnectingTime结束后销毁对象
                         TextMeshPro Text = TextPrefab.GetComponent<TextMeshPro>();
                         TextPrefab.GetComponent<MeshRenderer>().material = FontMats[0];
                         Text.color = Color.white;
@@ -1027,7 +1032,14 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
 
     }
-
+    public void SkipTime_Create()
+    {
+        animationTimer = CreateTime - 0.01f;
+    }
+    public void SkipTime_Assign()
+    {
+        animationTimer = NormalCard_Time - 0.01f;
+    }
     public void TestifDead()
     {
         if (PlayerData.Instance.physicalHealth <= 0 || PlayerData.Instance.spiritualHealth <= 0)
@@ -1237,7 +1249,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     void CreatText8(string playerData, ref Vector3 localPosAdd, Card card, GameObject CardGameObject, ref int value, string type)//type是加还是乘
     {
         GameObject TextPrefab = Instantiate(textPrefab, CardGameObject.transform);
-        Destroy(TextPrefab, ConnectingTime);//在ConnectingTime结束后销毁对象
+        Destroy(TextPrefab, NormalCard_Time);//在ConnectingTime结束后销毁对象
         localPosAdd += new Vector3(0, 0.5f * 0.03f, 0);
         TextPrefab.transform.localPosition += localPosAdd;
         TextMeshPro Text = TextPrefab.GetComponent<TextMeshPro>();
@@ -1359,7 +1371,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             playerData_Last.KPI = 0;
             PlayerData.Instance.KPIText.text = "0";
             //发工资了
-            int salary = PlayerData.Instance.KPI * 10;
+            int salary = Mathf.Min(PlayerData.Instance.KPI * 10, PlayerData.Instance.postLevel * 10000);
             PlayerData.Instance.ChangeMoney(salary);
             SignAll_Update("月末发薪水，你的财富增加了" + salary.ToString());
             PlayerData.Instance.KPI = 0;
@@ -1438,7 +1450,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
                 animationTimer = 0;
                 week++;
-                weekText.text = week.ToString();
+                weekText.text = "第"+(((week-1) / 4) + 1).ToString() + "月第" + ((week-1) % 4+1).ToString() + "周";
                 phase = Phase.Start;
 
                 ClickButton cb_Execute = ExecuteButton.GetComponent<ClickButton>();
@@ -1474,7 +1486,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             card.functionEffect = default;//所有卡牌的效果归零
             card.functionEffectEx.Initialize();//所有卡牌的效果Ex归零
             card.posNum = 0;//所有卡牌的位置归零
-            card.isEffect=false;
+            card.isEffect = false;
             card.AIDatas_Debuff.Clear();
             playerCards.Add(card);
         }
@@ -1842,15 +1854,35 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         string s = null;
         for (int i = 0; i < card.AIDatas_Debuff.Count; i++)
         {
-            s += card.AIDatas_Debuff[i].name;
-            if (i != (card.AIDatas_Debuff.Count - 1))//如果不是最后一个
+            string t = AI_Debuff_BUff_Text.text;
+            if (t == null)
             {
-                s += "、";
+                s += card.AIDatas_Debuff[i].name;
+                if (i != (card.AIDatas_Debuff.Count - 1))//如果不是最后一个
+                {
+                    s += "、";
+                }
             }
+            else
+            {
+                if (!t.Contains(card.AIDatas_Debuff[i].name))
+                {
+                    s += card.AIDatas_Debuff[i].name;
+                    if (i != (card.AIDatas_Debuff.Count - 1))//如果不是最后一个
+                    {
+                        s += "、";
+                    }
+                }
+            }
+
         }
+
+
+
         if (s != null)
         {
             // AI_Debuff_Sign_Pannel.SetActive(true);
+
             AI_Debuff_BUff_Text.text += "你影响了" + s + "\r\n";
         }
     }
@@ -1875,18 +1907,19 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     void UpdateKPINeedEveryMonth()
     {
         int KPI_Last = Mechanism.Instance.KPIAverage;//上个月最后一周的平均水平
+        Debug.Log("KPI_Last" + KPI_Last);
 
         if (week <= 1 + 2 * 4)//前二个月，疯涨
-        {
-            int KPINeed_NextMonth_Min = (int)(KPINeed_EveryMonth * 1.4f);//和摸鱼的生存难度有关
-            int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * 2f);//和猝死的生存难度有关   //(int)(KPINeed_EveryMonth * 2f * (1 + envirRollValue / 2000));
-            KPINeed_EveryMonth = Mathf.Clamp((int)(KPI_Last * 4 * 1.4f), KPINeed_NextMonth_Min, KPINeed_NextMonth_Max);
+        {//1.4 2
+            int KPINeed_NextMonth_Min = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_1_Min, 4));//和摸鱼的生存难度有关
+            int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_1_Max, 4));//和猝死的生存难度有关   //(int)(KPINeed_EveryMonth * 2f * (1 + envirRollValue / 2000));
+            KPINeed_EveryMonth = Mathf.Clamp((int)(KPI_Last * 4 * Mathf.Pow(KPI_Up_PerWeek_1_Min, 4)), KPINeed_NextMonth_Min, KPINeed_NextMonth_Max);
         }
         else
-        {
-            int KPINeed_NextMonth_Min = (int)(KPINeed_EveryMonth * 1.12f);
-            int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * 1.2f);//(int)(KPINeed_EveryMonth * 1.2f * (1 + envirRollValue / 2000));
-            KPINeed_EveryMonth = Mathf.Clamp((int)(KPI_Last * 4 * 1.12f), KPINeed_NextMonth_Min, KPINeed_NextMonth_Max);
+        {//1.12 1.2
+            int KPINeed_NextMonth_Min = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_9_Min, 4));
+            int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_9_Max, 4));//(int)(KPINeed_EveryMonth * 1.2f * (1 + envirRollValue / 2000));
+            KPINeed_EveryMonth = Mathf.Clamp((int)(KPI_Last * 4 * Mathf.Pow(KPI_Up_PerWeek_9_Min, 4)), KPINeed_NextMonth_Min, KPINeed_NextMonth_Max);
         }
         KPINeed_EveryMonthText.text = KPINeed_EveryMonth.ToString();
     }
@@ -1908,5 +1941,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         CameraManager.Instance.SetVirtualCam("ChessCam");
     }
+
+
 
 }

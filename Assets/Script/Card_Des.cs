@@ -28,13 +28,19 @@ public partial class Card
         // }
     }
 
-    void AutoCardInfor()
+    public void AutoCardInfor()
     {
         string des = null;
-        des +="<size=25>" +this.finalTitle.ToString()+"：\r\n"+"</size>";
-        des+="\r\n";
-        des+="<color=#00F0FF>"+this.funDes+"\r\n"+"</color>";
-        des+="\r\n";
+        des += "<size=25>" + this.finalTitle.ToString() + "：\r\n" + "</size>";
+        des += "\r\n";
+        if (creator != null)
+        {
+            des += "创建者:" + creator;
+            des += "\r\n";
+            des += "\r\n";
+        }
+        des += "<color=#00F0FF>" + this.funDes + "\r\n" + "</color>";
+        des += "\r\n";
         if (this.description.Contains("连轴"))
         {
             des += "连轴：将一张牌从你的牌库拖入战场，并增加它的收益。如果牌库中没有足够多的卡牌，则无法连轴\r\n";
@@ -63,7 +69,7 @@ public partial class Card
         {
             des += "所有人一周生产KPI的平均值";
         }
-         if (this.description.Contains("同事"))
+        if (this.description.Contains("同事"))
         {
             des += "同事是和你一组一起工作的人，将在第二个月出现";
         }

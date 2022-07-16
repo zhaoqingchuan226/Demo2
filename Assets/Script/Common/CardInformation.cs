@@ -15,9 +15,9 @@ public class CardInformation : MonoBehaviour, IPointerEnterHandler, IPointerExit
     void Start()
     {
         originScale = transform.localScale;
-       
+
     }
-   
+
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
         if (currentInfor == null)
@@ -27,20 +27,20 @@ public class CardInformation : MonoBehaviour, IPointerEnterHandler, IPointerExit
             float offset = 0;
             if (this.transform.position.x <= Screen.width / 2)
             {
-                offset = this.GetComponent<RectTransform>().sizeDelta.x*1.16f;
+                offset = this.GetComponent<RectTransform>().sizeDelta.x * 1.16f;
             }
             else
             {
-                offset = -this.GetComponent<RectTransform>().sizeDelta.x*1.16f;
+                offset = -this.GetComponent<RectTransform>().sizeDelta.x * 1.16f;
             }
             InformationBoard_Instance.transform.position = this.transform.position + new Vector3(offset, 0, 0);
             // RectTransform rt_this = this.GetComponent<RectTransform>();
             // RectTransform rt_infor = InformationBoard_Instance.GetComponent<RectTransform>();
             // rt_infor.anchoredPosition = new Vector2(rt_this.anchoredPosition.x + rt_this.sizeDelta.x, rt_this.anchoredPosition.y);
             currentInfor = InformationBoard_Instance;
-            InforText=currentInfor.transform.Find("DescriptionText").gameObject.GetComponent<TextMeshProUGUI>();
-            InforText.text=this.GetComponent<CardDisplay>().card.cardInfor;
-           
+            InforText = currentInfor.transform.Find("DescriptionText").gameObject.GetComponent<TextMeshProUGUI>();
+            InforText.text = this.GetComponent<CardDisplay>().card.cardInfor;
+
         }
 
     }
@@ -48,5 +48,13 @@ public class CardInformation : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         Destroy(currentInfor);
         currentInfor = null;
+    }
+    void OnDisable()
+    {
+        if (currentInfor != null)
+        {
+            Destroy(currentInfor);
+            currentInfor = null;
+        }
     }
 }

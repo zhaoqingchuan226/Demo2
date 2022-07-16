@@ -235,4 +235,10 @@ public class TeachManager : MonoSingleton<TeachManager>
         }
     }
 
+    public bool O_C_Guide()
+    {
+            isGuide=!isGuide;
+        return isGuide;
+    }
+
 }
