@@ -20,9 +20,24 @@ public class SettingsManager : MonoSingleton<SettingsManager>
     public GameObject settingPanel;
     public TextMeshProUGUI beginAni_tmp;
     public TextMeshProUGUI guide_tmp;
+    public GameObject OpenAni;
+    public GameObject OpenGuide;
     void Start()
     {
         gameSpeed_tmp.text = "1x";
+    }
+    void HideSpecialButton()
+    {
+        if (Mechanism.Instance.playState != PlayState.MainMenu)
+        {
+            OpenAni.SetActive(false);
+            OpenGuide.SetActive(false);
+        }
+        else
+        {
+            OpenAni.SetActive(true);
+            OpenGuide.SetActive(true);
+        }
     }
     public void OnClickSettingButton()
     {
@@ -33,6 +48,7 @@ public class SettingsManager : MonoSingleton<SettingsManager>
         else
         {
             settingPanel.SetActive(true);
+            HideSpecialButton();
         }
     }
     public void OnClickChangeSpeedButton()

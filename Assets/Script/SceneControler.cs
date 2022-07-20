@@ -76,7 +76,7 @@ public class SceneControler : MonoSingleton<SceneControler>
                 }
                 else
                 {
-                    Mechanism.Instance.PlayChess();
+                    Mechanism.Instance.PlayChess(false);
                 }
 
                 break;

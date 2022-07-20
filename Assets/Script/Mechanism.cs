@@ -176,7 +176,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     PlayerData_OnlyData playerData_Last;//上一帧的playerData数据
 
     [HideInInspector] public Dictionary<Card, List<GameObject>> Cards_TextPrefabList_Dic = new Dictionary<Card, List<GameObject>>();//用于后面队列的卡牌修改前面队列卡牌的文字效果,一张卡牌对应一个文字gameobj的集合
-
+    bool isAudioPlayed = false;
 
     //<<<<<Triplet>>>>>
     [HideInInspector] public int[] TripletCards;//用于检测场景中物体三连情况的数组，卡牌id-卡牌数量
@@ -222,7 +222,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         playState = PlayState.MainMenu;
         Application.targetFrameRate = 60;
         // Screen.SetResolution(1920, 1080, true);
-        // Screen.SetResolution(Mathf.Min(1920,Screen.width) ,Mathf.Min(1080,Screen.height),false);
+        Screen.SetResolution(Mathf.Min(1920, Screen.width), Mathf.Min(1080, Screen.height), false);
         // WeekdayPannel.SetActive(true);
         // HolidayPannel.SetActive(false);
         // Scene.SetActive(true);
@@ -242,7 +242,6 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         // {
         //     TeachManager.Instance.SetGuide(StartButton, true);
         // }
-
         TeachManager.Instance.SetGuide(ExecuteButton, true);
         UpdateMechanism();//PlayerData中playerCards数组拷贝给本类中的playerCards，并根据时间分好组
         TripletCards = new int[150];
@@ -336,6 +335,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         isFirstWeekendMeeting = true;
         isFirstChooseCardButton = true;
         isFirstHolidayStore = true;
+        isAudioPlayed = false;
 
 
 
@@ -576,6 +576,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             TextMeshPro KPIText = PlayerData.Instance.KPIText;
             if (isFirstGive)
             {
+
                 //  Test2();
                 isFirstGive = false;
                 foreach (var card in cardList)
@@ -632,6 +633,12 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
             if (animationTimer >= GiveTime && animationTimer <= GiveTime + PlayerDataChangeTime)
             {
+                if (!isAudioPlayed)
+                {
+                    isAudioPlayed = true;
+                    AudioManager.Instance.PlayClip("recover0");
+                }
+
                 //这边不好缩，将就看吧
                 if (functionEffectBuffer.physicalHealth != 0)
                 {
@@ -1062,6 +1069,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
     void CreatCard(ref List<Card> playerCards_Times)//根据cardList（如playerCards_Noon）来创建卡牌
     {
+        AudioManager.Instance.PlayClip("create0");
         int r = Random.Range(0, playerCards_Times.Count);
         GameObject cardPG = Instantiate(cardPersonalGamePrefab, roots[animationCounter - 1]);
 
@@ -1103,6 +1111,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
     GameObject CreatCardConnect(ref List<Card> playerCards_Times_Less11, ref List<Card> playerCards_Times, int posNum)//根据时间和队列限制来创建卡牌
     {
+        AudioManager.Instance.PlayClip("create0");
         int r = Random.Range(0, playerCards_Times_Less11.Count);
         GameObject cardPG = Instantiate(cardPersonalGamePrefab, roots[posNum - 1]);//在posNum-1的地方生成
         cardPG.GetComponent<CardDisplayPersonalGame>().card = playerCards_Times_Less11[r];
@@ -1405,6 +1414,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     void AllRecover(Dictionary<int, int> id_physicalHealths_Last, Dictionary<int, int> id_spiritualHealths_Last)//恢复数据计算
     {
+
         foreach (var AIData in AIMechanism.Instance.AIDatas)
         {
             id_physicalHealths_Last.Add(AIData.AIid, AIData.physicalHealth);
@@ -1425,10 +1435,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
     IEnumerator Recover(Dictionary<int, int> id_physicalHealths_Last, Dictionary<int, int> id_spiritualHealths_Last)//恢复动画
     {
+        AudioManager.Instance.PlayClip("recover0");
         while (true)
         {
             animationTimer += Time.deltaTime;
-            float lerpFactor = Mathf.Clamp01(animationTimer / GiveTime);
+            float lerpFactor = Mathf.Clamp01(animationTimer / PlayerDataChangeTime);
             foreach (var AIData in AIMechanism.Instance.AIDatas)
             {
                 AIMechanism.Instance.physicalHealthTexts[AIData.AIid].text = ((int)Mathf.Lerp(id_physicalHealths_Last[AIData.AIid], AIData.physicalHealth, lerpFactor)).ToString() + "/" + AIData.physicalHealthMax.ToString();
@@ -1438,7 +1449,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             PlayerData.Instance.spiritualHealthText.text = ((int)Mathf.Lerp(id_spiritualHealths_Last[5], PlayerData.Instance.spiritualHealth, lerpFactor)).ToString() + "/" + PlayerData.Instance.spiritualHealthMax.ToString();
 
 
-            if (animationTimer > GiveTime + 1)//这个1是停留时间
+            if (animationTimer > PlayerDataChangeTime + 1)//这个1是停留时间
             {
                 foreach (var AIData in AIMechanism.Instance.AIDatas)
                 {
@@ -1450,7 +1461,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
                 animationTimer = 0;
                 week++;
-                weekText.text = "第"+(((week-1) / 4) + 1).ToString() + "月第" + ((week-1) % 4+1).ToString() + "周";
+                weekText.text = "第" + (((week - 1) / 4) + 1).ToString() + "月第" + ((week - 1) % 4 + 1).ToString() + "周";
                 phase = Phase.Start;
 
                 ClickButton cb_Execute = ExecuteButton.GetComponent<ClickButton>();
@@ -1681,6 +1692,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         else if (PlayerData.Instance.KPI < KPINeed_EveryMonth)
         {
+            Debug.Log("<");
             KPILifeReduceSign(false);
         }
 
@@ -1704,7 +1716,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         else
         {
-            warningText.text = "你未能满足领导的预期，你被赶出了公司";
+            warningText.text = "你未能满足领导的预期，被赶出了公司";
             BackMainMenuButton.SetActive(true);
         }
     }
@@ -1924,8 +1936,10 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         KPINeed_EveryMonthText.text = KPINeed_EveryMonth.ToString();
     }
 
-    public void PlayChess()
+    public void PlayChess(bool isBeginBlack = true)//需不需要开场的黑场过渡
     {
+        AudioManager.Instance.audioSource_bgm.volume = 0.05f;
+        AudioManager.Instance.PlayClip("BGM0", "BGM");
         //显示ui
         globalUI.SetActive(true);
         playState = PlayState.Chess;
@@ -1939,8 +1953,25 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         {
             TeachManager.Instance.TeachEventTrigger("开头介绍");
         }
-        CameraManager.Instance.SetVirtualCam("ChessCam");
+
+        if (isBeginBlack)//播完动画后开头有黑幕
+        {
+            CameraManager.Instance.Chess_Cam_BlackFade();
+            CameraManager.Instance.SetVirtualCam("ChessCam", 0f);//瞬间切换
+        }
+        else
+        {
+            CameraManager.Instance.SetVirtualCam("ChessCam");
+        }
+        StoryManager.Instance.Stranger_SitSofa();
     }
+
+    public void CloseGlobalUI()//被黑衣人杀死时用
+    {
+        globalUI.SetActive(false);
+    }
+
+
 
 
 

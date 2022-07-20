@@ -60,7 +60,8 @@ public class CardStore : MonoSingleton<CardStore>
 
     public List<GameObject> additives = new List<GameObject>();
     public List<Sprite> cardTextures = new List<Sprite>();
-
+    public List<GameObject> flowers_model = new List<GameObject>();
+    public List<Sprite> flowers_spirit = new List<Sprite>();
 
     [HideInInspector] public Probability probability = new Probability(1);
     void Awake()
@@ -90,7 +91,7 @@ public class CardStore : MonoSingleton<CardStore>
                 string times = elements[5];
                 string condition = elements[6];
                 int executeQueue = int.Parse(elements[13]);
-                string funDes=elements[15];
+                string funDes = elements[15];
 
 
                 Card.ActionType actionType;
@@ -153,7 +154,7 @@ public class CardStore : MonoSingleton<CardStore>
 
 
 
-                Card card = new Card(id, title, description, qualityLevel, actionType, times, condition, functions, executeQueue, t,funDes);
+                Card card = new Card(id, title, description, qualityLevel, actionType, times, condition, functions, executeQueue, t, funDes);
 
 
                 if (card.id < 10000)
@@ -355,11 +356,12 @@ public class CardStore : MonoSingleton<CardStore>
             if ("Chess_" + id.ToString() == additive.name)
             {
                 tmp = additive;
+                break;
             }
         }
-        if(tmp==null)
+        if (tmp == null)
         {
-            tmp=additives[0];
+            tmp = additives[0];
         }
         return tmp;
     }
@@ -373,6 +375,39 @@ public class CardStore : MonoSingleton<CardStore>
             if ("Chess_" + id.ToString() == sprite.name)
             {
                 tmp = sprite;
+                break;
+            }
+        }
+        return tmp;
+    }
+
+    public GameObject SearchFlower_Model(Type type)
+    {
+        GameObject tmp = null;
+        foreach (var model in flowers_model)
+        {
+            if ("Flower_" + type.ToString() == model.name)
+            {
+                tmp = model;
+                break;
+            }
+        }
+        if (tmp == null)
+        {
+            tmp = flowers_model[0];
+        }
+        return tmp;
+    }
+
+    public Sprite SearchFlower_Spirite(Type type)
+    {
+        Sprite tmp = null;
+        foreach (var sprite in flowers_spirit)
+        {
+            if ("Flower_" + type.ToString() == sprite.name)
+            {
+                tmp = sprite;
+                break;
             }
         }
         return tmp;

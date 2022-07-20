@@ -64,15 +64,22 @@ public class TeachManager : MonoSingleton<TeachManager>
             case "开头介绍":
                 words.Add("故事的开头，要从一个刚毕业的新生开始说起");
                 words.Add("你满怀期待地入职了一家心仪已久的公司");
-                words.Add("尽管这家公司，充满了各种匪夷所思的传闻……");
+                words.Add("选择它的初衷，是因为你的偶像“月雾”大佬在这里。");
+                words.Add("他有着超群实力却甘愿来小厂，是公司高层却又热衷于做博主分享知识");
+                words.Add("然而，这家公司，充满了各种匪夷所思的传闻……");
                 break;
             case "生命介绍":
                 words.Add("话不多说。这是你的精力和体力，某一项归零，游戏就结束了");
+                words.Add("白屋前辈大概会在三点提醒你喝茶，注意休息");
+                words.Add("你只要安稳度过十个月，你就迎来了胜利");
+                words.Add("哦，为什么是十个月，这或许不是什么能说的秘密");
                 SetGuide(player_P, true);
                 SetGuide(player_S, true);
                 break;
             case "绩效需求介绍":
                 words.Add("你每个月有绩效需求，达不到就会被开除");
+                words.Add("你的领导阿尼莫，将对你负责");
+                words.Add("或许，我是说或许，你可以和他做点什么交易");
                 SetGuide(KPINeed, true);
                 SetGuide(playe_K, true);
                 break;
@@ -83,14 +90,22 @@ public class TeachManager : MonoSingleton<TeachManager>
                 break;
             case "开始介绍":
                 words.Add("点击开始键，自动执行你这一周的计划");
+                words.Add("哦，空格子不是你能够自由安排工作的时间段");
+                words.Add("等你足够资深了，你自然可以自由地填满所有的格子");
                 words.Add("开始体验被雇佣者的一周吧");
                 SetGuide(StartButton, true);
                 break;
             case "卡牌介绍":
                 words.Add("这是你的初始卡牌");
+                words.Add("红卡代表“动”，需要消耗自己来获得利益");
+                words.Add("蓝卡代表“静”，具有回复或是辅助工作的效果");
+                words.Add("请注意平衡“动”和“静”，劳逸结合");
+                words.Add("什么，为什么你只有红卡？");
+                words.Add("年轻人，你这个年纪，你睡得着觉？");
                 break;
             case "卡牌介绍时间":
                 words.Add("此处为卡牌出现的时间，例如“夜班”只可能在“晚上”的槽位出现");
+                words.Add("“上 中 下”则代表此卡牌会出现在上午、中午或者下午");
                 SetGuide(timeGuide, true);
                 break;
             case "卡牌介绍描述":
@@ -99,7 +114,10 @@ public class TeachManager : MonoSingleton<TeachManager>
                 break;
             case "卡牌介绍品质":
                 words.Add("这一块则代表着卡牌的等级");
+                words.Add("白色卡是最基础的卡");
                 words.Add("通过提升职位等级有机会获得更加高级的卡牌");
+                words.Add("顺便说一句，你的偶像“月雾”拥有着大量五星橙卡");
+                words.Add("你想接近他，也得有能力，不是么");
                 SetGuide(qualityGuide, true);
                 break;
             case "关闭牌库提示":
@@ -111,6 +129,7 @@ public class TeachManager : MonoSingleton<TeachManager>
                 words.Add("你可以选择新的卡牌，每周有两次选择新卡牌的机会");
                 words.Add("领导让你们提前一个晚上来上班，就是让你们好好制定下一周的计划");
                 words.Add("到底是谁定的这条破规则？");
+                words.Add("首先排除你的领导阿尼莫");
                 SetGuide(ExecuteButton, true);
                 break;
             case "选牌三连蛊惑":
@@ -133,7 +152,7 @@ public class TeachManager : MonoSingleton<TeachManager>
                 break;
             case "场上三连介绍":
                 words.Add("触发三连后，三张卡牌会合成一张熟练度更高的卡牌，例如从“工作”变为“工作+1”");
-                words.Add("熟练度可以提升卡牌的数值");
+                words.Add("熟练度可以大量提升卡牌的数值");
                 words.Add("此外，每次三连都可以额外选择一张强力卡牌");
                 words.Add("啊，不停工作，然后变成一个熟练的工人");
                 break;
@@ -237,7 +256,7 @@ public class TeachManager : MonoSingleton<TeachManager>
 
     public bool O_C_Guide()
     {
-            isGuide=!isGuide;
+        isGuide = !isGuide;
         return isGuide;
     }
 

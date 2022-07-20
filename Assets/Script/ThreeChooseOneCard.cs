@@ -7,6 +7,7 @@ public class ThreeChooseOneCard : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
+        AudioManager.Instance.PlayClip("button0");
         SendCardToPlayerData();
         Mechanism.Instance.isChoose = false;
         Mechanism.Instance.chooseTimes--;

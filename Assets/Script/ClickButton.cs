@@ -29,7 +29,6 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-
         ExecuteCommand();
     }
 
@@ -82,6 +81,16 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
     {
         if (!isPressed)
         {
+            // float r = Random.Range(0, 1f);
+            // if (r > 0.5f)
+            // {
+            //     AudioManager.Instance.PlayClip("button3");
+            // }
+            // else
+            // {
+                AudioManager.Instance.PlayClip("button1");
+            // }
+
             isPressed = true;
             ButtonStatus();
         }
@@ -115,7 +124,7 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
 
     void OnClickStart()
     {
-        if (!isPressed && font.text == "开始" && !LibraryManager.Instance.isDeleteMode&&!Mechanism.Instance.isAISendShit)
+        if (!isPressed && font.text == "开始" && !LibraryManager.Instance.isDeleteMode && !Mechanism.Instance.isAISendShit)
         {
             Mechanism.Instance.OnClickStart();
             JustPress();

@@ -1664,6 +1664,7 @@ public partial class Card
                 cpg.JudgeActionColor(newCard.actionType);//改颜色
                 cpg.JudgeQualityColor(newCard);
                 cpg.StartCoroutine(cpg.Delay_JudgeAdditive(newCard, Time.deltaTime * i * 3));
+                cpg.JudgeFlower(newCard);
                 //万一被改变的卡牌需要用到buff函数来改变自身的颜色，注意，原来的se.originMatColor 是原卡牌的颜色，需要改为现卡牌的颜色
                 SimpleEffect se = allCardGameobject.GetComponent<SimpleEffect>();
                 se.originMatColor = se.mat.color;

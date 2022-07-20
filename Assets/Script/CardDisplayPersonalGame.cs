@@ -26,7 +26,8 @@ public class CardDisplayPersonalGame : MonoBehaviour
     public GameObject sphereCenterPos;//球心位置
     [HideInInspector] public GameObject currentAdditive;
 
-
+    public Transform flowerPos;
+    [HideInInspector] public GameObject currentFlower;
     void Start()
     {
         currentAdditive = null;
@@ -40,6 +41,7 @@ public class CardDisplayPersonalGame : MonoBehaviour
         JudgeActionColor(card.actionType);
         JudgeQualityColor(card);
         JudgeAdditive(card);
+        JudgeFlower(card);
     }
     public void JudgeTitle(Card card1)
     {
@@ -55,7 +57,7 @@ public class CardDisplayPersonalGame : MonoBehaviour
             s = ss[0] + "." + "\r\n" + ss[1];
         }
         titleText.text = s;
-        titleText.color=Color.white;
+        titleText.color = Color.white;
     }
     public void JudgeFontSize(Card card1)
     {
@@ -116,7 +118,7 @@ public class CardDisplayPersonalGame : MonoBehaviour
         quality.GetComponent<MeshRenderer>().material.color = c;
     }
 
-    public IEnumerator Delay_JudgeAdditive(Card card1,float delayTime)
+    public IEnumerator Delay_JudgeAdditive(Card card1, float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         JudgeAdditive(card1);
@@ -124,8 +126,6 @@ public class CardDisplayPersonalGame : MonoBehaviour
     }
     public void JudgeAdditive(Card card1)//delayTime是用来缓解一下次生成过多的prefab而造成的卡顿
     {
-
-
         if (currentAdditive != null)
         {
             Destroy(currentAdditive);
@@ -142,6 +142,19 @@ public class CardDisplayPersonalGame : MonoBehaviour
             }
         }
         StartCoroutine(Generate());
+    }
+
+    public void JudgeFlower(Card card1)
+    {
+        if (currentFlower != null)
+        {
+            Destroy(currentFlower);
+            currentFlower = null;
+        }
+        GameObject Flower = CardStore.Instance.SearchFlower_Model(card1.type);
+        currentFlower = Instantiate(Flower, flowerPos);
+   
+        // StartCoroutine(Generate());
     }
     IEnumerator Generate()
     {

@@ -75,7 +75,7 @@ public class StoryManager : MonoSingleton<StoryManager>
     List<GameObject> buttons = new List<GameObject>();
 
     [Space]
-    public bool isBeginAni=true;//是否有开场动画
+    public bool isBeginAni = true;//是否有开场动画
     [HideInInspector] public List<string> BlackBeginWords = new List<string>();
     //黑衣人的对话框
     public GameObject BlackWordsObj;
@@ -549,6 +549,19 @@ public class StoryManager : MonoSingleton<StoryManager>
         SetPlayableAsset("Begin");
         pd.Play();
     }
+    public void KillAni()
+    {
+        Mechanism.Instance.CloseGlobalUI();
+        // Mechanism.Instance.playState = PlayState.Black;
+        SetPlayableAsset("Kill");
+        pd.Play();
+    }
+
+    public void KillPos()//前往一个pos
+    {
+        sm.gameObject.transform.position = new Vector3(-0.839f, -0.741f, 1.08f);
+        sm.gameObject.transform.rotation = Quaternion.Euler(0, 78.27f, 0);
+    }
 
     public void UpdateBlackWords()//更新黑衣人的文本
     {
@@ -623,12 +636,19 @@ public class StoryManager : MonoSingleton<StoryManager>
         }
     }
 
-      public bool O_C_BeginAni()
+    public bool O_C_BeginAni()
     {
-       
-            isBeginAni =!isBeginAni;
-        
+
+        isBeginAni = !isBeginAni;
+
         return isBeginAni;
     }
+
+    public void Stranger_SitSofa()//把stranger塞到位置上坐着
+    {
+        sm.gameObject.transform.position = new Vector3(-0.1111711f, -0.741f, -4.71612f);
+        sm.gameObject.transform.rotation = Quaternion.Euler(0, -10.919f, 0);
+    }
+
 
 }

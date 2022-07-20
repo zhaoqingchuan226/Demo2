@@ -17,6 +17,7 @@ public class CardDisplay : MonoBehaviour
     public bool isLibrary = false;
     public GameObject newLight;//新卡牌特有的发光;
     public Image cardTexture;
+    public Image FlowerTexture;
     void Start()
     {
         ShowCard();
@@ -51,10 +52,15 @@ public class CardDisplay : MonoBehaviour
         {
             newLight.SetActive(card.isNew);
         }
-        cardTexture.sprite =CardStore.Instance.SearchTexture(card.id);
-        if(card.id>10000)
+        cardTexture.sprite = CardStore.Instance.SearchTexture(card.id);
+        if (card.id > 10000)
         {
-            cardTexture.color=Color.red;
+            cardTexture.color = Color.red;
+        }
+
+        if (FlowerTexture != null)
+        {
+            FlowerTexture.sprite = CardStore.Instance.SearchFlower_Spirite(card.type);
         }
     }
 

@@ -27,11 +27,11 @@ public class CardInformation : MonoBehaviour, IPointerEnterHandler, IPointerExit
             float offset = 0;
             if (this.transform.position.x <= Screen.width / 2)
             {
-                offset = this.GetComponent<RectTransform>().sizeDelta.x * 1.16f;
+                offset = this.GetComponent<RectTransform>().sizeDelta.x * 1.16f * Screen.width / 1920;
             }
             else
             {
-                offset = -this.GetComponent<RectTransform>().sizeDelta.x * 1.16f;
+                offset = -this.GetComponent<RectTransform>().sizeDelta.x * 1.16f * Screen.width / 1920;
             }
             InformationBoard_Instance.transform.position = this.transform.position + new Vector3(offset, 0, 0);
             // RectTransform rt_this = this.GetComponent<RectTransform>();

@@ -41,6 +41,7 @@ public class SimpleEffect : MonoBehaviour
     public GameObject Instantiate_FX;
     public GameObject Destory_FX_Prefab;
     List<GameObject> Destory_FXs = new List<GameObject>();
+    bool isDesAudioPlayed = false;
     Dictionary<GameObject, Transform> destory_FX_DestTrans_Dic = new Dictionary<GameObject, Transform>();//每一个目标点对应一个毁灭FX
     public Transform Des_StartPos;//发射毁灭FX的起点
     public Transform Des_EndPos;//被FX特效毁灭的终点
@@ -153,6 +154,7 @@ public class SimpleEffect : MonoBehaviour
             }
             if (isBuff == false)//第一次
             {
+                AudioManager.Instance.PlayClip("buff0");
                 Buff_FX.SetActive(true);
                 RestartParticleSystem(Buff_FX);
             }
@@ -211,6 +213,12 @@ public class SimpleEffect : MonoBehaviour
             isDes = true;
             timer_Des += Time.deltaTime;
 
+            if (timer_Des >= scaleTime * 0.583f && !isDesAudioPlayed)
+            {
+                isDesAudioPlayed = true;
+                AudioManager.Instance.PlayClip("kill0");
+            }
+
             float lerpFactor_move = timer_Des / (scaleTime * 0.583f);
             // float lerpFactor_Fontcolor = (timer_Des - scaleTime * 0.833f) / (scaleTime * 0.167f);
             foreach (var Destory_FX in Destory_FXs)
@@ -241,6 +249,7 @@ public class SimpleEffect : MonoBehaviour
             }
             if (isTD == false)
             {
+                AudioManager.Instance.PlayClip("TD0");
                 TD_FX.SetActive(true);
             }
             isTD = true;
@@ -252,6 +261,7 @@ public class SimpleEffect : MonoBehaviour
     }
     public void InstantiateCard(Card kidCard, float delayTime)
     {
+        AudioManager.Instance.PlayClip("boom0");
         if (!Instantiate_FX.activeInHierarchy)
         {
             Instantiate_FX.SetActive(true);
@@ -317,7 +327,7 @@ public class SimpleEffect : MonoBehaviour
             {
                 AIDefFont.SetActive(true);
             }
-            isAIDef=true;
+            isAIDef = true;
             float lerpFactor = timer_AIDef / scaleTime;
             Debug.Log(lerpFactor);
             TextMeshPro tmpp = AIDefFont.GetComponent<TextMeshPro>();

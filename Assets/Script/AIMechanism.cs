@@ -307,8 +307,8 @@ public class AIData//对应PlayerData
             PSWK_Ability.S = (int)(Mechanism.Instance.spiritualHealthAverage);//* Random.Range(0.8f, 1.2f)
             PSWK_Ability.S = Mathf.Min(-30, PSWK_Ability.S);
 
-            PSWK_Ability.W = (int)(Mechanism.Instance.workAbilityAverage * 1.2f);//* Random.Range(0.8f, 1.2f)
-            PSWK_Ability.K = (int)(Mechanism.Instance.KPIAverage * 1.2f);//* Random.Range(0.8f, 1.2f)
+            PSWK_Ability.W = (int)(Mechanism.Instance.workAbilityAverage * 1.1f);//* Random.Range(0.8f, 1.2f)
+            PSWK_Ability.K = (int)(Mechanism.Instance.KPIAverage * 1.1f);//* Random.Range(0.8f, 1.2f)
         }
         switch (this.type)
         {
