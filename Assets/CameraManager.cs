@@ -32,12 +32,12 @@ public class CameraManager : MonoSingleton<CameraManager>
             if (vcam.name == "ChessCam")
             {
                 ChessCam = vcam.GetComponent<CinemachineVirtualCamera>();
-                Debug.Log("ChessCam");
+             
             }
             else if (vcam.name == "BlackCam")
             {
                 BlackCam = vcam.GetComponent<CinemachineVirtualCamera>();
-                Debug.Log("BlackCam");
+              
             }
         }
     }

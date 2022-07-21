@@ -222,7 +222,9 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         playState = PlayState.MainMenu;
         Application.targetFrameRate = 60;
         // Screen.SetResolution(1920, 1080, true);
-        Screen.SetResolution(Mathf.Min(1920, Screen.width), Mathf.Min(1080, Screen.height), false);
+        int width = Mathf.Min(2560, Screen.width);
+        int height = width * 9 / 16;
+        Screen.SetResolution(width, height, true);
         // WeekdayPannel.SetActive(true);
         // HolidayPannel.SetActive(false);
         // Scene.SetActive(true);
@@ -375,7 +377,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     private void Update()
     {
-        Debug.Log(playState.ToString());
+ 
         // if(Input.GetKeyDown(KeyCode.K))
         // {
         //      CameraManager.Instance.SetVirtualCam("ChessCam");

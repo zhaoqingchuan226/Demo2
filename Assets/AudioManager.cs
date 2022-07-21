@@ -18,7 +18,6 @@ public class AudioManager : MonoSingleton<AudioManager>
     void Awake()
     {
         FindAllAudioResource();
-        Debug.Log(Audio_Dic.Count);
         AudioListener = Camera.main.GetComponent<AudioListener>();
         audioSource_bgm.volume = 0.4f;
         PlayClip("BGM1", "BGM");

@@ -121,7 +121,7 @@ public class PlayerData : MonoSingleton<PlayerData>
 
     public void LoadPlayerData()
     {
-        AssetDatabase.Refresh();//刷新
+        // AssetDatabase.Refresh();//刷新
         string[] dataRows = playerDataCSV.text.Split("\r\n", System.StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var dataRow in dataRows)

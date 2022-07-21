@@ -496,7 +496,7 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
             }
 
         }
-        Debug.Log(Type_AINames_Dic[Type.Flexible].Count);
+       
     }
 
     void UpdateAIData2UGUI()//更新现有AI数据到UI
