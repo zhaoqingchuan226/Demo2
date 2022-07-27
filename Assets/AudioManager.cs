@@ -14,7 +14,7 @@ public class AudioManager : MonoSingleton<AudioManager>
     // [HideInInspector] public AudioClip button1;
     [HideInInspector] public Dictionary<string, AudioClip> Audio_Dic = new Dictionary<string, AudioClip>();
     float timer;
-    bool isTwo = false;
+    // bool isTwo = false;
     void Awake()
     {
         FindAllAudioResource();
@@ -59,14 +59,18 @@ public class AudioManager : MonoSingleton<AudioManager>
         if (audioSource == "game")
         {
             aus = audioSource_game;
+            aus.PlayOneShot(Audio_Dic[clip]);
         }
         else if (audioSource == "BGM")
         {
             aus = audioSource_bgm;
+            aus.Stop();
+            aus.clip = Audio_Dic[clip];
+            aus.Play();
         }
         // aus.volume = volu;
         // aus.loop = isLoop;
-        aus.PlayOneShot(Audio_Dic[clip]);
+
         // switch (clip)
         // {
         //     case "BGM0":
@@ -84,6 +88,7 @@ public class AudioManager : MonoSingleton<AudioManager>
     }
     public void PlayBGM2()
     {
+        audioSource_bgm.Stop();
         audioSource_bgm.volume = 0.4f;
         PlayClip("BGM2", "BGM");
     }

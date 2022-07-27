@@ -12,23 +12,23 @@ public enum Period
 {
     日常1,
     宣发前,
-    宣发中,
+    // 宣发中,
     宣发后,
     日常2,
     舞会前,
-    舞会中,
+    // 舞会中,
     舞会后,
     日常3,
     G3A前,
-    G3A中,
+    // G3A中,
     G3A后,
     日常4,
     败露前,
-    败露中,
+    // 败露中,
     败露后,
     日常5,
     绝境前,
-    绝境中,
+    // 绝境中,
     绝境后
 }
 
@@ -44,6 +44,7 @@ public enum PlotPhase
 public class StoryManager : MonoSingleton<StoryManager>
 {
     //传入的UI对象
+    public GameObject StoryAll;
     public GameObject chooseButtonPrefab;
     public GameObject wordsPannel;
     public GameObject choosePannel;
@@ -56,10 +57,10 @@ public class StoryManager : MonoSingleton<StoryManager>
 
 
     public Period period = Period.日常1;
-    public int week = 1;
-    public int periodDays = 4;
+    // public int week = 1;
+    public int periodDays = 4;//四周为一个周期
     public float asideTime = 2f;
-    public TextMeshProUGUI weekText;
+    // public TextMeshProUGUI weekText;
     public TextMeshProUGUI periodText;
     public TextAsset StoryData;
     public List<NPC> NPCs = new List<NPC>();
@@ -69,11 +70,16 @@ public class StoryManager : MonoSingleton<StoryManager>
     bool input;//如何切换下一段对话
     bool isPlotProcessing;//剧情是否在进行
     PlotPhase plotPhase;//剧情现阶段执行到哪一步
-    float pro;             //选择后所被发配到的概率
+    // float pro;             //选择后所被发配到的概率
+    BranchPlot bpNow;//现在所在在分支
     public float timer = 0;
     bool isFirstThisPlotPhase = true;
     List<GameObject> buttons = new List<GameObject>();
+    public List<GameObject> NPC_GameObjs = new List<GameObject>();
+    public GameObject RewardPanel;
+    public TextMeshProUGUI RewardText;
 
+    //开场动画
     [Space]
     public bool isBeginAni = true;//是否有开场动画
     [HideInInspector] public List<string> BlackBeginWords = new List<string>();
@@ -82,12 +88,13 @@ public class StoryManager : MonoSingleton<StoryManager>
     public TextMeshProUGUI BlackWordsText;
 
     //PD
-
     public PlayableDirector pd;
     public List<PlayableAsset> pas = new List<PlayableAsset>();
 
     //black sws
     public splineMove sm;
+
+    //character sws
 
     //SwitchBall
     public GameObject switchBall;
@@ -96,21 +103,88 @@ public class StoryManager : MonoSingleton<StoryManager>
     public float switchBallExTime = 1.5f;
     float timer_switchBall;
 
+    public bool isChaAniFinished = false;
+
     void Awake()
     {
+        StoryAll.SetActive(false);
+        RewardPanel.SetActive(false);
         LoadStoryDataFromCSV();
+
         isPlotProcessing = false;
+        foreach (var NPC_GameObj in NPC_GameObjs)
+        {
+            NPC_GameObj.SetActive(false);
+        }
     }
     void Start()
     {
-        UpdataUI();
+        // UpdataUI();
         asidePannel.SetActive(false);
         choosePannel.SetActive(false);
         wordsPannel.SetActive(false);
-        NPCs_HasFound.Add(NPCs[0]);//默认就把非雨加到了剧情中去
-
-
+        NPCs_HasFound.Add(NPCs[0]);//到时候把所有人的都加进去，就好
+        // foreach (var plot in NPCs[0].plots)
+        // {
+        //     Debug.Log(plot.id);
+        // }
     }
+
+    public void O_NPC(string NPCName)//signal用//其实输入的不是NPC的名字，而是预制体名称
+    {
+        O_C_NPC(NPCName, true);
+    }
+
+    public void C_NPC(string NPCName)
+    {
+        O_C_NPC(NPCName, false);
+    }
+
+    void O_C_NPC(string NPCName, bool b)//激活，取消激活NPC
+    {
+        foreach (var NPC_GameObj in NPC_GameObjs)
+        {
+            if (NPC_GameObj.name == NPCName)
+            {
+                NPC_GameObj.SetActive(b);
+                break;
+            }
+        }
+    }
+
+    IEnumerator OpenAsidePanel(float timer = 0, bool isOpenCha = true)//isOpenCha为ture则打开角色，反之则关闭
+    {
+        bool isFirstMid = false;
+        while (true)
+        {
+            if (timer > asideTime)
+            {
+                asidePannel.SetActive(false);
+                yield break;
+            }
+            float factor = timer / asideTime;
+            if (factor > 0.5f && !isFirstMid)//进程过一半激活人物
+            {
+                isFirstMid = true;
+                if (isOpenCha)
+                {
+                    O_NPC("Cha_" + plotNow.owner.type.ToString());
+                }
+                else
+                {
+                    C_NPC("Cha_" + plotNow.owner.type.ToString());
+                }
+
+            }
+            timer += Time.deltaTime;
+            factor = Mathf.Clamp01((-2 * Mathf.Abs(factor - 0.5f) + 1f) * 1.2f);
+            Image img = asidePannel.GetComponentInChildren<Image>();
+            img.color = new Color(img.color.r, img.color.g, img.color.b, factor);
+            asideText.color = new Color(asideText.color.r, asideText.color.g, asideText.color.b, factor);
+            yield return null;
+        }
+    }
+
     void Update()
     {
         input = Input.GetMouseButtonDown(0);
@@ -122,7 +196,6 @@ public class StoryManager : MonoSingleton<StoryManager>
                 if (timer > asideTime)
                 {
                     timer = 0;
-                    asidePannel.SetActive(false);
                     plotPhase++;
                     isFirstThisPlotPhase = true;
                 }
@@ -130,7 +203,9 @@ public class StoryManager : MonoSingleton<StoryManager>
                 {
                     if (isFirstThisPlotPhase)
                     {
+                        StoryAll.SetActive(true);
                         asidePannel.SetActive(true);
+                        StartCoroutine(OpenAsidePanel(0f, true));
                         asideText.text = plotNow.aside_Start;
                         isFirstThisPlotPhase = false;
                     }
@@ -143,11 +218,9 @@ public class StoryManager : MonoSingleton<StoryManager>
                 if (timer > asideTime)
                 {
                     timer = 0;
-                    asidePannel.SetActive(false);
                     plotPhase = PlotPhase.aside_Start;
                     isFirstThisPlotPhase = true;
                     isPlotProcessing = false;
-
                     //如果还有其他剧情，则执行
                     ExecutePlotThisWeek();
                 }
@@ -155,23 +228,29 @@ public class StoryManager : MonoSingleton<StoryManager>
                 {
                     if (isFirstThisPlotPhase)
                     {
+                        SendReward();
+                        // C_NPC("Cha_" + plotNow.owner.type.ToString());
+                        // Debug.Log("Cha_"+plotNow.owner.type.ToString());
                         asidePannel.SetActive(true);
+                        StartCoroutine(OpenAsidePanel(0f, false));
                         asideText.text = plotNow.aside_End;
                         isFirstThisPlotPhase = false;
                     }
-
                 }
             }
             else if (plotPhase == PlotPhase.words1)
             {
                 if (isFirstThisPlotPhase)
                 {
+                    PlayAniPart1();//开始放动画
                     wordsPannel.SetActive(true);
                     isFirstThisPlotPhase = false;
                     wordsText.text = plotNow.words1[0];
                 }
-                if (input)
+                if (input && isChaAniFinished)
                 {
+                    isChaAniFinished = false;
+                    ResumeAni();//角色动画继续放
                     int index = plotNow.words1.IndexOf(wordsText.text);
                     if (index < (plotNow.words1.Count - 1))//如果不是最后一句话
                     {
@@ -187,18 +266,19 @@ public class StoryManager : MonoSingleton<StoryManager>
 
             else if (plotPhase == PlotPhase.words2)
             {
-
                 if (isFirstThisPlotPhase)
                 {
                     isFirstThisPlotPhase = false;
                     List<string> words2 = new List<string>();
-                    words2 = plotNow.Probability_words2_Dic[pro];
+                    words2 = bpNow.words;
                     wordsText.text = words2[0];
                 }
-                if (input)
+                if (input && isChaAniFinished)
                 {
+                    isChaAniFinished = false;
+                    ResumeAni();//角色动画继续放
                     List<string> words2 = new List<string>();
-                    words2 = plotNow.Probability_words2_Dic[pro];
+                    words2 = bpNow.words;
                     int index = words2.IndexOf(wordsText.text);
                     if (index < (words2.Count - 1))//如果不是最后一句话
                     {
@@ -239,49 +319,53 @@ public class StoryManager : MonoSingleton<StoryManager>
     public void OnClickButton(TextMeshProUGUI tmp)
     {
         string choose = tmp.text;
-        List<float> pros = plotNow.Choose_Probability_Dic[choose];
+        // List<float> pros = plotNow.Choose_Probability_Dic[choose];
+        List<BranchPlot> bps = plotNow.choose_Branch_Dic[choose];
 
         //不同选择随机概率
         float r = Random.Range(0f, 1f);
         string reward = null;
-        if (pros.Count == 1)
+        if (bps.Count == 1)
         {
-            pro = pros[0];
-            reward = plotNow.Probability_Reward_Dic[pros[0]];
+            bpNow = bps[0];
+            // pro = bps[0].pro;
+            reward = bps[0].reward;
         }
-        else if (pros.Count == 2)
+        else if (bps.Count == 2)
         {
-            if (r < pros[0])
+            if (r < bps[0].pro)
             {
-                pro = pros[0];
-                reward = plotNow.Probability_Reward_Dic[pros[0]];
+                bpNow = bps[0];
+                // pro = bps[0].pro;
+                reward = bps[0].reward;
             }
             else
             {
-                pro = pros[1];
-                reward = plotNow.Probability_Reward_Dic[pros[1]];
+                bpNow = bps[1];
+                // pro = bps[1].pro;
+                reward = bps[1].reward;
             }
         }
-        else if (pros.Count == 3)
-        {
-            if (r < pros[0])
-            {
-                pro = pros[0];
-                reward = plotNow.Probability_Reward_Dic[pros[0]];
-            }
-            else if (r >= pros[0] && r < (pros[0] + pros[1]))
-            {
-                pro = pros[1];
-                reward = plotNow.Probability_Reward_Dic[pros[1]];
-            }
-            else
-            {
-                pro = pros[2];
-                reward = plotNow.Probability_Reward_Dic[pros[2]];
-            }
-        }
-        //奖励物品
-        Debug.Log(reward);
+        // else if (pros.Count == 3)//目前没有三个分选项的，所以不用管
+        // {
+        //     if (r < pros[0])
+        //     {
+        //         pro = pros[0];
+        //         reward = plotNow.Probability_Reward_Dic[pros[0]];
+        //     }
+        //     else if (r >= pros[0] && r < (pros[0] + pros[1]))
+        //     {
+        //         pro = pros[1];
+        //         reward = plotNow.Probability_Reward_Dic[pros[1]];
+        //     }
+        //     else
+        //     {
+        //         pro = pros[2];
+        //         reward = plotNow.Probability_Reward_Dic[pros[2]];
+        //     }
+        // }
+        //奖励桌面配置，之后可以写成复杂的函数
+        // Debug.Log(reward);
 
         //
         foreach (var button in buttons)
@@ -291,61 +375,83 @@ public class StoryManager : MonoSingleton<StoryManager>
         buttons.Clear();
         plotPhase++;
         isFirstThisPlotPhase = true;
+
+        //播放分支后动画
+        PlayAniPart2();
     }
 
 
-    public void WeekAdd()
+    public void StartPlot()//触发所有剧情的函数
     {
         if (period == Period.绝境后)
         {
             return;
         }
 
+        int week = Mechanism.Instance.week;
         //日常1：1-4
         //事件前：5-6
         //事件：6
         //事件后：7-8
         //日常2：9-12
 
-
-        if (week % (2 * periodDays) == 4 || week % (2 * periodDays) == 0 || (week % (2 * periodDays) == 6 && period.ToString().Contains("中")))
-        {
-            period++;
-            week++;
-        }
-        else if (week % (2 * periodDays) == 6 && period.ToString().Contains("前"))
+        //不正规的时间计算
+        if (week % (2 * periodDays) == 5 || (week % (2 * periodDays) == 1 && week != 1) || (week % (2 * periodDays) == 7))//&& period.ToString().Contains("中")
         {
             period++;
         }
-
-        else
-        {
-            week++;
-        }
-
-        // if (week % periodDays == 0 && !period.ToString().Contains("后"))
+        // else if (week % (2 * periodDays) == 6 && period.ToString().Contains("前"))
         // {
         //     period++;
         // }
-        // else if (period.ToString().Contains("后"))
+        else
+        {
+
+        }
+
+
+        // FindNewNPC();
+        //正规的时间计算
+        // if (week % (2 * periodDays) == 4 || week % (2 * periodDays) == 0 || (week % (2 * periodDays) == 6 && period.ToString().Contains("中")))
         // {
         //     period++;
         //     week++;
         // }
+        // else if (week % (2 * periodDays) == 6 && period.ToString().Contains("前"))
+        // {
+        //     period++;
+        // }
+
         // else
         // {
         //     week++;
         // }
 
+        // // if (week % periodDays == 0 && !period.ToString().Contains("后"))
+        // // {
+        // //     period++;
+        // // }
+        // // else if (period.ToString().Contains("后"))
+        // // {
+        // //     period++;
+        // //     week++;
+        // // }
+        // // else
+        // // {
+        // //     week++;
+        // // }
+        // Debug.Log(week.ToString() + StoryManager.Instance.period); 
         UpdataUI();
         GetPlotThisWeek();//获取这周要发生的剧情
         ExecutePlotThisWeek();//执行这周要发生的剧情
     }
     void UpdataUI()
     {
-        weekText.text = week.ToString();
+        // weekText.text = week.ToString();
         periodText.text = period.ToString();
     }
+
+
 
     void GetPlotThisWeek()//找到这周可能发生的事件,添加进入
     {
@@ -364,23 +470,162 @@ public class StoryManager : MonoSingleton<StoryManager>
         }
     }
 
-
+    public void SetIsProcessing(bool b)//给“过去”动画的最后一帧用，激活UI界面开始交互故事，并播放分支前动画
+    {
+        isPlotProcessing = b;
+    }
     void ExecutePlotThisWeek()
     {
         if (plotsThisWeek.Count > 0)
         {
             plotNow = plotsThisWeek[0];
-            isPlotProcessing = true;
+            switch (plotNow.owner.type)
+            {
+                case Type.OverLoad:
+                    SetPlayableAsset("ToOverload");
+                    pd.Play();
+                    break;
+                default:
+                    break;
+            }
+
             plotPhase = PlotPhase.aside_Start;
             plotsThisWeek.RemoveAt(0);
         }
-        else
+        else//进入这里有两种可能，一种是什么剧情都没有，另一种则是播放完成所有的剧情
         {
-            plotNow = null;
+            if (plotNow != null)//如果有播放完成的剧情，则播放回去的动画
+            {
+                switch (plotNow.owner.type)
+                {
+                    case Type.OverLoad:
+                        SetPlayableAsset("BackOverload");
+                        pd.Play();
+                        break;
+                    default:
+                        break;
+                }
+                plotNow = null;
+            }
+            else//如果什么剧情都没有
+            {
+                Mechanism.Instance.phase++;
+                Mechanism.Instance.playState = PlayState.Chess;
+            }
+
+
             isPlotProcessing = false;
-            Debug.Log("没有剧情可以执行了");
+            //如果没有剩余的剧情了，那么就退出这个界面
+            StoryAll.SetActive(false);
+
         }
     }
+
+    public void EndPlot()//给signal用的
+    {
+        Mechanism.Instance.phase++;
+        Mechanism.Instance.playState = PlayState.Chess;
+        CameraManager.Instance.SetVirtualCam("ChessCam");
+    }
+
+    void SendReward()
+    {
+        string s = null;
+        switch (bpNow.reward)
+        {
+            case "招魂仪":
+                s = AutoDDReward(bpNow.reward);
+                SendDDtoPlaterData(1);
+                Debug.Log("OJBK");
+                break;
+            case "提神发夹":
+                s = AutoDDReward(bpNow.reward);
+                SendDDtoPlaterData(2);
+                break;
+            default:
+                break;
+        }
+        if (s != null)
+        {
+            DesktopDecorationStore.Instance.GenerateDDs();
+        }
+
+
+        if (bpNow.reward.Contains("card"))
+        {
+            string[] elements = bpNow.reward.Split('|');
+            int cardID = int.Parse(elements[1]);
+            int cardAmount = int.Parse(elements[2]);
+            string cardName = null;
+            for (var i = 0; i < cardAmount; i++)
+            {
+                Card c = CardStore.Instance.SearchCard(cardID);
+                c.isNew = true;
+                // InstantiateEffect(this, kidCard, interval * i);
+                PlayerData.Instance.playerCards.Add(c);
+                PlayerData.Instance.SortCards();
+                cardName = c.title;
+            }
+            s = AutoCardReward(cardID, cardAmount, cardName);
+        }
+        if (s == null)
+        {
+            s = "无事发生";
+        }
+        StartCoroutine(OpenRewardPanel(s));
+
+    }
+
+    void SendDDtoPlaterData(int DDid)
+    {
+        PlayerData.Instance.dds.Add(DesktopDecorationStore.Instance.SearchDD(DDid));
+    }
+    string AutoDDReward(string DD)
+    {
+        return "获得了 " + "“" + DD + "”";
+    }
+    string AutoCardReward(int cardID, int cardAmount, string cardName)
+    {
+        return "获得了 " + cardAmount.ToString() + "张" + "“" + cardName + "”";
+    }
+    IEnumerator OpenRewardPanel(string s, float openTime = 3f, float timer = 0)
+    {
+        RewardPanel.SetActive(true);
+        RewardText.text = s;
+        while (true)
+        {
+            if (timer > openTime)
+            {
+                RewardPanel.SetActive(false);
+                yield break;
+            }
+            timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public void PlayAniPart1()//播放分支前动画
+    {
+        SetPlayableAsset(plotNow.id.ToString());
+        pd.Play();
+    }
+    public void PlayAniPart2()//播放分支动画
+    {
+        SetPlayableAsset(bpNow.name);
+        pd.Play();
+    }
+
+    public void PauseAni()
+    {
+        isChaAniFinished = true;
+        pd.Pause();
+    }
+
+    public void ResumeAni()
+    {
+        pd.Resume();
+    }
+
     void LoadStoryDataFromCSV()
     {
         string[] dataRows = StoryData.text.Split("\r\n", System.StringSplitOptions.RemoveEmptyEntries);//按行分割
@@ -445,9 +690,8 @@ public class StoryManager : MonoSingleton<StoryManager>
                 string Aside_End = null;
                 List<string> words1 = new List<string>();
                 List<string> chooses = new List<string>();
-                Dictionary<string, List<float>> Choose_Probability_Dic = new Dictionary<string, List<float>>();
-                Dictionary<float, List<string>> Probability_words2_Dic = new Dictionary<float, List<string>>();
-                Dictionary<float, string> Probability_Reward_Dic = new Dictionary<float, string>();
+                Dictionary<string, List<BranchPlot>> choose_Branch_Dic = new Dictionary<string, List<BranchPlot>>();
+                int ID = 0;
 
                 for (int k = 1; k < 100; k++)
                 {
@@ -470,22 +714,23 @@ public class StoryManager : MonoSingleton<StoryManager>
                     {
                         string choose = elements2[7];
                         chooses.Add(choose);
-                        List<float> pros = new List<float>();
+                        List<BranchPlot> bps = new List<BranchPlot>();
+                        // List<float> pros = new List<float>();
                         for (int l = 1; l < 80; l++)
                         {
                             string[] elements3 = dataRows[i + k + l].Split(',');
 
                             if (elements3[2] != "pro")
                             {
-
                                 break;
                             }
                             else
                             {
                                 float pro = float.Parse(elements3[3]);
+                                string name = elements3[4];
                                 string reward = elements3[5];
-                                pros.Add(pro);
-
+                                // PlayableAsset pa = SearchPlayableAsset(name);
+                                // pros.Add(pro);
                                 List<string> words2 = new List<string>();
                                 for (int b = 7; b < elements3.Length; b++)
                                 {
@@ -494,19 +739,26 @@ public class StoryManager : MonoSingleton<StoryManager>
                                         words2.Add(elements3[b]);
                                     }
                                 }
-                                Probability_words2_Dic.Add(pro, words2);
-                                Probability_Reward_Dic.Add(pro, reward);
+                                bps.Add(new BranchPlot(name, pro, words2, reward));
+                                // Probability_words2_Dic.Add(pro, words2);
+                                // Probability_Reward_Dic.Add(pro, reward);
                             }
                         }
-                        Choose_Probability_Dic.Add(choose, pros);
+                        choose_Branch_Dic.Add(choose, bps);
+                        // Choose_Probability_Dic.Add(choose, pros);
                     }
                     else if (elements2[1] == "Aside_End")
                     {
                         Aside_End = elements2[7];
+                        // break;
+                    }
+                    else if (elements2[1] == "ID")
+                    {
+                        ID = int.Parse(elements2[2]);
                         break;
                     }
                 }
-                Plot plot = new Plot(Aside_Start, condis, words1, chooses, Choose_Probability_Dic, Probability_words2_Dic, Probability_Reward_Dic, Aside_End, owner);
+                Plot plot = new Plot(Aside_Start, condis, words1, chooses, choose_Branch_Dic, Aside_End, owner, ID);
 
                 foreach (var NPC in NPCs)
                 {
@@ -531,16 +783,83 @@ public class StoryManager : MonoSingleton<StoryManager>
         }
 
     }
+    /*
+        void PlayerMove(string pathContainer)
+        {
+            switch (pathContainer)
+            {
+                case "Overload":
+                    player_sm.pathContainer = pathManagers[0];
+                    player_sm.speed = 2f;
+                    break;
+                case "OverloadBack":
+                    player_sm.pathContainer = pathManagers[1];
+                    player_sm.speed = 2f;
+                    break;
+                default:
+                    break;
+            }
+            float timer = 0;
+            player_sm.StartMove();
+            player_sm.Pause();
+            StartCoroutine(DelayStart(0.5f, timer));
 
+        }
+        IEnumerator DelayStart(float delayTime, float timer)
+        {
+            while (true)
+            {
+                if (timer > delayTime)
+                {
+                    player_sm.StartMove();
+                    yield break;
+                }
+                timer += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+
+        public void PlayerMove_Go(string pathContainer)//主角的移动
+        {
+            player_sm.reverse = false;
+            PlayerMove(pathContainer);
+        }
+
+        public void PlayerMove_Back(string pathContainer)//主角的移动
+        {
+            player_sm.reverse = false;
+            PlayerMove(pathContainer);
+        }
+
+    */
+    //动画部分
     public void SetPlayableAsset(string s)
     {
+        pd.playableAsset = SearchPlayableAsset(s);
+        // foreach (var pa in pas)
+        // {
+        //     if (s == pa.name)
+        //     {
+        //  pd.playableAsset =  pa;
+        //         break;
+        //     }
+        // }
+    }
+
+
+    public PlayableAsset SearchPlayableAsset(string s)
+    {
+        PlayableAsset paa = null;
         foreach (var pa in pas)
         {
             if (s == pa.name)
             {
-                pd.playableAsset = pa;
+                paa = pa;
+                break;
             }
         }
+        return paa;
     }
 
     public void BeginAni()
@@ -578,6 +897,8 @@ public class StoryManager : MonoSingleton<StoryManager>
 
 
     }
+
+
 
     public void BlackMove()
     {

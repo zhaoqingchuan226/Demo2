@@ -94,16 +94,24 @@ public class PlayerData : MonoSingleton<PlayerData>
     public List<Color> rankColors;
 
 
+    // public TextMeshProUGUI PathUI;
 
+
+    //DD桌面配置
+    [HideInInspector] public List<DesktopDecoration> dds = new List<DesktopDecoration>();
 
     void Start()
     {
+        // string path = AssetDatabase.GetAssetPath(playerDataCSV);
+
+        // PathUI.text = Application.streamingAssetsPath;
         playerCards.Clear();
         datas.Clear();
         LoadPlayerData();
         UpdateKPILife();
 
     }
+
 
     public void UpdateKPILife()//更新KPILife的UI
     {
@@ -154,48 +162,142 @@ public class PlayerData : MonoSingleton<PlayerData>
                     }
                 }
             }
-            else if (elements[0] == "isBeginAni")
-            {
-                if (elements[1] == "1")
-                {
-                 
-                    //默认是开的
-                }
-                else
-                {
-               
-                    StoryManager.Instance.isBeginAni = false;
-                    SettingsManager.Instance.beginAni_tmp.text = "关闭";
-                }
 
-            }
-            else if (elements[0] == "isGuide")
+            string path = Path.Combine(Application.persistentDataPath, PLAYERDATA_FILE_NAME);
+            if (File.Exists(path))
             {
-                if (elements[1] == "1")
-                {
-                    //默认是开的
-                }
-                else
-                {
-                    TeachManager.Instance.isGuide = false;
-                    SettingsManager.Instance.guide_tmp.text = "关闭";
-                }
+                LoadFormJson();
             }
+            else//第一次没有存档时
+            {
+                StoryManager.Instance.isBeginAni = true;
+                SettingsManager.Instance.beginAni_tmp.text = "开启";
+                TeachManager.Instance.isGuide = true;
+                SettingsManager.Instance.guide_tmp.text = "开启";
+            }
+            //
+
+            // else if (elements[0] == "isBeginAni")
+            // {
+            //     if (elements[1] == "1")
+            //     {
+
+            //         //默认是开的
+            //     }
+            //     else
+            //     {
+
+            //         StoryManager.Instance.isBeginAni = false;
+            //         SettingsManager.Instance.beginAni_tmp.text = "关闭";
+            //     }
+
+            // }
+            // else if (elements[0] == "isGuide")
+            // {
+            //     if (elements[1] == "1")
+            //     {
+            //         //默认是开的
+            //     }
+            //     else
+            //     {
+            //         TeachManager.Instance.isGuide = false;
+            //         SettingsManager.Instance.guide_tmp.text = "关闭";
+            //     }
+            // }
+
+
+        }
+    }
+    // private StreamWriter Write(string path)
+    // {
+    //     if (path == null)
+    //         return null;
+    //     path += "/Data/PlayerData.csv";
+    //     if (!File.Exists(path))
+    //         File.CreateText(path);
+    //     return new StreamWriter(path);
+    // }
+
+    const string PLAYERDATA_FILE_NAME = "playerData.save";//这个后缀无所谓的
+
+    [System.Serializable]
+    public class SaveData
+    {
+        public bool isBeignAni;
+        public bool isGuide;
+
+        public SaveData()//构造函数用来保存现有的数据
+        {
+            isBeignAni = false;
+            isGuide = false;
         }
     }
 
+    public void SaveByJson()
+    {
+        SaveData saveData = new SaveData();
+        SaveSystem.SaveByJson(PLAYERDATA_FILE_NAME, saveData);
+    }
+    public void LoadFormJson()
+    {
+        var saveData = SaveSystem.LoadFromJson<SaveData>(PLAYERDATA_FILE_NAME);
+        StoryManager.Instance.isBeginAni = saveData.isBeignAni;
+        if (StoryManager.Instance.isBeginAni)
+        {
+            SettingsManager.Instance.beginAni_tmp.text = "开启";
+        }
+        else
+        {
+            SettingsManager.Instance.beginAni_tmp.text = "关闭";
+        }
+
+        TeachManager.Instance.isGuide = saveData.isGuide;
+        if (TeachManager.Instance.isGuide)
+        {
+
+            SettingsManager.Instance.guide_tmp.text = "开启";
+        }
+        else
+        {
+            SettingsManager.Instance.guide_tmp.text = "关闭";
+        }
+
+
+        // return saveData;
+    }
+
+#if UNITY_EDITOR
+    [UnityEditor.MenuItem("Developer/Delete Player Data Save File")]
+    public static void DeletePlayerDataSaveFile()
+    {
+        SaveSystem.DeleteSaveFile(PLAYERDATA_FILE_NAME);
+    }
+#endif
+
     public void SavePlayerData() //储存玩家信息至csv
     {
+        SaveByJson();//存
+        // FileInfo f = new FileInfo("PlayerData");
+        // Debug.Log(f.FullName);
+        // Path.GetFileName
+
 
         //路径
-        string path = Application.dataPath + "/Data/PlayerData.csv";
-        datas.Clear();
-        datas.Add("money," + 1000);
-        datas.Add("card,1");
-        datas.Add("card,1");
-        datas.Add("card,11");
-        datas.Add("isBeginAni,0");
-        datas.Add("isGuide,0");
+        // string path = AssetDatabase.GetAssetPath(playerDataCSV);
+        // Debug.Log(path);
+
+        // StreamWriter stream = Write(Application.persistentDataPath);
+        // datas.Clear();
+        // datas.Add("money," + 1000);
+        // datas.Add("card,1");
+        // datas.Add("card,1");
+        // datas.Add("card,11");
+        // datas.Add("isBeginAni,0");
+        // datas.Add("isGuide,0");
+        // stream.Write(datas);
+        // stream.Close();
+        // stream.Dispose();
+        // File.WriteAllLines(path, datas);
         // datas.Add("#,id,title,description,qualitylevel,actionType,time,condition,func,,,,,,queue");
 
         // SortCards();
@@ -278,7 +380,8 @@ public class PlayerData : MonoSingleton<PlayerData>
                     datas.Add(str);
                 }
         */
-        File.WriteAllLines(path, datas);
+
+
     }
 
 
@@ -332,7 +435,7 @@ public class PlayerData : MonoSingleton<PlayerData>
         physicalHealthText.text = physicalHealth.ToString() + "/" + physicalHealthMax.ToString();
         spiritualHealthText.text = spiritualHealth.ToString() + "/" + spiritualHealthMax.ToString();
         workAbilityText.text = workAbility.ToString();
-        KPIText.text = KPI.ToString()+"/"+Mechanism.Instance.KPINeed_EveryMonth.ToString();
+        KPIText.text = KPI.ToString() + "/" + Mechanism.Instance.KPINeed_EveryMonth.ToString();
         rangkingText.text = ranking.ToString();
         JudgeRankingColor(ranking, rangkingText, KPIText);
         postLevelText.text = postLevel.ToString();

@@ -6,6 +6,7 @@ using UnityEngine;
 //这个单例是用来统计各种奇奇怪怪的，会被卡牌的condi或者func用到的属性的
 public class FieldManager : MonoSingleton<FieldManager>
 {
+    //卡牌区
     [HideInInspector]
     public bool isTripletReward = false;
 
@@ -51,5 +52,15 @@ public class FieldManager : MonoSingleton<FieldManager>
     [HideInInspector] public int KPIAll = 0;//上一月KPI的总量
 
     [HideInInspector] public List<AIData> AIDatas_Remove = new List<AIData>();//需要抹除的AIData
+
+
+    //桌面配置区
+    [HideInInspector] public bool isUnDeath = false;//招魂仪的不死效果;
+    [HideInInspector] public bool isOverload = false;//提神发夹的增加消耗，增加收益;
+    void Awake()
+    {
+        // isUnDeath = true;
+        // isOverload = true;
+    }
 
 }

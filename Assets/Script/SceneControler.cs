@@ -22,6 +22,10 @@ public class SceneControler : MonoSingleton<SceneControler>
     public float aniTime = 2f;
 
     bool isClickAnyButton = false;//是否点击了主界面的任意按钮
+    void Awake()
+    {
+        mainMenu.SetActive(true);
+    }
     void Start()
     {
         Black0OriPos = Black0.GetComponent<RectTransform>().anchoredPosition;
@@ -29,24 +33,34 @@ public class SceneControler : MonoSingleton<SceneControler>
         originalpha = blackPlastic.GetComponent<MeshRenderer>().material.color.a;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
     public void OnClickButton(int sceneID)
     {
         PlayerData.Instance.SavePlayerData();
+        StartCoroutine(LoadSceneDelay(sceneID));
+
+    }
+
+    IEnumerator LoadSceneDelay(int sceneID)
+    {
+        yield return new WaitForSeconds(0.3f);
         SceneManager.LoadScene(sceneID);
     }
 
     public void OnClickExitButton()
     {
-#if UNITY_EDITOR
         PlayerData.Instance.SavePlayerData();
+        StartCoroutine(LoadExit());
+    }
+
+    IEnumerator LoadExit()
+    {
+        yield return new WaitForSeconds(0.3f);
+#if UNITY_EDITOR
+
         EditorApplication.isPlaying = false;
 #else
- PlayerData.Instance.SavePlayerData();
+
         Application.Quit();
 #endif
     }

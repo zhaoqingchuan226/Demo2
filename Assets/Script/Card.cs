@@ -11,7 +11,7 @@ public partial class Card
     public string finalTitle = null; //最终卡名
 
     public string description = "描述的内容";
-    public string funDes;
+    public string funDes;//有趣的介绍
 
     public string times = "上中下";
 
@@ -992,6 +992,41 @@ public partial class Card
         }
     }
 
+
+    float FieldBuffValue(float value, string pro)//由场地buff造成的数值倍率
+    {
+
+        float n = 1;
+        if (value >= 0)//表增益
+        {
+            switch (pro)
+            {
+                case "K":
+                    n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.2f);
+                 
+                    break;
+                default: break;
+            }
+        }
+        else//表消耗
+        {
+            switch (pro)
+            {
+                case "P":
+                    n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
+         
+                    break;
+                case "S":
+                    n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
+                    break;
+                default: break;
+            }
+
+        }
+       
+        return n;
+    }
+
     //P S W K
     void BaseAdd(
         string funcName,
@@ -1016,39 +1051,23 @@ public partial class Card
                 {
                     case "P":
                         allCard.functionEffect.physicalHealth +=
-                            (
-                            int
-                            )((value * (1 + addLevelPower * this.addLevel)) *
-                            functionEffectEx.physicalHealthMulti +
-                            functionEffectEx.physicalHealthAdd);
+                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.physicalHealthMulti + functionEffectEx.physicalHealthAdd) * FieldBuffValue(value, "P"));
                         functionEffectEx.Initialize("P");
                         break;
 
                     case "S":
                         allCard.functionEffect.spiritualHealth +=
-                            (
-                            int
-                            )((value * (1 + addLevelPower * this.addLevel)) *
-                            functionEffectEx.spiritualHealthMulti +
-                            functionEffectEx.spiritualHealthAdd);
+                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.spiritualHealthMulti + functionEffectEx.spiritualHealthAdd) * FieldBuffValue(value, "S"));
                         functionEffectEx.Initialize("S");
                         break;
                     case "W":
                         allCard.functionEffect.workAbility +=
-                            (
-                            int
-                            )((value * (1 + addLevelPower * this.addLevel)) *
-                            functionEffectEx.workAbilityMulti +
-                            functionEffectEx.workAbilityAdd);
+                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.workAbilityMulti + functionEffectEx.workAbilityAdd) * FieldBuffValue(value, "W"));
                         functionEffectEx.Initialize("W");
                         break;
                     case "K":
                         allCard.functionEffect.KPI +=
-                            (
-                            int
-                            )((value * (1 + addLevelPower * this.addLevel)) *
-                            functionEffectEx.KPIMulti +
-                            functionEffectEx.KPIAdd);
+                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.KPIMulti + functionEffectEx.KPIAdd) * FieldBuffValue(value, "K"));
                         functionEffectEx.Initialize("K");
                         break;
                     default:
@@ -1060,20 +1079,16 @@ public partial class Card
                 switch (funcName)
                 {
                     case "P":
-                        allCard.functionEffect.physicalHealth +=
-                            (int)(value);
+                        allCard.functionEffect.physicalHealth += (int)(value * FieldBuffValue(value, "P"));
                         break;
                     case "S":
-                        allCard.functionEffect.spiritualHealth +=
-                            (int)(value);
+                        allCard.functionEffect.spiritualHealth += (int)(value * FieldBuffValue(value, "S"));
                         break;
                     case "W":
-                        allCard.functionEffect.workAbility +=
-                            (int)(value);
+                        allCard.functionEffect.workAbility += (int)(value * FieldBuffValue(value, "W"));
                         break;
                     case "K":
-                        allCard.functionEffect.KPI +=
-                            (int)(value);
+                        allCard.functionEffect.KPI += (int)(value * FieldBuffValue(value, "K"));
                         break;
                     default:
                         break;

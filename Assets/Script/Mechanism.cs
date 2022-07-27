@@ -219,6 +219,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
     private void Awake()
     {
+        Time.timeScale = 1;
         playState = PlayState.MainMenu;
         Application.targetFrameRate = 60;
         // Screen.SetResolution(1920, 1080, true);
@@ -231,6 +232,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         MeshRenderer mr = StartButton.GetComponent<MeshRenderer>();
         phase = Phase.Start;
         buttonActive = true;
+        globalUI.SetActive(false);
     }
     private void Start()
     {
@@ -377,7 +379,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     private void Update()
     {
- 
+
         // if(Input.GetKeyDown(KeyCode.K))
         // {
         //      CameraManager.Instance.SetVirtualCam("ChessCam");
@@ -412,7 +414,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             }
             else if (phase == Phase.Story)
             {
-                phase++;
+                playState=PlayState.Story;
+                StoryManager.Instance.StartPlot();
             }
             else if (phase == Phase.HolidayStore)
             {
@@ -1051,7 +1054,10 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     public void TestifDead()
     {
-        if (PlayerData.Instance.physicalHealth <= 0 || PlayerData.Instance.spiritualHealth <= 0)
+        if (
+            (!FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth <= 0 || PlayerData.Instance.spiritualHealth <= 0))
+            || (FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth < -50 || PlayerData.Instance.spiritualHealth < -50))
+            )
         {
             Warning_Panel.SetActive(true);
             string s = null;
@@ -1066,6 +1072,17 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             warningText.text = "你因" + s + "猝死。";
             BackMainMenuButton.SetActive(true);
         }
+        //锁血
+        else if ((FieldManager.Instance.isUnDeath &&
+        (PlayerData.Instance.physicalHealth >= -50 && PlayerData.Instance.physicalHealth <= 0
+        || PlayerData.Instance.spiritualHealth >= -50 && PlayerData.Instance.spiritualHealth <= 0)))
+        {
+            PlayerData.Instance.physicalHealth = Mathf.Min(10, PlayerData.Instance.physicalHealthMax);
+            PlayerData.Instance.spiritualHealth = Mathf.Min(10, PlayerData.Instance.spiritualHealthMax);
+            PlayerData.Instance.UpdateDataToUI_Weekday();
+        }
+
+
     }
 
 

@@ -413,5 +413,27 @@ public class CardStore : MonoSingleton<CardStore>
         return tmp;
     }
 
+    public Card SearchCard(int id)
+    {
+        List<Card> cardsAll = new List<Card>();
+        cardsAll.AddRange(cards);
+        cardsAll.AddRange(Colourless_Cards);
+        Card c=new Card();
+        foreach (var card in cardsAll)
+        {
+            if (card.id == id)
+            {
+                c = card;
+                break;
+            }
+
+        }
+        if (c == null)
+        {
+            c = cards[0];
+        }
+        return new Card(c);
+    }
+
 }
 
