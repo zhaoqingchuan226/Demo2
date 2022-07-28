@@ -17,12 +17,32 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: lambert63
+    second: {fileID: 2100000, guid: 9243d93ada8afb04b81ff669adcfc117, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert64
+    second: {fileID: 2100000, guid: 6fc67bb737a59f147a54b40ac613661d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: sand_clock3
     second: {fileID: 2100000, guid: e48cfcbbed10b9b4dac78fd8c40e8555, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: sand_clock6
+    second: {fileID: 2100000, guid: e48cfcbbed10b9b4dac78fd8c40e8555, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: trans
+    second: {fileID: 2100000, guid: 0c0c93576bf12334bb4a2ea8257c62f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: trans4
     second: {fileID: 2100000, guid: 0c0c93576bf12334bb4a2ea8257c62f8, type: 2}
   materials:
     materialImportMode: 2
@@ -108,7 +128,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

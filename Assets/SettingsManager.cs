@@ -9,8 +9,8 @@ public enum GameSpeed
     S1,
     S2,
     S4,
-    S8,
-    S16
+    // S8,
+    // S16
 
 }
 public class SettingsManager : MonoSingleton<SettingsManager>
@@ -53,7 +53,7 @@ public class SettingsManager : MonoSingleton<SettingsManager>
     }
     public void OnClickChangeSpeedButton()
     {
-        if (gameSpeed == GameSpeed.S16)
+        if (gameSpeed == GameSpeed.S4)
         {
             gameSpeed = GameSpeed.S05;
         }
@@ -80,16 +80,16 @@ public class SettingsManager : MonoSingleton<SettingsManager>
                 Time.timeScale = 4f;
                 gameSpeed_tmp.text = "4x";
                 break;
-            case GameSpeed.S8:
-                Time.timeScale = 8f;
-                gameSpeed_tmp.text = "8x";
-                break;
-            case GameSpeed.S16:
-                Time.timeScale = 16f;
-                gameSpeed_tmp.text = "16x";
-                break;
-            default:
-                break;
+            // case GameSpeed.S8:
+            //     Time.timeScale = 8f;
+            //     gameSpeed_tmp.text = "8x";
+            //     break;
+            // case GameSpeed.S16:
+            //     Time.timeScale = 16f;
+            //     gameSpeed_tmp.text = "16x";
+            //     break;
+            // default:
+            //     break;
         }
 
     }

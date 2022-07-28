@@ -12,7 +12,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: lambert87
+    second: {fileID: 2100000, guid: ec6d1abf8493ae348bf39ec273be0c44, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: trans2
+    second: {fileID: 2100000, guid: 9a5fcfe9d11dd6e41bab45b2956e6bcf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: trans8
     second: {fileID: 2100000, guid: 9a5fcfe9d11dd6e41bab45b2956e6bcf, type: 2}
   materials:
     materialImportMode: 2
@@ -98,7 +108,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

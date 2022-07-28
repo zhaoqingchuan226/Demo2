@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: F6
+    second: {fileID: 2100000, guid: 7f883364e31ed1046a7029434856bbb8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Flower8
     second: {fileID: 2100000, guid: f345b6362a2e19c4a9656ce6e4c973f1, type: 2}
   - first:
@@ -27,7 +32,22 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Flower_2_3
+    second: {fileID: 2100000, guid: 2009c492953744149b81637d9c75cc3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Flower_2_4
+    second: {fileID: 2100000, guid: 6e0d91f7a8df4be4bb5f07833520bfa8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: lambert13
+    second: {fileID: 2100000, guid: 6fc67bb737a59f147a54b40ac613661d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert93
     second: {fileID: 2100000, guid: 6fc67bb737a59f147a54b40ac613661d, type: 2}
   - first:
       type: UnityEngine:Material
@@ -37,12 +57,27 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: pasted__pasted__Flower_5
+    second: {fileID: 2100000, guid: 88d8e4cf2eeee904eae1989a50a220c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sand_clock12
+    second: {fileID: 2100000, guid: 77daba0f75eb1524ca2ffec486918fa9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: sand_clock3
     second: {fileID: 2100000, guid: a5d40a31268b56f469bcafc6f60c4138, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: trans
+    second: {fileID: 2100000, guid: 0c0c93576bf12334bb4a2ea8257c62f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: trans11
     second: {fileID: 2100000, guid: 0c0c93576bf12334bb4a2ea8257c62f8, type: 2}
   materials:
     materialImportMode: 2
@@ -128,7 +163,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

@@ -75,8 +75,8 @@ public class Plot
                 {
                     // if (card.finalTitle.Contains("加班"))
                     // {
-                    c = true;
-                    break;
+                        c = true;
+                        break;
                     // }
                 }
                 if (c)//认识了NPC

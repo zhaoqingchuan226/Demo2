@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: blue2
+    second: {fileID: 2100000, guid: b3a9f402bd068034bbcf6e1293af0c07, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: lambert1
     second: {fileID: 2100000, guid: efe42fb9feb341b44b2e8c28c05cdc84, type: 2}
   - first:
@@ -27,12 +32,32 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: lambert59
+    second: {fileID: 2100000, guid: 6fc67bb737a59f147a54b40ac613661d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert60
+    second: {fileID: 2100000, guid: efe42fb9feb341b44b2e8c28c05cdc84, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: red
     second: {fileID: 2100000, guid: 353adf91e3c5fa44ab6538c2514efb89, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: red2
+    second: {fileID: 2100000, guid: 353adf91e3c5fa44ab6538c2514efb89, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: trans
+    second: {fileID: 2100000, guid: 0c0c93576bf12334bb4a2ea8257c62f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: trans2
     second: {fileID: 2100000, guid: 0c0c93576bf12334bb4a2ea8257c62f8, type: 2}
   materials:
     materialImportMode: 2
@@ -118,7 +143,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

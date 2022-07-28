@@ -8,15 +8,14 @@ using TMPro;
 public class CardDisplayPersonalGameAni : MonoBehaviour
 {
     public int CardID;
-    public TextMeshPro titleText;
+    // public TextMeshPro titleText;
     public Material[] mats;
     // public TextMeshProUGUI TimeText;
     // public TextMeshProUGUI descriptionText;
 
     // public Image BackgourndImage;
     // public Image QualityImage;
-    public GameObject quality;
-    public GameObject action;
+    public float scaleSize = 1f;
 
     public Card card;
 
@@ -26,8 +25,8 @@ public class CardDisplayPersonalGameAni : MonoBehaviour
     public GameObject sphereCenterPos;//球心位置
     [HideInInspector] public GameObject currentAdditive;
 
-    public Transform flowerPos;
-    [HideInInspector] public GameObject currentFlower;
+    // public Transform flowerPos;
+    // [HideInInspector] public GameObject currentFlower;
     void Start()
     {
         card = CardStore.Instance.SearchCard(CardID);
@@ -37,87 +36,16 @@ public class CardDisplayPersonalGameAni : MonoBehaviour
 
     void ShowCard()//将Card中的数据赋予给UI
     {
-        JudgeTitle(card);//根据标点符号换行
-        JudgeFontSize(card);
-        JudgeActionColor(card.actionType);
-        JudgeQualityColor(card);
+        // JudgeTitle(card);//根据标点符号换行
+        // JudgeFontSize(card);
+
         JudgeAdditive(card);
-        JudgeFlower(card);
-    }
-    public void JudgeTitle(Card card1)
-    {
-        string s = card1.title;
-        if (s.Contains("："))
-        {
-            string[] ss = s.Split("：", System.StringSplitOptions.RemoveEmptyEntries);
-            s = ss[0] + "：" + "\r\n" + ss[1];
-        }
-        else if (s.Contains("."))
-        {
-            string[] ss = s.Split(".", System.StringSplitOptions.RemoveEmptyEntries);
-            s = ss[0] + "." + "\r\n" + ss[1];
-        }
-        titleText.text = s;
-        titleText.color = Color.white;
-    }
-    public void JudgeFontSize(Card card1)
-    {
-        char[] chars = card1.title.ToCharArray();
-        if (chars.Length < 4)
-        {
-            titleText.fontSize = 4f;
-        }
-        else if (chars.Length == 4)
-        {
-            titleText.fontSize = 2.6f;
-        }
-        else if (chars.Length >= 5)
-        {
-            titleText.fontSize = 2.4f;
-        }
-    }
-    public void JudgeActionColor(Card.ActionType at)
-    {
-        if (at == Card.ActionType.Dynamic)
-        {
-            action.GetComponent<MeshRenderer>().material = mats[0];
-        }
-        else if (at == Card.ActionType.Static)
-        {
-            action.GetComponent<MeshRenderer>().material = mats[1];
-        }
-        else
-        {
-            action.GetComponent<MeshRenderer>().material = mats[2];
-        }
+        // JudgeFlower(card);
     }
 
-    public void JudgeQualityColor(Card card1)
-    {
-        Color c;
-        switch (card1.qualityLevel)
-        {
-            case 1:
-                c = new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
-                break;
-            case 2:
-                c = new Color(175f / 255f, 239f / 255f, 96f / 255f, 1);
-                break;
-            case 3:
-                c = new Color(35f / 255f, 130f / 255f, 236f / 255f, 1);
-                break;
-            case 4:
-                c = new Color(179f / 255f, 33f / 255f, 180f / 255f, 1);
-                break;
-            case 5:
-                c = new Color(255f / 255f, 194f / 255f, 50f / 255f, 1);
-                break;
-            default:
-                c = Color.white;
-                break;
-        }
-        quality.GetComponent<MeshRenderer>().material.color = c;
-    }
+
+
+
 
     public IEnumerator Delay_JudgeAdditive(Card card1, float delayTime)
     {
@@ -134,6 +62,7 @@ public class CardDisplayPersonalGameAni : MonoBehaviour
         }
         GameObject additive = CardStore.Instance.SearchModel(card1.id);
         currentAdditive = Instantiate(additive, sphereCenterPos.transform);
+        currentAdditive.transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
         if (card1.id > 10000)
         {
             MeshRenderer[] mrs = currentAdditive.GetComponentsInChildren<MeshRenderer>();
@@ -145,18 +74,7 @@ public class CardDisplayPersonalGameAni : MonoBehaviour
         StartCoroutine(Generate());
     }
 
-    public void JudgeFlower(Card card1)
-    {
-        if (currentFlower != null)
-        {
-            Destroy(currentFlower);
-            currentFlower = null;
-        }
-        GameObject Flower = CardStore.Instance.SearchFlower_Model(card1.type);
-        currentFlower = Instantiate(Flower, flowerPos);
 
-        // StartCoroutine(Generate());
-    }
     IEnumerator Generate()
     {
         while (true)
@@ -165,11 +83,11 @@ public class CardDisplayPersonalGameAni : MonoBehaviour
             if (timer > generateTime)
             {
                 timer = 0;
-                currentAdditive.transform.localScale = Vector3.one;
+                currentAdditive.transform.localScale = Vector3.one*scaleSize;
                 yield break;
             }
             float factor = anic.Evaluate(timer / generateTime);
-            currentAdditive.transform.localScale = new Vector3(factor, factor, factor);
+            currentAdditive.transform.localScale = new Vector3(factor, factor, factor)*scaleSize;
             yield return null;
         }
     }

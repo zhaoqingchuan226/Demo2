@@ -160,7 +160,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         // Debug.Log(Vcam.name);
         GameObject quad = Vcam.transform.Find("Quad").gameObject;
-        Debug.Log(quad.transform.localPosition.z);
+        // Debug.Log(quad.transform.localPosition.z);
         quad.SetActive(true);
         Material mat = quad.GetComponent<MeshRenderer>().material;
         float timer_fade = 0;

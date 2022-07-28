@@ -183,10 +183,10 @@ public class SimpleEffect : MonoBehaviour
         {
             if (timer_Des > scaleTime)
             {
-                foreach (var Destory_FX in Destory_FXs)
-                {
-                    destory_FX_DestTrans_Dic[Destory_FX].GetComponentInParent<SimpleEffect>().tmp.color = color;
-                }
+                // foreach (var Destory_FX in Destory_FXs)
+                // {
+                //     destory_FX_DestTrans_Dic[Destory_FX].GetComponentInParent<SimpleEffect>().tmp.color = color;
+                // }
 
                 foreach (var Destory_FX1 in Destory_FXs)
                 {

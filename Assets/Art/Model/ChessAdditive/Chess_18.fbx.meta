@@ -12,12 +12,22 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: lambert61
+    second: {fileID: 2100000, guid: 66ebe3b390eb5244491e97278158ccab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: mouth
     second: {fileID: 2100000, guid: 60c987c7511927045ae28819ae1d801e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: piece
+    second: {fileID: 2100000, guid: ed2b484825fb620489a0b01d26e337f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: piece1
     second: {fileID: 2100000, guid: ed2b484825fb620489a0b01d26e337f8, type: 2}
   materials:
     materialImportMode: 2
@@ -103,7 +113,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

@@ -12,12 +12,27 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: lambert88
+    second: {fileID: 2100000, guid: c04ab8cf0af55ce4984cf0c18a714fc0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: pasted__lambert21
     second: {fileID: 2100000, guid: 0aac97083f7e873479ad56ae7aad71e4, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: pasted__lambert22
+    second: {fileID: 2100000, guid: b7e90b23c2d9a1d4fa84a38998799045, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__lambert31
+    second: {fileID: 2100000, guid: 0aac97083f7e873479ad56ae7aad71e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__lambert32
     second: {fileID: 2100000, guid: b7e90b23c2d9a1d4fa84a38998799045, type: 2}
   - first:
       type: UnityEngine:Material
@@ -108,7 +123,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

@@ -287,7 +287,6 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             {
                 FieldManager.Instance.FishPeopleAll++;
             }
-
         }
 
         if (AIMechanism.Instance.AIDatas.Count > 0)
@@ -309,6 +308,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         //初始化,去掉上一次操作的残留
         foreach (var cardPersonalGame in cardPersonalGamePrefabs)
         {
+            cardPersonalGame.GetComponent<CardDisplayPersonalGame>().MatRet();
             Destroy(cardPersonalGame);
         }
         cardPersonalGamePrefabs.Clear();
@@ -414,7 +414,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             }
             else if (phase == Phase.Story)
             {
-                playState=PlayState.Story;
+                playState = PlayState.Story;
                 StoryManager.Instance.StartPlot();
             }
             else if (phase == Phase.HolidayStore)

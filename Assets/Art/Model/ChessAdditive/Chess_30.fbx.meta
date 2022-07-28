@@ -12,12 +12,22 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: fish4
+    second: {fileID: 2100000, guid: 8fd5ed93f4265ee41841d722c3257c19, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: headset
     second: {fileID: 2100000, guid: 6013a3bc73e673a4f9e92c92c8500317, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: piece
+    second: {fileID: 2100000, guid: f45c6b756c47a704593dccebc65a98a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: piece2
     second: {fileID: 2100000, guid: f45c6b756c47a704593dccebc65a98a1, type: 2}
   materials:
     materialImportMode: 2
@@ -103,7 +113,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012999999
+    globalScale: 1.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

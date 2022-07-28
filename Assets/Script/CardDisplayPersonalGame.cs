@@ -28,11 +28,17 @@ public class CardDisplayPersonalGame : MonoBehaviour
 
     // public Transform flowerPos;
     // [HideInInspector] public GameObject currentFlower;
+
+    Material originActionMat;
+    // Material originQualityMat;
+
     void Start()
     {
         GameObject Chessbase = Mechanism.Instance.roots[card.posNum - 1].Find("Chessbase").gameObject;
         quality = Chessbase.transform.Find("QualityColor").gameObject;
+        // originQualityMat = quality.GetComponent<MeshRenderer>().material;
         action = Chessbase.transform.Find("ActionColor").gameObject;
+        originActionMat = action.GetComponent<MeshRenderer>().material;
         currentAdditive = null;
         ShowCard();
     }
@@ -45,6 +51,12 @@ public class CardDisplayPersonalGame : MonoBehaviour
         JudgeQualityColor(card);
         JudgeAdditive(card);
         // JudgeFlower(card);
+    }
+
+    public void MatRet()//每次点击开始的时候，重置下方的quality和action mat为默认
+    {
+        quality.GetComponent<MeshRenderer>().material.color = Color.black;
+        action.GetComponent<MeshRenderer>().material = originActionMat;
     }
     // public void JudgeTitle(Card card1)
     // {
