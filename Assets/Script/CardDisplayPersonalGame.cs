@@ -8,15 +8,15 @@ using TMPro;
 public class CardDisplayPersonalGame : MonoBehaviour
 {
 
-    public TextMeshPro titleText;
+    // public TextMeshPro titleText;
     public Material[] mats;
     // public TextMeshProUGUI TimeText;
     // public TextMeshProUGUI descriptionText;
 
     // public Image BackgourndImage;
     // public Image QualityImage;
-    public GameObject quality;
-    public GameObject action;
+    GameObject quality;
+    GameObject action;
 
     public Card card;
 
@@ -26,55 +26,58 @@ public class CardDisplayPersonalGame : MonoBehaviour
     public GameObject sphereCenterPos;//球心位置
     [HideInInspector] public GameObject currentAdditive;
 
-    public Transform flowerPos;
-    [HideInInspector] public GameObject currentFlower;
+    // public Transform flowerPos;
+    // [HideInInspector] public GameObject currentFlower;
     void Start()
     {
+        GameObject Chessbase = Mechanism.Instance.roots[card.posNum - 1].Find("Chessbase").gameObject;
+        quality = Chessbase.transform.Find("QualityColor").gameObject;
+        action = Chessbase.transform.Find("ActionColor").gameObject;
         currentAdditive = null;
         ShowCard();
     }
 
     void ShowCard()//将Card中的数据赋予给UI
     {
-        JudgeTitle(card);//根据标点符号换行
-        JudgeFontSize(card);
+        // JudgeTitle(card);//根据标点符号换行
+        // JudgeFontSize(card);
         JudgeActionColor(card.actionType);
         JudgeQualityColor(card);
         JudgeAdditive(card);
-        JudgeFlower(card);
+        // JudgeFlower(card);
     }
-    public void JudgeTitle(Card card1)
-    {
-        string s = card1.title;
-        if (s.Contains("："))
-        {
-            string[] ss = s.Split("：", System.StringSplitOptions.RemoveEmptyEntries);
-            s = ss[0] + "：" + "\r\n" + ss[1];
-        }
-        else if (s.Contains("."))
-        {
-            string[] ss = s.Split(".", System.StringSplitOptions.RemoveEmptyEntries);
-            s = ss[0] + "." + "\r\n" + ss[1];
-        }
-        titleText.text = s;
-        titleText.color = Color.white;
-    }
-    public void JudgeFontSize(Card card1)
-    {
-        char[] chars = card1.title.ToCharArray();
-        if (chars.Length < 4)
-        {
-            titleText.fontSize = 4f;
-        }
-        else if (chars.Length == 4)
-        {
-            titleText.fontSize = 2.6f;
-        }
-        else if (chars.Length >= 5)
-        {
-            titleText.fontSize = 2.4f;
-        }
-    }
+    // public void JudgeTitle(Card card1)
+    // {
+    //     string s = card1.title;
+    //     if (s.Contains("："))
+    //     {
+    //         string[] ss = s.Split("：", System.StringSplitOptions.RemoveEmptyEntries);
+    //         s = ss[0] + "：" + "\r\n" + ss[1];
+    //     }
+    //     else if (s.Contains("."))
+    //     {
+    //         string[] ss = s.Split(".", System.StringSplitOptions.RemoveEmptyEntries);
+    //         s = ss[0] + "." + "\r\n" + ss[1];
+    //     }
+    //     titleText.text = s;
+    //     titleText.color = Color.white;
+    // }
+    // public void JudgeFontSize(Card card1)
+    // {
+    //     char[] chars = card1.title.ToCharArray();
+    //     if (chars.Length < 4)
+    //     {
+    //         titleText.fontSize = 4f;
+    //     }
+    //     else if (chars.Length == 4)
+    //     {
+    //         titleText.fontSize = 2.6f;
+    //     }
+    //     else if (chars.Length >= 5)
+    //     {
+    //         titleText.fontSize = 2.4f;
+    //     }
+    // }
     public void JudgeActionColor(Card.ActionType at)
     {
         if (at == Card.ActionType.Dynamic)
@@ -144,18 +147,18 @@ public class CardDisplayPersonalGame : MonoBehaviour
         StartCoroutine(Generate());
     }
 
-    public void JudgeFlower(Card card1)
-    {
-        if (currentFlower != null)
-        {
-            Destroy(currentFlower);
-            currentFlower = null;
-        }
-        GameObject Flower = CardStore.Instance.SearchFlower_Model(card1.type);
-        currentFlower = Instantiate(Flower, flowerPos);
-   
-        // StartCoroutine(Generate());
-    }
+    // public void JudgeFlower(Card card1)
+    // {
+    //     if (currentFlower != null)
+    //     {
+    //         Destroy(currentFlower);
+    //         currentFlower = null;
+    //     }
+    //     GameObject Flower = CardStore.Instance.SearchFlower_Model(card1.type);
+    //     currentFlower = Instantiate(Flower, flowerPos);
+
+    //     // StartCoroutine(Generate());
+    // }
     IEnumerator Generate()
     {
         while (true)

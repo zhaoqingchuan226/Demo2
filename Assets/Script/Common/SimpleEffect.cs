@@ -20,11 +20,11 @@ public class SimpleEffect : MonoBehaviour
     public float scaleSize = 1.3f;
     public float scaleTime = 0.75f;
     Vector3 originLocalScale;
-    [HideInInspector] public Color originMatColor;
+   
     [HideInInspector] public TextMeshPro tmp;
     TextMeshProUGUI tmp_UI;
-    Color originTmpColor;
-    [HideInInspector] public Material mat;
+    // Color originTmpColor;
+
     [HideInInspector] public bool isBebuffed = false;
     [HideInInspector] public bool isBuff = false;
     [HideInInspector] public bool isDes = false;
@@ -80,8 +80,8 @@ public class SimpleEffect : MonoBehaviour
         // }
         // else
         // {
-        mat = GetComponent<MeshRenderer>().material;
-        originMatColor = mat.color;
+       
+     
         // }
 
 
@@ -91,7 +91,7 @@ public class SimpleEffect : MonoBehaviour
         // }
         // else
         // {
-        originTmpColor = tmp.color;
+        // originTmpColor = tmp.color;
         // }
 
 
@@ -141,7 +141,7 @@ public class SimpleEffect : MonoBehaviour
                 // }
                 // else
                 // {
-                mat.color = originMatColor;
+              
                 if (L != null)
                 {
                     L.SetActive(false);
@@ -171,7 +171,7 @@ public class SimpleEffect : MonoBehaviour
             {
                 L.SetActive(true);
             }
-            mat.color = Color.Lerp(originMatColor, buffColor, lerpFactor);
+         
             // }
 
             yield return null;
@@ -255,7 +255,7 @@ public class SimpleEffect : MonoBehaviour
             isTD = true;
             timer_TD += Time.deltaTime;
             float lerpFactor = timer_TD / scaleTime;
-            this.tmp.color = Color.Lerp(originTmpColor, Color.yellow, lerpFactor);
+            // this.tmp.color = Color.Lerp(originTmpColor, Color.yellow, lerpFactor);
             yield return null;
         }
     }

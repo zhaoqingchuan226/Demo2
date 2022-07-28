@@ -1003,7 +1003,7 @@ public partial class Card
             {
                 case "K":
                     n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.2f);
-                 
+
                     break;
                 default: break;
             }
@@ -1014,7 +1014,7 @@ public partial class Card
             {
                 case "P":
                     n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
-         
+
                     break;
                 case "S":
                     n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
@@ -1023,7 +1023,7 @@ public partial class Card
             }
 
         }
-       
+
         return n;
     }
 
@@ -1674,15 +1674,15 @@ public partial class Card
                 int level = Mathf.Min(allCard.qualityLevel + 1, 5);
                 Card newCard = new Card(CardStore.Instance.RandomCard(level, true));
                 CardDisplayPersonalGame cpg = allCardGameobject.GetComponent<CardDisplayPersonalGame>();
-                cpg.JudgeTitle(newCard);
-                cpg.JudgeFontSize(newCard);//
+                // cpg.JudgeTitle(newCard);
+                // cpg.JudgeFontSize(newCard);//
                 cpg.JudgeActionColor(newCard.actionType);//改颜色
                 cpg.JudgeQualityColor(newCard);
                 cpg.StartCoroutine(cpg.Delay_JudgeAdditive(newCard, Time.deltaTime * i * 3));
-                cpg.JudgeFlower(newCard);
+                // cpg.JudgeFlower(newCard);
                 //万一被改变的卡牌需要用到buff函数来改变自身的颜色，注意，原来的se.originMatColor 是原卡牌的颜色，需要改为现卡牌的颜色
                 SimpleEffect se = allCardGameobject.GetComponent<SimpleEffect>();
-                se.originMatColor = se.mat.color;
+                // se.originMatColor = se.mat.color;
 
                 PlayerData.Instance.playerCards.Add(newCard);
                 PlayerData.Instance.SortCards();
