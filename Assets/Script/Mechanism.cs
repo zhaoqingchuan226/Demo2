@@ -1711,7 +1711,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         else if (PlayerData.Instance.KPI < KPINeed_EveryMonth)
         {
-            Debug.Log("<");
+     
             KPILifeReduceSign(false);
         }
 
@@ -1938,7 +1938,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     void UpdateKPINeedEveryMonth()
     {
         int KPI_Last = Mechanism.Instance.KPIAverage;//上个月最后一周的平均水平
-        Debug.Log("KPI_Last" + KPI_Last);
+    
 
         if (week <= 1 + 2 * 4)//前二个月，疯涨
         {//1.4 2
