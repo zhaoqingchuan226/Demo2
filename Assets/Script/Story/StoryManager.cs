@@ -112,10 +112,13 @@ public class StoryManager : MonoSingleton<StoryManager>
         LoadStoryDataFromCSV();
 
         isPlotProcessing = false;
-        foreach (var NPC_GameObj in NPC_GameObjs)
-        {
-            NPC_GameObj.SetActive(false);
-        }
+        // foreach (var NPC_GameObj in NPC_GameObjs)
+        // {
+        //     NPC_GameObj.SetActive(false);
+        // }
+
+
+   
     }
     void Start()
     {
@@ -128,6 +131,9 @@ public class StoryManager : MonoSingleton<StoryManager>
         // {
         //     Debug.Log(plot.id);
         // }
+             //开局坐好
+        SetPlayableAsset("StartSit");
+        pd.Play();
     }
 
     public void O_NPC(string NPCName)//signal用//其实输入的不是NPC的名字，而是预制体名称

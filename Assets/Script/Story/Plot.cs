@@ -73,11 +73,11 @@ public class Plot
                 //检测是否有加班
                 foreach (var card in Mechanism.Instance.cardList)
                 {
-                    // if (card.finalTitle.Contains("加班"))
-                    // {
+                    if (card.finalTitle.Contains("加班"))
+                    {
                         c = true;
                         break;
-                    // }
+                    }
                 }
                 if (c)//认识了NPC
                 {
