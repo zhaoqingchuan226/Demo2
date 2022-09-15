@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2133035497382186927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2133035497382186925}
+  - component: {fileID: 2133035497382186926}
+  - component: {fileID: 9212876950338044613}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2133035497382186925
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133035497382186927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 933.9171, y: 678.1703, z: 24.394096}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2133035497382186926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133035497382186927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386d8ee26e6b3d14aa6c08b3a62a3a2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardStore: {fileID: 9212876950338044613}
+  playerMoney: 0
+  playerCards: 
+  playerDataCSV: {fileID: 4900000, guid: d899955801fe13945a0f1b155ac7f8de, type: 3}
+  Date: "\u7B2C\u4E00\u5468"
+  Name: "\u738B\u5927\u5B9D"
+  physicalHealth: 10
+  spiritualHealth: 10
+  workAbility: 10
+  KPI: 0
+  ranking: 1
+  interpersonalRelationship:
+    colleague1: 100
+    colleague2: 100
+    colleague3: 100
+    colleague4: 100
+    leader: 100
+    Boss: 100
+--- !u!114 &9212876950338044613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133035497382186927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df72adbcf3986ef42876e4ca07c39eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardData: {fileID: 4900000, guid: 311f5df81538bed4db3e2346fa439a79, type: 3}

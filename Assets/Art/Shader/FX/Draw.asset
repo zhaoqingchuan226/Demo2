@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Draw
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity
+    Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=18935\n228;271.2;1280;1289.8;929.7373;243.569;1;True;False\nNode;AmplifyShaderEditor.TexturePropertyNode;21;323.465,1135.156;Inherit;True;Global;_Hatch3;_Hatch3;1;0;Create;True;0;0;0;False;0;False;None;8cc57c26b70fe48169162a1fca10593f;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;31;1696.02,482.1899;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;5;13.61505,65.37902;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;7;False;1;FLOAT;0\nNode;AmplifyShaderEditor.TriplanarNode;53;804.8503,1674.907;Inherit;True;Spherical;World;False;Top
+    Texture 5;_TopTexture5;white;-1;None;Mid Texture 5;_MidTexture5;white;-1;None;Bot
+    Texture 5;_BotTexture5;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.CustomExpressionNode;6;92.87556,-178.1343;Inherit;False;fixed3
+    hatchWeights0 = fixed3(0, 0, 0)@$\t\t\t\t$fixed3 hatchWeights1 = fixed3(0, 0,
+    0)@$\t\t\t$if (hatchFactor > 6.0)$ {$} $else if (hatchFactor > 5.0)$ {$hatchWeights0.x
+    = hatchFactor - 5.0@$} $else if (hatchFactor > 4.0) {$\t\t\t\thatchWeights0.x
+    = hatchFactor - 4.0@$hatchWeights0.y = 1.0 - hatchWeights0.x@$} else if (hatchFactor
+    > 3.0)$ {$hatchWeights0.y = hatchFactor - 3.0@$hatchWeights0.z = 1.0 - hatchWeights0.y@$}
+    $else if (hatchFactor > 2.0)$ {$\t\t\thatchWeights0.z = hatchFactor - 2.0@$\t\t\t\t$}
+    $$return hatchWeights0@;3;Create;1;True;hatchFactor;FLOAT;0;In;;Inherit;False;My
+    Custom Expression;True;False;0;;False;1;0;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;11;721.0305,-121.0535;Inherit;False;hatchWeights0;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.TriplanarNode;49;795.3306,708.1373;Inherit;True;Spherical;World;False;Top
+    Texture 1;_TopTexture1;white;-1;None;Mid Texture 1;_MidTexture1;white;-1;None;Bot
+    Texture 1;_BotTexture1;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.TexturePropertyNode;15;303.516,1642.93;Inherit;True;Global;_Hatch5;_Hatch5;4;0;Create;True;0;0;0;False;0;False;None;db782b9e683fe42d894d4e8482fdb17d;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.RangedFloatNode;42;-193.2011,1060.608;Inherit;False;Constant;_Float0;Float
+    0;6;0;Create;True;0;0;0;False;0;False;12;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;13;1780.376,332.6312;Inherit;False;Constant;_Float4;Float
+    4;16;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;30;1709.779,891.2889;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;16;1246.26,1039.367;Inherit;False;10;hatchWeights1;1;0;OBJECT;;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;32;1725.494,1415.539;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.BreakToComponentsNode;17;1511.79,423.8772;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15\nNode;AmplifyShaderEditor.TriplanarNode;46;783.7983,432.0981;Inherit;True;Spherical;World;False;Top
+    Texture 0;_TopTexture0;white;-1;None;Mid Texture 0;_MidTexture0;white;-1;None;Bot
+    Texture 0;_BotTexture0;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SaturateNode;38;2669.822,897.9066;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.TexturePropertyNode;23;327.953,902.5441;Inherit;True;Global;_Hatch2;_Hatch2;5;0;Create;True;0;0;0;False;0;False;None;b76eea5b4cd334934bdfbc8f5c3b18cf;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.TriplanarNode;52;810.8181,1402.624;Inherit;True;Spherical;World;False;Top
+    Texture 4;_TopTexture4;white;-1;None;Mid Texture 4;_MidTexture4;white;-1;None;Bot
+    Texture 4;_BotTexture4;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.TexturePropertyNode;18;314.5256,435.1974;Inherit;True;Global;_Hatch0;_Hatch0;0;0;Create;True;0;0;0;False;0;False;None;cec7935972aff4e36929bf649c13aecc;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.TriplanarNode;51;818.3641,1180.697;Inherit;True;Spherical;World;False;Top
+    Texture 3;_TopTexture3;white;-1;None;Mid Texture 3;_MidTexture3;white;-1;None;Bot
+    Texture 3;_BotTexture3;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.BreakToComponentsNode;19;1453.117,1054.798;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15\nNode;AmplifyShaderEditor.WorldSpaceLightDirHlpNode;1;-897.7227,-179.1213;Inherit;False;False;1;0;FLOAT;0;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.TexturePropertyNode;22;321.9941,1379.131;Inherit;True;Global;_Hatch4;_Hatch4;2;0;Create;True;0;0;0;False;0;False;None;8dd74c1ceae694a7b8b23b908acefcd8;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.TriplanarNode;50;807.9853,929.2437;Inherit;True;Spherical;World;False;Top
+    Texture 2;_TopTexture2;white;-1;None;Mid Texture 2;_MidTexture2;white;-1;None;Bot
+    Texture 2;_BotTexture2;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.VertexToFragmentNode;9;399.7182,166.026;Inherit;False;False;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;33;1682.378,729.4362;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.TexturePropertyNode;20;318.5995,673.4809;Inherit;True;Global;_Hatch1;_Hatch1;3;0;Create;True;0;0;0;False;0;False;None;a52d08fa5f43c40648bbd8a6402c8256;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.PosVertexDataNode;47;-205.2759,1227.003;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SimpleAddOpNode;37;2435.384,742.8522;Inherit;False;7;7;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;35;1704.874,1593.626;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SaturateNode;45;-169.2079,273.7813;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.DotProductOpNode;3;-611.1033,-160.6996;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.LightAttenuation;44;-603.9065,-308.8391;Inherit;False;0;1;FLOAT;0\nNode;AmplifyShaderEditor.ScaleAndOffsetNode;40;-262.4236,-16.17512;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0.5;False;2;FLOAT;0.5;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;12;1209.229,301.7903;Inherit;False;11;hatchWeights0;1;0;OBJECT;;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;48;108.1728,1202.052;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.VertexToFragmentNode;8;439.532,-150.3266;Inherit;False;False;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;34;1717.995,1224.329;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;43;-357.9054,-183.7595;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;7;206.0064,175.6736;Inherit;False;fixed3
+    hatchWeights0 = fixed3(0, 0, 0)@$\t\t\t\t$fixed3 hatchWeights1 = fixed3(0, 0,
+    0)@$\t\t\t$$$ if (hatchFactor > 2.0)$ {$\t\t\thatchWeights0.z = hatchFactor -
+    2.0@$\t\t\t\thatchWeights1.x = 1.0 - hatchWeights0.z@$} $else if (hatchFactor
+    > 1.0) {$\t\t\t$hatchWeights1.x = hatchFactor -1.0@$\t\t\t\thatchWeights1.y =
+    1.0 -hatchWeights1.x@$} $else {$\t\t\t\thatchWeights1.y = hatchFactor@$hatchWeights1.z
+    = 1.0 - hatchWeights1.y@$}$return hatchWeights1@;3;Create;1;True;hatchFactor;FLOAT;0;In;;Inherit;False;My
+    Custom Expression;True;False;0;;False;1;0;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;10;706.9895,174.5941;Inherit;False;hatchWeights1;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.SimpleSubtractOpNode;14;2017.543,367.6233;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.WorldNormalVector;2;-882.7518,-8.509354;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.SimpleAddOpNode;26;1949.004,564.2473;Inherit;False;6;6;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;0;2743.941,747.6609;Inherit;False;True;-1;Output;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;31;0;17;0\nWireConnection;31;1;46;1\nWireConnection;5;0;45;0\nWireConnection;53;0;15;0\nWireConnection;53;9;48;0\nWireConnection;6;0;5;0\nWireConnection;11;0;8;0\nWireConnection;49;0;20;0\nWireConnection;49;9;48;0\nWireConnection;30;0;17;2\nWireConnection;30;1;50;1\nWireConnection;32;0;19;1\nWireConnection;32;1;52;1\nWireConnection;17;0;12;0\nWireConnection;46;0;18;0\nWireConnection;46;9;48;0\nWireConnection;38;0;37;0\nWireConnection;52;0;22;0\nWireConnection;52;9;48;0\nWireConnection;51;0;21;0\nWireConnection;51;9;48;0\nWireConnection;19;0;16;0\nWireConnection;50;0;23;0\nWireConnection;50;9;48;0\nWireConnection;9;0;7;0\nWireConnection;33;0;17;1\nWireConnection;33;1;49;1\nWireConnection;37;0;14;0\nWireConnection;37;1;31;0\nWireConnection;37;2;33;0\nWireConnection;37;3;30;0\nWireConnection;37;4;34;0\nWireConnection;37;5;32;0\nWireConnection;37;6;35;0\nWireConnection;35;0;19;2\nWireConnection;35;1;53;1\nWireConnection;45;0;40;0\nWireConnection;3;0;1;0\nWireConnection;3;1;2;0\nWireConnection;40;0;3;0\nWireConnection;48;0;42;0\nWireConnection;48;1;47;0\nWireConnection;8;0;6;0\nWireConnection;34;0;19;0\nWireConnection;34;1;51;1\nWireConnection;43;0;3;0\nWireConnection;43;1;44;0\nWireConnection;7;0;5;0\nWireConnection;10;0;9;0\nWireConnection;14;0;13;0\nWireConnection;14;1;26;0\nWireConnection;26;0;17;0\nWireConnection;26;1;17;1\nWireConnection;26;2;17;2\nWireConnection;26;3;19;0\nWireConnection;26;4;19;1\nWireConnection;26;5;19;2\nWireConnection;0;0;38;0\nASEEND*/\n//CHKSM=D2A3F58F2EC7913A3B42E2BEE1838C2E0B309F3C"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 
