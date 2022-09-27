@@ -305,6 +305,7 @@ public class SimpleEffect : MonoBehaviour
         {
             if (timer_Bounce > bounceTime)
             {
+                AudioManager.Instance.PlayClip("fall0");
                 StartCoroutine(Bounce());
                 timer_Bounce = 0;
                 yield break;

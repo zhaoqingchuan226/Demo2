@@ -20,6 +20,7 @@ public class HolidayStoreCard : MonoBehaviour, IPointerClickHandler
         if (!isSell && PlayerData.Instance.playerMoney >= price)
         {
             LACControl.Instance.ReduceCoin(price);
+            AudioManager.Instance.PlayClip("Ding");
             isSell = true;
             SendCardToPlayerData();
             haveSold.SetActive(true);
@@ -27,7 +28,7 @@ public class HolidayStoreCard : MonoBehaviour, IPointerClickHandler
             priceText.text = "已出售";
             priceText.color = Color.red;
         }
-        else if (PlayerData.Instance.playerMoney < price&&!isSell)
+        else if (PlayerData.Instance.playerMoney < price && !isSell)
         {
             Mechanism.Instance.SignAll_Update("你没有财富啊没有财富");
         }

@@ -31,7 +31,7 @@ public class DesktopDecoration
         id = dd.id;
         title = dd.title;
         qualityLevel = dd.qualityLevel;
-        maxCount=dd.maxCount;
+        maxCount = dd.maxCount;
         description = dd.description;
         funDes = dd.funDes;
     }
@@ -44,8 +44,14 @@ public class DesktopDecoration
             case 1://招魂仪，数值在Card FieldBuffValue()中改
                 FieldManager.Instance.isUnDeath = true;
                 break;
-            case 2://招魂仪，数值在 Mechanism //锁血 下
+            case 2://提神发夹
                 FieldManager.Instance.isOverload = true;
+                break;
+            case 3://血色蔷薇 白天的精力消耗降低，晚上kpi提升
+                FieldManager.Instance.isFlower_Overload = true;
+                break;
+            case 4://禁忌书 月末给牌
+                FieldManager.Instance.isBook_Cthugha = true;
                 break;
             default:
                 break;

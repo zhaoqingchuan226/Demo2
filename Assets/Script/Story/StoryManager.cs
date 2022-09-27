@@ -10,6 +10,9 @@ using SWS;
 //剧情时期
 public enum Period
 {
+    日常0,
+    空白前,
+    空白后,
     日常1,
     宣发前,
     // 宣发中,
@@ -41,7 +44,7 @@ public enum PlotPhase
     aside_End,
 }
 
-public class StoryManager : MonoSingleton<StoryManager>
+public partial class StoryManager : MonoSingleton<StoryManager>
 {
     //传入的UI对象
     public GameObject StoryAll;
@@ -56,7 +59,7 @@ public class StoryManager : MonoSingleton<StoryManager>
 
 
 
-    public Period period = Period.日常1;
+    public Period period = Period.日常0;
     // public int week = 1;
     public int periodDays = 4;//四周为一个周期
     public float asideTime = 2f;
@@ -78,6 +81,7 @@ public class StoryManager : MonoSingleton<StoryManager>
     public List<GameObject> NPC_GameObjs = new List<GameObject>();
     public GameObject RewardPanel;
     public TextMeshProUGUI RewardText;
+    public GameObject SnakeAll;
 
     //开场动画
     [Space]
@@ -127,8 +131,12 @@ public class StoryManager : MonoSingleton<StoryManager>
         //     NPC_GameObj.SetActive(false);
         // }
 
+        foreach (var smsm in sms)
+        {
+            Mats_Origin_Overload.Add(smsm.material);
+        }
 
-
+        originColor_light_Player = light_Player.color;
     }
     float timer_sit = 0f;
     void Start()
@@ -142,10 +150,21 @@ public class StoryManager : MonoSingleton<StoryManager>
                                    // {
                                    //     Debug.Log(plot.id);
                                    // }
-                                   //开局坐好
+
+
+
+        //开局设置默认的坐姿
         SetPlayableAsset("StartSit");
         pd.Play();
-        StartCoroutine(Sit());
+        // StartCoroutine(Sit());
+
+        //打开神秘人，关闭所有npc的gameobj
+
+        foreach (var NPC_GameObj in NPC_GameObjs)
+        {
+            NPC_GameObj.SetActive(false);
+        }
+        sm.gameObject.SetActive(true);
     }
     IEnumerator Sit()
     {
@@ -199,6 +218,10 @@ public class StoryManager : MonoSingleton<StoryManager>
                     Mechanism.Instance.chessBoard.SetActive(false);
                     LACControl.Instance.O_C_AllMeshes(false);
                     AIMechanism.Instance.O_C_AllAIModel(false);
+                    SnakeAll.SetActive(false);
+                    //打开此段剧情需要用到的物品
+                    O_C_SpecialObj(true);
+                    ChangeLightAndParticle(true);
                 }
                 else
                 {
@@ -207,6 +230,9 @@ public class StoryManager : MonoSingleton<StoryManager>
                     Mechanism.Instance.chessBoard.SetActive(true);
                     LACControl.Instance.O_C_AllMeshes(true);
                     AIMechanism.Instance.O_C_AllAIModel(true);
+                    SnakeAll.SetActive(true);
+                    O_C_SpecialObj(false);
+                    ChangeLightAndParticle(false);
                 }
 
             }
@@ -221,16 +247,22 @@ public class StoryManager : MonoSingleton<StoryManager>
 
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.K))
-        // {
-        //     SetPlayableAsset("KPIKill");
-        //     pd.Play();
-        // }
-        // else if(Input.GetKeyDown(KeyCode.L))
-        // {
-        //     SetPlayableAsset("HealthKill");
-        //     pd.Play();
-        // }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            // SetPlayableAsset("KPIKill");
+            // pd.Play();
+            Card card = CardStore.Instance.RandomForbidenCard();
+            card.isNew = true;
+            // InstantiateEffect(this, kidCard, interval * i);
+            PlayerData.Instance.playerCards.Add(card);
+            PlayerData.Instance.SortCards();
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            // // SetPlayableAsset("HealthKill");
+            // // pd.Play();
+            // O_C_NightMode(false);
+        }
 
 
         input = Input.GetMouseButtonDown(0);
@@ -580,6 +612,14 @@ public class StoryManager : MonoSingleton<StoryManager>
             case "提神发夹":
                 s = AutoDDReward(bpNow.reward);
                 SendDDtoPlaterData(2);
+                break;
+            case "血色蔷薇":
+                s = AutoDDReward(bpNow.reward);
+                SendDDtoPlaterData(3);
+                break;
+            case "禁忌书":
+                s = AutoDDReward(bpNow.reward);
+                SendDDtoPlaterData(4);
                 break;
             default:
                 break;

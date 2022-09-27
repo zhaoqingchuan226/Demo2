@@ -79,7 +79,7 @@ public class Plot
                         break;
                     }
                 }
-                c=true;//这个是debug用的，记得删除
+                // c = true;//这个是debug用的，记得删除
                 if (c)//认识了NPC
                 {
                     foreach (var NPC in StoryManager.Instance.NPCs)
@@ -120,6 +120,15 @@ public class Plot
                     b = false;
                 }
 
+            }
+            else if (condi.Contains("Probability"))
+            {
+                string[] elements = condi.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
+                float r = Random.Range(0, 1f);
+                if (float.Parse(elements[1]) < r)//如果时期对上了
+                {
+                    b = false;
+                }
             }
         }
 

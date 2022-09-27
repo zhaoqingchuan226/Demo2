@@ -1945,6 +1945,15 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         //玩家和AI、KPI清零
         if (week % 4 == 0)
         {
+            //禁忌书送牌
+            if (FieldManager.Instance.isBook_Cthugha)
+            {
+                Card card = CardStore.Instance.RandomForbidenCard();
+                card.isNew = true;
+                // InstantiateEffect(this, kidCard, interval * i);
+                PlayerData.Instance.playerCards.Add(card);
+                PlayerData.Instance.SortCards();
+            }
 
             //发工资了
             int salary = Mathf.Min(PlayerData.Instance.KPI * 10, PlayerData.Instance.postLevel * 10000);

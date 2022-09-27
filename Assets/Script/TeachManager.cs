@@ -81,6 +81,7 @@ public class TeachManager : MonoSingleton<TeachManager>
             /*OK*/
             case "它的介绍":
                 //黑夜怒吼音效播放
+                AudioManager.Instance.PlayClip("Monster_growl_1");
                 AddWord("还有在黑暗里垂涎欲滴的它");
                 AddWord("还有我心里乱撞的小鹿", "M");
                 AddWord("哦别当真，我这就去烤了我的小鹿", "M");
@@ -99,7 +100,7 @@ public class TeachManager : MonoSingleton<TeachManager>
             case "绩效需求介绍":
                 AddWord("每个月，你得获得足够多的绩效");
                 AddWord("让拉奥孔先生的肚子大得能碰到按钮，才能获得新眼球");
-                AddWord("挺过十个月，我就放你们走");
+                AddWord("挺过十二个月，我就放你们走");
                 // SetGuide(KPINeed, true);
                 SetGuide(playe_K, true);
                 SetGuide(KPIButton, true);

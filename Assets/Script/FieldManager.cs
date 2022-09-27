@@ -74,6 +74,8 @@ public class FieldManager : MonoSingleton<FieldManager>
     [HideInInspector] public bool isUnDeath = false;//招魂仪的不死效果;
     [HideInInspector] public bool isOverload = false;//提神发夹的增加消耗，增加收益;
 
+    [HideInInspector] public bool isFlower_Overload = false;//血蔷薇，降低白天消耗，增加晚上收益;
+    [HideInInspector] public bool isBook_Cthugha = false;//禁忌书，月末给卡;
 
     //棋子台词区
     [HideInInspector] public Dictionary<int, List<cardDialog>> cardID_cardDialogs_Dic = new Dictionary<int, List<cardDialog>>();

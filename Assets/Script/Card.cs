@@ -243,14 +243,14 @@ public partial class Card
         else
         {
             Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this].GetComponent<CardDisplayPersonalGame>().FX();
-            if(this.executeQueue == 12)
+            if (this.executeQueue == 12)
             {
                 foreach (var AIData in AIDatas_Debuff)
                 {
                     AIMechanism.Instance.AI_Chas[AIData.AIid].Mini_BeDebuffed(this.id);
                     AIMechanism.Instance.Leader.Mini_BeDebuffed(this.id);
                 }
-               
+
             }
         }
     }
@@ -1029,8 +1029,11 @@ public partial class Card
             switch (pro)
             {
                 case "K":
-                    n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.2f);
-
+                    n = 1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.2f;
+                    if (FieldManager.Instance.isFlower_Overload && this.times.Contains("晚"))
+                    {
+                        n += 0.5f;
+                    }
                     break;
                 default: break;
             }
@@ -1040,17 +1043,21 @@ public partial class Card
             switch (pro)
             {
                 case "P":
-                    n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
+                    n = (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
 
                     break;
                 case "S":
-                    n *= (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
+                    n =  (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
+                    if (FieldManager.Instance.isFlower_Overload && !this.times.Contains("晚"))
+                    {
+                        n -= 0.2f;
+                    }
                     break;
                 default: break;
             }
 
         }
-
+        n = Mathf.Max(0, n);
         return n;
     }
 
@@ -1836,7 +1843,7 @@ public partial class Card
                     }
                     else
                     {
-                        kidCard=CardStore.Instance.cards[0];
+                        kidCard = CardStore.Instance.cards[0];
                     }
                 }
                 else

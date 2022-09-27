@@ -26,7 +26,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     private void Awake()
     {
         cb = Camera.main.GetComponent<CinemachineBrain>();
-        SetVirtualCam("MainCam");
+        SetVirtualCam("BlackCam");
     }
     void Start()
     {

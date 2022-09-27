@@ -64,24 +64,24 @@ public class LACControl : MonoSingleton<LACControl>
         }
     }
 
-    void Update()
-    {
-        // if (Input.GetKeyDown(KeyCode.V))
-        // {
-        //     StartCoroutine(Butt(1000));
-        // }
+    // void Update()
+    // {
+    //     // if (Input.GetKeyDown(KeyCode.V))
+    //     // {
+    //     //     StartCoroutine(Butt(1000));
+    //     // }
 
 
-        // if (Input.GetKeyDown(KeyCode.J))
-        // {
-        //     StartCoroutine(SetWeight(P, 30));
-        // }
-        // if (Input.GetKeyDown(KeyCode.K))
-        // {
-        //     StartCoroutine(SetWeight(P, -30));
-        // }
+    //     // if (Input.GetKeyDown(KeyCode.J))
+    //     // {
+    //     //     StartCoroutine(SetWeight(P, 30));
+    //     // }
+    //     // if (Input.GetKeyDown(KeyCode.K))
+    //     // {
+    //     //     StartCoroutine(SetWeight(P, -30));
+    //     // }
 
-    }
+    // }
 
 
     public IEnumerator SetWeight(string s, float deltaWeight, float timer = 0)
@@ -275,7 +275,7 @@ public class LACControl : MonoSingleton<LACControl>
 
     }
 
-    public IEnumerator Butt(int n)//屁股拉薪水
+    public IEnumerator Butt(int n, bool isAudio = true)//屁股拉薪水
     {
         float timer = 0;
         Animator a = this.GetComponent<Animator>();
@@ -293,7 +293,7 @@ public class LACControl : MonoSingleton<LACControl>
                 if (!isSalary)
                 {
                     isSalary = true;
-                    StartCoroutine(GenerateCoin(n));
+                    StartCoroutine(GenerateCoin(n, isAudio));
                 }
             }
             timer += Time.deltaTime;
@@ -303,10 +303,15 @@ public class LACControl : MonoSingleton<LACControl>
         }
     }
 
-    public IEnumerator GenerateCoin(int moneyAmount)
+    public IEnumerator GenerateCoin(int moneyAmount, bool isAudio = true)
     {
         float timer = 0;
         float interval = 0.1f;
+        if (isAudio)
+        {
+            AudioManager.Instance.PlayClip("Coin_drop");
+        }
+
         while (true)
         {
             timer += Time.deltaTime;
@@ -376,7 +381,7 @@ public class LACControl : MonoSingleton<LACControl>
                     else//找钱
                     {
                         DestroyCoins("silver", n + 1);
-                        StartCoroutine(GenerateCoin(5000 - r));
+                        StartCoroutine(GenerateCoin(5000 - r,false));
                     }
                 }
                 else//铜币加银币不够，那就先用金币支付，再找钱
@@ -390,7 +395,7 @@ public class LACControl : MonoSingleton<LACControl>
                     else//找钱
                     {
                         DestroyCoins("gold", n + 1);
-                        StartCoroutine(GenerateCoin(10000 - r));
+                        StartCoroutine(GenerateCoin(10000 - r,false));
                     }
                 }
             }

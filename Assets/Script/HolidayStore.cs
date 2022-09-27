@@ -35,14 +35,14 @@ public class HolidayStore : MonoSingleton<HolidayStore>
 
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.N))
-        // {
-        //     OpenStore();
-        // }
-        // if (Input.GetKeyDown(KeyCode.M))
-        // {
-        //     CloseStore();
-        // }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            OpenStore();
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            CloseStore();
+        }
         if (isOpen)
         {
 
@@ -175,6 +175,7 @@ public class HolidayStore : MonoSingleton<HolidayStore>
     {
         Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);//复原鼠标
         dialog_fish.SetDiaglog("啊！吃得好饱！");
+        AudioManager.Instance.PlayClip("Eat_chess");
     }
 
     public void FishRefuse()

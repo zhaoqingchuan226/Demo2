@@ -148,7 +148,7 @@ public class PlayerData : MonoSingleton<PlayerData>
             string[] elements = dataRow.Split(',');
             if (elements[0] == "money")
             {
-                LACControl.Instance.StartCoroutine(LACControl.Instance.GenerateCoin(int.Parse(elements[1])));
+                LACControl.Instance.StartCoroutine(LACControl.Instance.GenerateCoin(int.Parse(elements[1]),false));
             }
             else if (elements[0] == "card")
             {

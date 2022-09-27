@@ -15,68 +15,121 @@ public class DesktopDecorationDisplay : MonoBehaviour, IPointerDownHandler
     public DesktopDecoration dd;
     public GameObject infoPanel_Prefab;
     public GameObject infoPanel = null;
-    Transform infoPool;
+    // Transform infoPool;
+    [HideInInspector] public Dialog dialog;
     // public TextMeshProUGUI infoText;
     // bool isInfoOPen = false;
+    List<string> words = new List<string>();
+    int wordsCounter = 0;
 
     void Start()
     {
+
+        dialog = this.GetComponent<Dialog>();
         ShowDD();
-        infoPool = GameObject.Find("UI").transform.Find("----------Global-----------").Find("DDInformationPool");
+        AddWords();
+        // infoPool = GameObject.Find("UI").transform.Find("----------Global-----------").Find("DDInformationPool");
     }
-    void OnEnable()
+
+    void AddWords()
     {
-        // ShowCard();
+        switch (dd.id)
+        {
+            case 1:
+                words.Add("在你死亡时，我将会唤醒你，继续干活");
+                words.Add("如果只是透支一点点，我还是能救活你的");
+                words.Add("可别透支太多了，嘿嘿嘿");
+                break;
+            case 2:
+                words.Add("加班时别上一个发夹，打起精神来！");
+                words.Add("你将付出更多体力和精力，但是可以获得更多绩效！");
+                words.Add("同时还能提高颅顶线，增加脱单率！");
+                break;
+            case 3:
+                words.Add("白昼的精力需要节约");
+                words.Add("当夜幕降临，释放你的潜能");
+                words.Add("你的绩效将无人能敌！");
+                break;
+            case 4:
+                words.Add("禁忌！更多的禁忌！");
+                words.Add("每个月末，我会赋予你新的禁忌！");
+                words.Add("记得查看你的牌库哦，哦嘿嘿嘿");
+                break;
+            default:
+                break;
+        }
     }
+    // void OnEnable()
+    // {
+    //     // ShowCard();
+    // }
 
     void ShowDD()//将Card中的数据赋予给UI
     {
         if (dd != null)
         {
-            // if (model != null)
-            // {
-            //     Destroy(model);
-            //     model = null;
-            // }
             model = Instantiate(DesktopDecorationStore.Instance.SearchDD_Model(dd.id), this.transform);
             dd.GetDD();
         }
-
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-
-        ShowInfo();
+        Debug.Log(dd.title);
+        dialog.SetDiaglog(SpeakWords());
+        // ShowInfo();
     }
 
-    void ShowInfo()
+    void OnMouseEnter()
     {
-        if (infoPanel == null)
-        {
-
-            infoPanel = Instantiate(infoPanel_Prefab, infoPool);
-            infoPanel.transform.position = Camera.main.WorldToScreenPoint(this.transform.position);
-            infoPanel.GetComponentInChildren<TextMeshProUGUI>().text = AutoDDInfo();
-        }
-        else
-        {
-            infoPanel.SetActive(true);
-        }
+        Cursor.SetCursor(MouseControl.Instance.SearchTex, Vector2.zero, CursorMode.Auto);
+    }
+    void OnMouseExit()
+    {
+        Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
     }
 
-    string AutoDDInfo()
+    string SpeakWords()
     {
         string s = null;
-        if (dd != null)
+        if (words.Count > 0)
         {
-            s += "<size=25>" + dd.title + "：\r\n" + "</size>";
-            s += "\r\n";
-            s += dd.description;
-            s += "\r\n";
-            s += "\r\n";
-            s += "<color=#00F0FF>" + dd.funDes + "\r\n" + "</color>";
-            s += "\r\n";
+            s = words[wordsCounter];
+            wordsCounter++;
+            if (wordsCounter == words.Count)
+            {
+                wordsCounter = 0;
+            }
         }
         return s;
     }
+    // void ShowInfo()
+    // {
+    //     if (infoPanel == null)
+    //     {
+
+    //         infoPanel = Instantiate(infoPanel_Prefab, infoPool);
+    //         infoPanel.transform.position = Camera.main.WorldToScreenPoint(this.transform.position);
+    //         infoPanel.GetComponentInChildren<TextMeshProUGUI>().text = AutoDDInfo();
+    //     }
+    //     else
+    //     {
+    //         infoPanel.SetActive(true);
+    //     }
+    // }
+
+    // string AutoDDInfo()
+    // {
+    //     string s = null;
+    //     if (dd != null)
+    //     {
+    //         s += "<size=25>" + dd.title + "：\r\n" + "</size>";
+    //         s += "\r\n";
+    //         s += dd.description;
+    //         s += "\r\n";
+    //         s += "\r\n";
+    //         s += "<color=#00F0FF>" + dd.funDes + "\r\n" + "</color>";
+    //         s += "\r\n";
+    //     }
+    //     return s;
+    // }
 }

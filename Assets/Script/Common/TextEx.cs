@@ -10,13 +10,13 @@ public class TextEx : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     Vector3 originScale;
     public Color Entercolor;
     Color originColor;
-    TextMeshProUGUI text;
+    Image text;
     GameObject WhiteLine;
     Image whiteline;
     void Start()
     {
         originScale = transform.localScale;
-        text = gameObject.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
+        text = gameObject.transform.Find("Text").gameObject.GetComponent<Image>();
         WhiteLine = gameObject.transform.Find("whiteline").gameObject;
         whiteline = WhiteLine.GetComponent<Image>();
         WhiteLine.SetActive(false);

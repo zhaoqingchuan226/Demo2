@@ -17,6 +17,7 @@ public class SkullControl : MonoSingleton<SkullControl>
     {
         if (b && !isButtonPressed)
         {
+            AudioManager.Instance.PlayClip("button1");
             pressButton.transform.position -= pressButton.transform.up * 0.01f;
             isButtonPressed = true;
         }
@@ -55,23 +56,23 @@ public class SkullControl : MonoSingleton<SkullControl>
     //         DestroyEye(0);
     //     }
 
-    //     if (Input.GetKeyDown(KeyCode.N))
-    //     {
-    //         GenerateEyeBall(0);
-    //         // O_C_Button(true);
-    //     }
-    //     else if (Input.GetKeyDown(KeyCode.J))
-    //     {
-    //         EmitEye(0, 3);
-    //     }
-    //     else if (Input.GetKeyDown(KeyCode.K))
-    //     {
-    //         EmitEye(3, 1);
-    //     }
-    //     else if (Input.GetKeyDown(KeyCode.L))
-    //     {
-    //         EmitEye(1, 0);
-    //     }
+    //     // if (Input.GetKeyDown(KeyCode.N))
+    //     // {
+    //     //     GenerateEyeBall(0);
+    //     //     // O_C_Button(true);
+    //     // }
+    //     // else if (Input.GetKeyDown(KeyCode.J))
+    //     // {
+    //     //     EmitEye(0, 3);
+    //     // }
+    //     // else if (Input.GetKeyDown(KeyCode.K))
+    //     // {
+    //     //     EmitEye(3, 1);
+    //     // }
+    //     // else if (Input.GetKeyDown(KeyCode.L))
+    //     // {
+    //     //     EmitEye(1, 0);
+    //     // }
     // }
 
     //！！！生成眼球！！！
@@ -106,6 +107,7 @@ public class SkullControl : MonoSingleton<SkullControl>
     //发射眼球
     public void EmitEye(int a, int b)//a,b是eye_roots中的发射点和接受点的数字顺序
     {
+        AudioManager.Instance.PlayClip("Eye_shoot");
         //如果发射点有眼球且接受点无球
         if (eye_roots_GameObjs_Dic[eye_roots[a]] != null && eye_roots_GameObjs_Dic[eye_roots[b]] == null)
         {
@@ -161,6 +163,7 @@ public class SkullControl : MonoSingleton<SkullControl>
         GameObject g = eye_roots_GameObjs_Dic[eye_roots[n]];
         if (g != null)
         {
+            AudioManager.Instance.PlayClip("Eye_fire");
             Material mat = g.GetComponent<MeshRenderer>().material;
             mat.SetFloat("_clii", 1);
             StartCoroutine(Dissolve(mat, g, n));

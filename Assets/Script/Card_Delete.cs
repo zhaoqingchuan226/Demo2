@@ -12,7 +12,7 @@ public class Card_Delete : MonoBehaviour, IPointerClickHandler
             Card card = this.gameObject.GetComponent<CardDisplayPersonalGameLibrary>().card;
             if (PlayerData.Instance.playerCards.Contains(card))
             {
-                Debug.Log("Remove");
+    
                 PlayerData.Instance.playerCards.Remove(card);
 
                 // LibraryManager.Instance.UpdateLibrary();

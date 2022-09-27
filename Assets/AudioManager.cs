@@ -43,12 +43,18 @@ public class AudioManager : MonoSingleton<AudioManager>
         LoadAudio("TD0");
         LoadAudio("magic0");
         LoadAudio("fall0");
+        LoadAudio("Monster_growl_1");
+        LoadAudio("Coin_drop");
+        LoadAudio("Eye_fire");
+        LoadAudio("Eat_chess");
+        LoadAudio("Eye_shoot");
+        LoadAudio("Ding");
     }
 
-    void Update()
-    {
+    // void Update()
+    // {
 
-    }
+    // }
     public void QuickPlayClip(string clip)//给按钮用的
     {
         // audioSource_game.volume = volu;

@@ -57,6 +57,7 @@ public class CardStore : MonoSingleton<CardStore>
     public List<Card> cards_LV3 = new List<Card>();
     public List<Card> cards_LV4 = new List<Card>();
     public List<Card> cards_LV5 = new List<Card>();
+    [HideInInspector] public List<Card> cards_Forbiden = new List<Card>();//禁忌卡牌
 
     public List<GameObject> additives = new List<GameObject>();
     public List<Sprite> cardTextures = new List<Sprite>();
@@ -189,7 +190,10 @@ public class CardStore : MonoSingleton<CardStore>
                 {
                     Colourless_Cards.Add(card);
                 }
-
+                if (card.title.Contains("禁忌"))
+                {
+                    cards_Forbiden.Add(card);
+                }
 
 
             }
@@ -418,7 +422,7 @@ public class CardStore : MonoSingleton<CardStore>
         List<Card> cardsAll = new List<Card>();
         cardsAll.AddRange(cards);
         cardsAll.AddRange(Colourless_Cards);
-        Card c=new Card();
+        Card c = new Card();
         foreach (var card in cardsAll)
         {
             if (card.id == id)
@@ -433,6 +437,11 @@ public class CardStore : MonoSingleton<CardStore>
             c = cards[0];
         }
         return new Card(c);
+    }
+
+    public Card RandomForbidenCard()//禁忌书送的随机卡牌
+    {
+        return new Card(cards_Forbiden[Random.Range(0, cards_Forbiden.Count)]);
     }
 
 }

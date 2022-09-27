@@ -22,6 +22,7 @@ public class HolidayStoreProp : MonoBehaviour, IPointerClickHandler
         if (!isSell && PlayerData.Instance.playerMoney >= price)
         {
             LACControl.Instance.ReduceCoin(price);
+            AudioManager.Instance.PlayClip("Ding");
             isSell = true;
             pd.priceText.text = "已出售";
             pd.priceText.color = Color.red;

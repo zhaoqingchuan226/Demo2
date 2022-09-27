@@ -9,10 +9,14 @@ public class SpecificInfo : MonoBehaviour
 {
     bool isInfoOpen = false;
 
-
+    CardDisplayPersonalGameLibrary cp;
+    void Start()
+    {
+        cp = this.GetComponent<CardDisplayPersonalGameLibrary>();
+    }
     private void OnMouseDown()
     {
-        CardDisplayPersonalGameLibrary cp = this.GetComponent<CardDisplayPersonalGameLibrary>();
+
         if (!LibraryManager.Instance.isDeleteMode && cp.cardPG_Type == CardPG_Type.Libaray)
         {
             isInfoOpen = !isInfoOpen;
@@ -34,10 +38,17 @@ public class SpecificInfo : MonoBehaviour
     }
     void OnMouseEnter()
     {
-        Cursor.SetCursor(MouseControl.Instance.SearchTex, Vector2.zero, CursorMode.Auto);
+        if (cp.cardPG_Type == CardPG_Type.Libaray)
+        {
+            Cursor.SetCursor(MouseControl.Instance.SearchTex, Vector2.zero, CursorMode.Auto);
+        }
+
     }
     void OnMouseExit()
     {
-        Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
+        if (cp.cardPG_Type == CardPG_Type.Libaray)
+        {
+            Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
+        }
     }
 }

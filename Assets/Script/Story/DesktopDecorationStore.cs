@@ -20,7 +20,7 @@ public class DesktopDecorationStore : MonoSingleton<DesktopDecorationStore>
     public Transform originPos;
     public float widthAll = 0.6f;
     [Range(1, 20)]
-    int amountAll = 12;
+    int amountAll = 6;
     List<GameObject> dds_GameObject = new List<GameObject>();
     [HideInInspector] List<DesktopDecoration> dds = new List<DesktopDecoration>();
     [HideInInspector] public List<Vector3> poss = new List<Vector3>();

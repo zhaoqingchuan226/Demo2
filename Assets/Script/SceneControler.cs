@@ -14,10 +14,10 @@ public class SceneControler : MonoSingleton<SceneControler>
     public GameObject blackPlastic;//黑色塑料袋
     float originalpha;//此项和上一项均用于没有开场动画时播放塑料袋渐隐的动画
 
-    public GameObject Black0;
-    Vector2 Black0OriPos;
-    public GameObject Black1;
-    Vector2 Black1OriPos;
+    // public GameObject Black0;
+    // Vector2 Black0OriPos;
+    // public GameObject Black1;
+    // Vector2 Black1OriPos;
     float timer;
     public float aniTime = 2f;
 
@@ -28,8 +28,8 @@ public class SceneControler : MonoSingleton<SceneControler>
     }
     void Start()
     {
-        Black0OriPos = Black0.GetComponent<RectTransform>().anchoredPosition;
-        Black1OriPos = Black1.GetComponent<RectTransform>().anchoredPosition;
+        // Black0OriPos = Black0.GetComponent<RectTransform>().anchoredPosition;
+        // Black1OriPos = Black1.GetComponent<RectTransform>().anchoredPosition;
         originalpha = blackPlastic.GetComponent<MeshRenderer>().material.color.a;
     }
 
@@ -77,6 +77,11 @@ public class SceneControler : MonoSingleton<SceneControler>
     }
     IEnumerator MainMenuFade()
     {
+        if (StoryManager.Instance.isBeginAni)
+        {
+            StoryManager.Instance.BeginAni();
+        }
+
         while (true)
         {
             timer += Time.deltaTime;
@@ -86,7 +91,7 @@ public class SceneControler : MonoSingleton<SceneControler>
                 mainMenu.SetActive(false);
                 if (StoryManager.Instance.isBeginAni)
                 {
-                    StoryManager.Instance.BeginAni();
+
                 }
                 else
                 {
@@ -96,10 +101,10 @@ public class SceneControler : MonoSingleton<SceneControler>
                 break;
             }
             float factor = timer / aniTime;
-            RectTransform rt0 = Black0.GetComponent<RectTransform>();
-            RectTransform rt1 = Black1.GetComponent<RectTransform>();
-            rt0.anchoredPosition = new Vector2(rt0.anchoredPosition.x, Mathf.Lerp(Black0OriPos.y, Black0OriPos.y + rt0.sizeDelta.y, factor));
-            rt1.anchoredPosition = new Vector2(rt1.anchoredPosition.x, Mathf.Lerp(Black1OriPos.y, Black1OriPos.y - rt1.sizeDelta.y, factor));
+            // RectTransform rt0 = Black0.GetComponent<RectTransform>();
+            // RectTransform rt1 = Black1.GetComponent<RectTransform>();
+            // rt0.anchoredPosition = new Vector2(rt0.anchoredPosition.x, Mathf.Lerp(Black0OriPos.y, Black0OriPos.y + rt0.sizeDelta.y, factor));
+            // rt1.anchoredPosition = new Vector2(rt1.anchoredPosition.x, Mathf.Lerp(Black1OriPos.y, Black1OriPos.y - rt1.sizeDelta.y, factor));
 
             foreach (var UI in FadeUIs)
             {
