@@ -53,6 +53,12 @@ public class DesktopDecoration
             case 4://禁忌书 月末给牌
                 FieldManager.Instance.isBook_Cthugha = true;
                 break;
+            case 11://高手的鼠标
+                FieldManager.Instance.isMouse = true;
+                break;
+            case 12://绘阶刀
+                FieldManager.Instance.isKnife_HuiJie = true;
+                break;
             default:
                 break;
         }

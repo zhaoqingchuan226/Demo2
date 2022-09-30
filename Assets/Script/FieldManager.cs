@@ -76,7 +76,10 @@ public class FieldManager : MonoSingleton<FieldManager>
 
     [HideInInspector] public bool isFlower_Overload = false;//血蔷薇，降低白天消耗，增加晚上收益;
     [HideInInspector] public bool isBook_Cthugha = false;//禁忌书，月末给卡;
-
+    [HideInInspector] public bool isMouse = false;//高手的鼠标;
+     [HideInInspector] public bool isKnife_HuiJie = false;//绘阶刀;
+    [HideInInspector] public int Counter_HuiJie = 0;//绘阶刀计数;
+    [HideInInspector] public int Level_HuiJie = 0;//绘阶刀等级，累积五次计数后，计数清零，等级+1;
     //棋子台词区
     [HideInInspector] public Dictionary<int, List<cardDialog>> cardID_cardDialogs_Dic = new Dictionary<int, List<cardDialog>>();
 
@@ -98,8 +101,7 @@ public class FieldManager : MonoSingleton<FieldManager>
     void Awake()
     {
         LoadDialog();
-        // isUnDeath = true;
-        // isOverload = true;
+
     }
     // public void PlayCardDialog(int id, string situation)
     // {
@@ -350,6 +352,28 @@ public class FieldManager : MonoSingleton<FieldManager>
         SetDic(71, 0.5f, 1f, "万金油，万金油！", "1_3");
 
         SetDic(72, 0.5f, 1f, "宇宙中的星辰，没有一颗是重复的", "1_3");
+
+
+
+
+
+        SetDic(10000, 0.1f, 0, "疲劳了，什么都干不了", "chess");
+        SetDic(10000, 0.1f, 0, "总是因人际和斗争而劳累", "chess");
+        SetDic(10000, 0.1f, 0, "腰酸背痛，领导训我我也要休息", "chess");
+
+        SetDic(10001, 0.1f, 0, "被举报了", "chess");
+        SetDic(10001, 0.1f, 0, "你要陷害我是吧？", "chess");
+        SetDic(10001, 0.1f, 0, "是谁要陷害我呀？", "chess");
+
+        SetDic(10002, 0.1f, 0, "不就是鸡汤吗，我喝，我喝", "chess");
+        SetDic(10002, 0.1f, 0, "这喝汤，多是一件美事", "chess");
+        SetDic(10002, 0.1f, 0, "忍住，肚子好疼", "chess");
+
+        SetDic(10003, 0.1f, 0, "今天我还就和你杠上了！", "chess");
+        SetDic(10003, 0.1f, 0, "班都不上了我也要教训他一顿！", "chess");
+        SetDic(10003, 0.1f, 0, "踢凹垃圾筒，我系地上最强", "chess");
+
+        SetDic(10003, 0.2f, 0, "他和她约会啵嘴，我留下加班开会", "chess");
     }
 
 }

@@ -5005,8 +5005,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.124, y: 0.04, z: 0.124}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.124, y: 0.04, z: 0.17}
+  m_Center: {x: 0, y: 0, z: 0.04}
 --- !u!114 &3149241930020495197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5033,7 +5033,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8db9d4b5594cd344a35cdf99fac4949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isUI: 0
   text: {fileID: 7498133515227356767}
+  text_UI: {fileID: 0}
   dialog_obj: {fileID: 7264254957262827861}
   switchTime: 0.15
 --- !u!114 &2222234567759828231

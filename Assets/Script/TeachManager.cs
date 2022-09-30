@@ -99,7 +99,8 @@ public class TeachManager : MonoSingleton<TeachManager>
             /*OK*/
             case "绩效需求介绍":
                 AddWord("每个月，你得获得足够多的绩效");
-                AddWord("让拉奥孔先生的肚子大得能碰到按钮，才能获得新眼球");
+                AddWord("让拉奥孔先生的肚子变大，碰到按钮，才能获得新眼球");
+                AddWord("简单来说，好好卖力，我给你让你活下去的眼球");
                 AddWord("挺过十二个月，我就放你们走");
                 // SetGuide(KPINeed, true);
                 SetGuide(playe_K, true);
@@ -107,7 +108,9 @@ public class TeachManager : MonoSingleton<TeachManager>
                 break;
             /*OK*/
             case "生命介绍":
-                AddWord("看到了吗，消耗体力和精力，接着获得绩效");
+                AddWord("红手代表体力，蓝手代表精力");
+                AddWord("手臂粗细显示健康状况");
+                AddWord("消耗体力和精力，接着获得绩效");
                 SetGuide(player_P, true);
                 SetGuide(player_S, true);
                 break;
@@ -117,7 +120,7 @@ public class TeachManager : MonoSingleton<TeachManager>
                 AddWord(@"用""体力""和""精力""这两只手臂干活，随后养大自己的肚子？", "M");
                 AddWord("没错，宰相肚子里都是绩效");
                 AddWord("那如果体力或精力没了，会怎么样？", "M");
-                AddWord("手臂就会断掉，就会拉不住绳子");
+                AddWord("手臂断掉，拉不住蛇");
                 SetGuide(playe_K, true);
                 break;
             /*OK*/
@@ -128,7 +131,7 @@ public class TeachManager : MonoSingleton<TeachManager>
                 break;
             /*OK*/
             case "牌库介绍":
-                AddWord("那我们该怎么达成绩效", "M");
+                AddWord("那绩效怎么获得？", "M");
                 AddWord("查看你牌库里的卡牌，你将用它们拿绩效");
                 SetGuide(LibraryButton, true);
                 break;
@@ -173,21 +176,21 @@ public class TeachManager : MonoSingleton<TeachManager>
             /*OK*/
             case "能力介绍":
                 AddWord("哦，这位性感先生头上是什么？", "M");
-                AddWord(@"是一棵""技能树""，通过卡牌获得的""能力""将会让它生长");
-                AddWord("它在周末将会结出卡牌果实");
-                AddWord(@"培养这颗""技能树""，它将结出更好的果实");
-                AddWord("变大？类似⚪起吗？", "M");
-                AddWord("随你怎么理解");
+                AddWord(@"是一棵""卡牌树""，它周末将给予你果实");
+                AddWord(@"你可以用卡牌中的""能力""来培养它，它将结出更高等级的果实");
+                // AddWord("变大？类似⚪起吗？", "M");
+                // AddWord("随你怎么理解");
                 SetGuide(player_W, true);
                 break;
             /*OK*/
             case "周末选牌介绍":
-                AddWord("每周末晚上，树都会⚪起，随后喷射出不可描述的果实");
-                AddWord("话说清除啊喂，是卡牌！不是不可描述的果实", "M");
+                // AddWord("每周末晚上，树都会⚪起，随后喷射出不可描述的果实");
+                // AddWord("话说清除啊喂，是卡牌！不是不可描述的果实", "M");
                 AddWord("你每周有两次选择新卡牌的机会");
+                AddWord("花开三朵，各表一枝，不同分支将走向不同结局");
                 // AddWord("领导让你们提前一个晚上来上班，就是让你们好好制定下一周的计划");
                 // AddWord("到底是谁定的这条破规则？");
-                // AddWord("首先排除你的领导阿尼莫");
+                // AddWord("首先排除你的领导雨田军");
                 SetGuide(ExecuteButton, true);
                 break;
             /*OK*/
@@ -212,8 +215,8 @@ public class TeachManager : MonoSingleton<TeachManager>
             //     break;
             /*OK*/
             case "场上三连介绍":
-                AddWord(@"触发三连后，三张卡牌会合成一张熟练度更高的卡牌，例如从""工作""变为""工作+1""");
-                AddWord("熟练度可以大量提升卡牌的数值");
+                AddWord(@"三张相同卡牌会触发三连，他们会合体并强化，例如从""工作""变为""工作+1""");
+                AddWord(@"这个""+1""代表熟练度,可以大量提升卡牌的数值");
                 AddWord("此外，每次三连都可以额外选择一张强力卡牌");
                 AddWord("啊，不停工作，然后变成一个熟练的工人");
                 break;
@@ -232,20 +235,20 @@ public class TeachManager : MonoSingleton<TeachManager>
                 break;
             /*OK*/
             case "小组成员介绍":
-                AddWord("看来你适应得不错，这四坨将加入你的战局");
+                AddWord("看来你适应得不错，它们将加入你的战局");
                 AddWord("每个月排名最后的那位，将会额外消耗一个眼球");
                 AddWord("哦，我只是觉得，你们需要压力，它需要伙食");
-                AddWord("这四位死亡后会复活，在更换人格后会重新加入你的工作小组");
+                AddWord("这四位死亡后会复活，会用更强的角色重新加入你的游戏对局");
                 StoryManager.Instance.animator_black.SetTrigger("Show");
                 break;
             /*OK*/
             case "被陷害介绍":
                 // AddWord("这是你的受欢迎度");
                 // AddWord("如果你做了对不起同事的事情，他们就会讨厌你，可能还会背地里对你动手");
-                AddWord("那四坨会骚扰你，往你的牌库里塞奇怪的东西");
+                AddWord("它们会骚扰你，往你的牌库里塞奇怪的东西");
                 AddWord("那些卡牌会造成你的内耗");
                 AddWord("你可以在牌库里找到它们");
-                AddWord("看一看，是谁陷害了你");
+                AddWord("看一看卡牌的创建者是何人，是谁，陷害了你");
                 SetGuide(playe_PY, true);
                 break;
             default:

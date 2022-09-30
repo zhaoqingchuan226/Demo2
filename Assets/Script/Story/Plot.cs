@@ -101,6 +101,33 @@ public class Plot
                 }
 
             }
+            else if (condi == "高职位")
+            {
+                bool c = false;
+                //检测是否有加班
+                if (PlayerData.Instance.postLevel >= 3)
+                {
+                    c = true;
+                }
+         
+                // c = true;//这个是debug用的，记得删除
+                if (c)//认识了NPC
+                {
+                    foreach (var NPC in StoryManager.Instance.NPCs)
+                    {
+                        if (NPC == owner)
+                        {
+                            NPC.isKnown = true;
+                        }
+                    }
+                }
+                //这里注意不能写b=c，因为b=true这样的语句会混淆逻辑
+                if (c == false)
+                {
+                    b = false;
+                }
+
+            }
             else if (condi == "认识")
             {
                 // Debug.Log(owner.name);
@@ -125,7 +152,7 @@ public class Plot
             {
                 string[] elements = condi.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
                 float r = Random.Range(0, 1f);
-                if (float.Parse(elements[1]) < r)//如果时期对上了
+                if (float.Parse(elements[1]) < r)
                 {
                     b = false;
                 }

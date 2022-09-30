@@ -35,14 +35,14 @@ public class HolidayStore : MonoSingleton<HolidayStore>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            OpenStore();
-        }
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            CloseStore();
-        }
+        // if (Input.GetKeyDown(KeyCode.N))
+        // {
+        //     OpenStore();
+        // }
+        // if (Input.GetKeyDown(KeyCode.M))
+        // {
+        //     CloseStore();
+        // }
         if (isOpen)
         {
 

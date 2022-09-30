@@ -56,7 +56,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
     public TextMeshProUGUI asideText;
     public TextMeshProUGUI NPCNameText;
     public TextMeshProUGUI wordsText;
-
+    public GameObject black;//如果一周有两段以上的剧情，那么中间会用一个黑幕过渡；
 
 
     public Period period = Period.日常0;
@@ -145,17 +145,28 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         asidePannel.SetActive(false);
         choosePannel.SetActive(false);
         wordsPannel.SetActive(false);
-        NPCs_HasFound.Add(NPCs[0]);//到时候把所有人的都加进去，就好
-                                   // foreach (var plot in NPCs[0].plots)
-                                   // {
-                                   //     Debug.Log(plot.id);
-                                   // }
+        foreach (var NPC in NPCs)
+        {
+            NPCs_HasFound.Add(NPC);
+        }
+
+
+
+
+        // foreach (var NPC in NPCs)
+        // {
+        //     foreach (var plot in NPC.plots)
+        //     {
+        //         Debug.Log(plot.id);
+        //     }
+        // }
 
 
 
         //开局设置默认的坐姿
         SetPlayableAsset("StartSit");
         pd.Play();
+
         // StartCoroutine(Sit());
 
         //打开神秘人，关闭所有npc的gameobj
@@ -199,11 +210,21 @@ public partial class StoryManager : MonoSingleton<StoryManager>
     IEnumerator OpenAsidePanel(float timer = 0, bool isOpenCha = true)//isOpenCha为ture则打开角色，反之则关闭
     {
         bool isFirstMid = false;
+
+        if (!isOpenCha && plotsThisWeek.Count > 0)
+        {
+            black.SetActive(true);
+        }
         while (true)
         {
-            if (timer > asideTime)
+            if (timer > asideTime - 0.08f)
             {
+                timer = 0f;
                 asidePannel.SetActive(false);
+                if (plotsThisWeek.Count <= 0)
+                {
+                    black.SetActive(false);
+                }
                 yield break;
             }
             float factor = timer / asideTime;
@@ -247,22 +268,22 @@ public partial class StoryManager : MonoSingleton<StoryManager>
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            // SetPlayableAsset("KPIKill");
-            // pd.Play();
-            Card card = CardStore.Instance.RandomForbidenCard();
-            card.isNew = true;
-            // InstantiateEffect(this, kidCard, interval * i);
-            PlayerData.Instance.playerCards.Add(card);
-            PlayerData.Instance.SortCards();
-        }
-        else if (Input.GetKeyDown(KeyCode.L))
-        {
-            // // SetPlayableAsset("HealthKill");
-            // // pd.Play();
-            // O_C_NightMode(false);
-        }
+        // if (Input.GetKeyDown(KeyCode.K))
+        // {
+        //     // SetPlayableAsset("KPIKill");
+        //     // pd.Play();
+        //     Card card = CardStore.Instance.RandomForbidenCard();
+        //     card.isNew = true;
+        //     // InstantiateEffect(this, kidCard, interval * i);
+        //     PlayerData.Instance.playerCards.Add(card);
+        //     PlayerData.Instance.SortCards();
+        // }
+        // else if (Input.GetKeyDown(KeyCode.L))
+        // {
+        //     // // SetPlayableAsset("HealthKill");
+        //     // // pd.Play();
+        //     // O_C_NightMode(false);
+        // }
 
 
         input = Input.GetMouseButtonDown(0);
@@ -281,6 +302,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
                 {
                     if (isFirstThisPlotPhase)
                     {
+                        Debug.Log("Begin");
                         StoryAll.SetActive(true);
                         asidePannel.SetActive(true);
                         StartCoroutine(OpenAsidePanel(0f, true));
@@ -566,15 +588,6 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         {
             if (plotNow != null)//如果有播放完成的剧情，则播放回去的动画
             {
-                // switch (plotNow.owner.type)
-                // {
-                //     case Type.OverLoad:
-                //         SetPlayableAsset("BackOverload");
-                //         pd.Play();
-                //         break;
-                //     default:
-                //         break;
-                // }
                 EndPlot();
                 plotNow = null;
             }
@@ -607,7 +620,6 @@ public partial class StoryManager : MonoSingleton<StoryManager>
             case "招魂仪":
                 s = AutoDDReward(bpNow.reward);
                 SendDDtoPlaterData(1);
-                Debug.Log("OJBK");
                 break;
             case "提神发夹":
                 s = AutoDDReward(bpNow.reward);
@@ -620,6 +632,14 @@ public partial class StoryManager : MonoSingleton<StoryManager>
             case "禁忌书":
                 s = AutoDDReward(bpNow.reward);
                 SendDDtoPlaterData(4);
+                break;
+            case "高手的鼠标":
+                s = AutoDDReward(bpNow.reward);
+                SendDDtoPlaterData(11);
+                break;
+            case "绘阶刀":
+                s = AutoDDReward(bpNow.reward);
+                SendDDtoPlaterData(12);
                 break;
             default:
                 break;
@@ -697,7 +717,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
     public void PauseAni()
     {
         isChaAniFinished = true;
-        Debug.Log("Pause");
+
         pd.Pause();
     }
 

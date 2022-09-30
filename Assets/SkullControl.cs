@@ -12,6 +12,8 @@ public class SkullControl : MonoSingleton<SkullControl>
     [HideInInspector] public bool isButtonPressed = false;
     public Light eyeLight;
     float eyeLightOriginIntensity;
+
+    public Dialog dialog_skull_right;
     //！！！按下按钮！！！
     public void O_C_Button(bool b)
     {
@@ -141,6 +143,7 @@ public class SkullControl : MonoSingleton<SkullControl>
                 if (timer > 2 * FlyTime)
                 {
                     g.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                      dialog_skull_right.SetDiaglog("眼球得到了，光芒变强了");
                     JudgeLightIntensityByKPILife();
                     yield break;
                 }
@@ -180,6 +183,7 @@ public class SkullControl : MonoSingleton<SkullControl>
                 eye_roots_GameObjs_Dic[eye_roots[n]] = null;
                 Destroy(g);//毁灭
                 JudgeLightIntensityByKPILife();
+                dialog_skull_right.SetDiaglog("眼球烧掉了，光芒变弱了");
                 yield break;
             }
             timer += Time.deltaTime;
@@ -237,13 +241,13 @@ public class SkullControl : MonoSingleton<SkullControl>
                 eyeLight.intensity = eyeLightOriginIntensity * 0f;
                 break;
             case 1:
-                eyeLight.intensity = eyeLightOriginIntensity * 0.7f;
+                eyeLight.intensity = eyeLightOriginIntensity * 0.5f;
                 break;
             case 2:
                 eyeLight.intensity = eyeLightOriginIntensity * 1f;
                 break;
             case 3:
-                eyeLight.intensity = eyeLightOriginIntensity * 1.3f;
+                eyeLight.intensity = eyeLightOriginIntensity * 1.5f;
                 break;
             default:
                 break;

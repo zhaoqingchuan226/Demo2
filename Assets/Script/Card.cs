@@ -1035,6 +1035,10 @@ public partial class Card
                         n += 0.5f;
                     }
                     break;
+                case "W":
+                    n = 1f + (float)FieldManager.Instance.Level_HuiJie * 0.1f;
+                    Debug.Log("已增益" + n);
+                    break;
                 default: break;
             }
         }
@@ -1047,7 +1051,7 @@ public partial class Card
 
                     break;
                 case "S":
-                    n =  (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
+                    n = (1f + (FieldManager.Instance.isOverload ? 1f : 0f) * 0.1f);
                     if (FieldManager.Instance.isFlower_Overload && !this.times.Contains("晚"))
                     {
                         n -= 0.2f;
@@ -1098,6 +1102,16 @@ public partial class Card
                         allCard.functionEffect.workAbility +=
                             (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.workAbilityMulti + functionEffectEx.workAbilityAdd) * FieldBuffValue(value, "W"));
                         functionEffectEx.Initialize("W");
+                        if (FieldManager.Instance.isKnife_HuiJie)
+                        {
+                            FieldManager.Instance.Counter_HuiJie++;
+                            if (FieldManager.Instance.Counter_HuiJie >= 5)
+                            {
+                                FieldManager.Instance.Counter_HuiJie = 0;
+                                FieldManager.Instance.Level_HuiJie++;
+                            }
+                            Debug.Log(FieldManager.Instance.Level_HuiJie + "级" + FieldManager.Instance.Counter_HuiJie + "计数");
+                        }
                         break;
                     case "K":
                         allCard.functionEffect.KPI +=

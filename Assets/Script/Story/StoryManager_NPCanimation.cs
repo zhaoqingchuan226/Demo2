@@ -25,6 +25,12 @@ public partial class StoryManager : MonoSingleton<StoryManager>
     public Transform flower;
     public GameObject vase;
 
+    //月雾
+    [Space(10)]
+    public GameObject connecter;//接口
+    public GameObject knife;//画阶刀
+    public GameObject stage;//桌面上的台阶
+
     void O_C_NightMode(bool b)//姐姐的变身,ture则变为夜间模式
     {
         for (var i = 0; i < sms.Count; i++)
@@ -55,6 +61,13 @@ public partial class StoryManager : MonoSingleton<StoryManager>
                 flower.gameObject.SetActive(b);
                 O_C_NightMode(b);
                 break;
+            case 11:
+                connecter.SetActive(b);
+                break;
+            case 12:
+                knife.SetActive(b);
+                stage.SetActive(b);
+                break;
             default:
                 break;
         }
@@ -69,6 +82,8 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         if (b)
         {
             light_Player.color = lightColors[NPCs_HasFound.IndexOf(plotNow.owner)];
+            ParticleSystem.MainModule mainModule = pm.main;
+            mainModule.startColor = light_Player.color;
             foreach (var light in lights_AI)
             {
                 light.gameObject.SetActive(false);
@@ -77,6 +92,8 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         else
         {
             light_Player.color = originColor_light_Player;
+            ParticleSystem.MainModule mainModule = pm.main;
+            mainModule.startColor = light_Player.color;
             foreach (var light in lights_AI)
             {
                 light.gameObject.SetActive(true);

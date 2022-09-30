@@ -22,6 +22,9 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
     List<Card> cards_LV5 = new List<Card>();//用来防止生成相同的卡牌
     List<GameObject> card3_1Prefabs = new List<GameObject>();
     public GameObject giveUpButton;
+
+
+    bool isFirstCard16 = true;//高手的鼠标会偶尔将一张卡变成心流时刻，但是只能变一张，所以用这个bool来控制
     private void Start()
     {
         cardGroup.SetActive(false);
@@ -32,6 +35,11 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
     [HideInInspector] public bool isFirstChoose = true;//三次三连中，第一次三连为true//三次平时选择中，第一次为true
     public void Open()//触发函数，相当于enabled
     {
+        if (FieldManager.Instance.isMouse && !FieldManager.Instance.isTripletReward)
+        {
+            isFirstCard16 = true;
+        }
+
         cardGroup.SetActive(true);
         FieldManager.Instance.isSpeakIn1_3 = false;
         if (isFirstChoose)
@@ -128,7 +136,6 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
                 if (r <= lv1Max)
                 {
                     CreateCardRandomLV1();
-
                 }
                 else if (r > lv1Max && r < lv2Max)
                 {
@@ -158,8 +165,24 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
 
     [HideInInspector] public int currentCardAmount = 0;//现在界面里有多少卡牌
     // public float cardInterval = -0.2f;
+
+    //在开启高手的鼠标时，有5%的概率会将卡牌变成心流时刻
     void CreatCard(Card card)
     {
+
+        if (FieldManager.Instance.isMouse && !FieldManager.Instance.isTripletReward)
+        {
+            if (isFirstCard16)
+            {
+                float r = Random.Range(0, 1f);
+                if (r < 0.5f)
+                {
+                    isFirstCard16 = false;
+                    card = CardStore.Instance.SearchCard(16);
+                }
+            }
+        }
+
         currentCardAmount += 1;
         // Vector3 deltaPos = new Vector3(cardInterval, 0, 0) * (currentCardAmount - 2);
         GameObject cardPrefab = Instantiate(card3_1Prefab, roots[currentCardAmount - 1]);

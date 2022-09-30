@@ -40,7 +40,10 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        ExecuteCommand();
+        if (Mechanism.Instance.playState == PlayState.Chess)
+        {
+            ExecuteCommand();
+        }
     }
 
     void ExecuteCommand()
@@ -461,7 +464,7 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
                     {
                         TeachManager.Instance.isFirstLibrary = false;
                         TeachManager.Instance.currentEvent = null;//是为了让之前不能用的开始键现在可以用
-                        TeachManager.Instance.TeachEventTrigger_Delay("开始介绍",1.1f);
+                        TeachManager.Instance.TeachEventTrigger_Delay("开始介绍", 1.1f);
                         //退出时触发开始按钮介绍
                     }
                 }

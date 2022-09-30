@@ -289,7 +289,15 @@ namespace PinYinSpell
                                 }
                                 else
                                 {
-                                    tmp = pinyin[index];
+                                    if (index < pinyin.Length&&index>=0)
+                                    {
+                                        tmp = pinyin[index];
+                                    }
+                                    else
+                                    {
+                                        tmp = "";
+                                    }
+
                                 }
 
                                 break;
@@ -323,7 +331,7 @@ namespace PinYinSpell
             return result.ToString();
         }
 
-        static List<char> splitters = new List<char> { '!', ',', '.', '！', '，', '。', ':', '！', '!', '？', '?'};
+        static List<char> splitters = new List<char> { '!', ',', '.', '！', '，', '。', ':', '！', '!', '？', '?' };
 
         public static string PreProcess(string s)
         {
@@ -342,5 +350,5 @@ namespace PinYinSpell
             }
             return sb.ToString();
         }
-	}
+    }
 }

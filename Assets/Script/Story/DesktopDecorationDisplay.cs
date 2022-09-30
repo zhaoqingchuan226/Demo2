@@ -55,6 +55,16 @@ public class DesktopDecorationDisplay : MonoBehaviour, IPointerDownHandler
                 words.Add("每个月末，我会赋予你新的禁忌！");
                 words.Add("记得查看你的牌库哦，哦嘿嘿嘿");
                 break;
+            case 11:
+                words.Add("你听说过心流吗，一种极为专注的状态");
+                words.Add("极为强大的它将被赋予给弱小的你");
+                words.Add("选牌时，祈祷心流的眷顾吧！");
+                break;
+            case 12:
+                words.Add("持续提升，阶段质变！");
+                words.Add("让我看到你在提升自己的能力！");
+                words.Add("每五次，你的能力收益将永久提高！");
+                break;
             default:
                 break;
         }

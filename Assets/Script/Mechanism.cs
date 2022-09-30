@@ -211,6 +211,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
 
     public GameObject Warning_Panel;//用于显示死亡，警告信息的面板
+    public GameObject Win_Panel;//胜利面板
     public TextMeshProUGUI warningText;
     public GameObject BackMainMenuButton;//游戏结束，返回主菜单
 
@@ -408,7 +409,10 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             PlayerData.Instance.O_C_Texts();
             O_C_GlobalGI();
         }
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+           SettingsManager.Instance.OnClickSettingButton();
+        }
 
 
         if (playState == PlayState.MainMenu)
@@ -428,7 +432,6 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             if (phase == Phase.CreatCardAnimation)
             {
                 CreatCardAnimation();
-
             }
             else if (phase == Phase.Calculate)
             {
@@ -450,7 +453,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 {
                     isFirstHolidayStore = false;
                     float r = Random.Range(0, 1f);
-                    if ((r > 0.25f && week > 3) || week == 3)//第三周必第一次 之后每周刷出的概率为25%
+                    if ((r < 0.3334f && week > 3) || week == 3)//第三周必第一次 之后每周刷出的概率为25%
                     {
                         // holidayStorePanel.SetActive(true);
                         HolidayStore.Instance.OpenStore();
@@ -1942,6 +1945,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     public void OnClickNextWeekButton()//进入下一周，管理每月KPI清零，并且每周回血
     {
+        if (week == 48)//十二月判定胜利
+        {
+            Win_Panel.SetActive(true);
+            return;
+        }
         //玩家和AI、KPI清零
         if (week % 4 == 0)
         {
@@ -2646,6 +2654,19 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         KPINeed_EveryMonthText.text = KPINeed_EveryMonth.ToString();
     }
 
+    void DelayState()
+    {
+        StartCoroutine(State());
+    }
+
+    IEnumerator State()
+    {
+        playState = PlayState.MainMenu;
+        yield return new WaitForSeconds(1.05f);
+        playState = PlayState.Chess;
+        yield break;
+    }
+
     public void PlayChess(bool isBeginBlack = true)//需不需要开场的黑场过渡
     {
         StoryManager.Instance.pd.Stop();
@@ -2662,6 +2683,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         else
         {
+            DelayState();
             TeachManager.Instance.TeachEventTrigger_Delay("开头介绍", 1.1f);
         }
 
