@@ -49,6 +49,10 @@ public class AudioManager : MonoSingleton<AudioManager>
         LoadAudio("Eat_chess");
         LoadAudio("Eye_shoot");
         LoadAudio("Ding");
+        LoadAudio("ChangeColor");
+        LoadAudio("Sparkle");
+        LoadAudio("Swishing0");
+       
     }
 
     // void Update()

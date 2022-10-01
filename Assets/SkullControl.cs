@@ -241,13 +241,13 @@ public class SkullControl : MonoSingleton<SkullControl>
                 eyeLight.intensity = eyeLightOriginIntensity * 0f;
                 break;
             case 1:
-                eyeLight.intensity = eyeLightOriginIntensity * 0.5f;
+                eyeLight.intensity = eyeLightOriginIntensity * 0.7f;
                 break;
             case 2:
                 eyeLight.intensity = eyeLightOriginIntensity * 1f;
                 break;
             case 3:
-                eyeLight.intensity = eyeLightOriginIntensity * 1.5f;
+                eyeLight.intensity = eyeLightOriginIntensity * 1.3f;
                 break;
             default:
                 break;

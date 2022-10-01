@@ -401,7 +401,7 @@ public class AIData//对应PlayerData
     {
         // int week = Mechanism.Instance.week;
         float n;
-        if (Mechanism.Instance.week <= 1 + 2 * 4)
+        if (Mechanism.Instance.week <= 1 + 4 * 4)
         {
             n = (Mechanism.Instance.KPI_Up_PerWeek_1_Min + Mechanism.Instance.KPI_Up_PerWeek_1_Max) / 2;
         }
@@ -612,6 +612,7 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
             {
                 AIData AIDataNew = new AIData(id);
                 AI_Chas[id].AIData = AIDataNew;
+                AI_Chas[id].workAbilityMatChangeColor();
                 Mechanism.Instance.AICome(AIDataNew.name);
                 if (Mechanism.Instance.week != AI_Appear_Week)
                 {

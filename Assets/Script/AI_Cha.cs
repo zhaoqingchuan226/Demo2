@@ -372,9 +372,18 @@ public class AI_Cha : MonoBehaviour
         healthMat.SetFloat("_Health", health);
     }
 
-    void workAbilityMatChangeColor()//象征职位等级的宝石变色
+    public void workAbilityMatChangeColor()//象征职位等级的宝石变色
     {
-        switch (AIData.postLevel)
+        int n = 1;
+        if (aI_Cha_Type == AI_Cha_Type.AI)
+        {
+            n = AIData.postLevel;
+        }
+        else if (aI_Cha_Type == AI_Cha_Type.Player)
+        {
+            n =PlayerData.Instance.postLevel;
+        }
+        switch (n)
         {
             case 1:
                 workAbilityMat.color = new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);

@@ -115,7 +115,7 @@ public class LACControl : MonoSingleton<LACControl>
             if (timer > setWeightTime)
             {
                 timer = 0;
-                sm.SetBlendShapeWeight(0, deltaWeight + originWeight);
+                sm.SetBlendShapeWeight(0, Mathf.Min(deltaWeight + originWeight, 100));
                 sm.GetComponent<SkinnedMeshRenderer>().material.SetFloat("_EmisIntensity", 0);
                 yield break;
             }
@@ -364,41 +364,49 @@ public class LACControl : MonoSingleton<LACControl>
     {
         if (price <= PlayerData.Instance.playerMoney)//铜币够，全部使用铜币支付
         {
-            if (copperCoins.Count * 1000 >= price)
-            {
-                DestroyCoins("copper", price / 1000);
-            }
-            else//铜币不够了
-            {
-                if (copperCoins.Count * 1000 + silverCoins.Count * 5000 >= price)//铜币加银币够，那就先用银币支付，再找钱
-                {
-                    int n = price / 5000;
-                    int r = price % 5000;
-                    if (r == 0)//银币刚刚可以支付
-                    {
-                        DestroyCoins("silver", n);
-                    }
-                    else//找钱
-                    {
-                        DestroyCoins("silver", n + 1);
-                        StartCoroutine(GenerateCoin(5000 - r,false));
-                    }
-                }
-                else//铜币加银币不够，那就先用金币支付，再找钱
-                {
-                    int n = price / 10000;
-                    int r = price % 10000;
-                    if (r == 0)//金币刚刚可以支付
-                    {
-                        DestroyCoins("gold", n);
-                    }
-                    else//找钱
-                    {
-                        DestroyCoins("gold", n + 1);
-                        StartCoroutine(GenerateCoin(10000 - r,false));
-                    }
-                }
-            }
+            int remain_Money = PlayerData.Instance.playerMoney - price;
+            DestroyCoins("copper", copperCoins.Count);
+            DestroyCoins("silver", silverCoins.Count);
+            DestroyCoins("gold", goldCoins.Count);
+            StartCoroutine(GenerateCoin(remain_Money, false));
+
+            // if (copperCoins.Count * 1000 >= price)
+            // {
+            //     DestroyCoins("copper", price / 1000);
+            // }
+            // else//铜币不够了
+            // {
+            //     if (copperCoins.Count * 1000 + silverCoins.Count * 5000 >= price)//铜币加银币够，那就先用银币支付，再找钱
+            //     {
+            //         int n = price / 5000;
+            //         int r = (price % 5000) / 1000;
+            //         // if (r == 0)//银币刚刚可以支付
+            //         // {
+            //         //     DestroyCoins("silver", n);
+            //         // }
+            //         // else//找钱
+            //         // {
+            //         //     DestroyCoins("silver", n + 1);
+            //         //     StartCoroutine(GenerateCoin(5000 - r,false));
+            //         // }
+            //         DestroyCoins("silver", n);
+            //         DestroyCoins("copper", r);
+            //     }
+            //     else//铜币加银币不够，那就先用金币支付，再找钱
+            //     {
+            //         int n = price / 10000;
+            //         int r = price % 10000;
+            //         if (r == 0)//金币刚刚可以支付
+            //         {
+            //             DestroyCoins("gold", n);
+            //         }
+            //         else//找钱
+            //         {
+            //             DestroyCoins("gold", n + 1);
+            //             StartCoroutine(GenerateCoin(10000 - r, false));
+            //         }
+            //     }
+            // }
         }
 
     }

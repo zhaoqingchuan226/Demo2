@@ -40,7 +40,6 @@ public class HolidayStoreDelete : MonoSingleton<HolidayStoreDelete>, IPointerCli
         }
         else if (PlayerData.Instance.playerMoney < price)
         {
-            Mechanism.Instance.SignAll_Update("你没有财富啊没有财富");
             HolidayStore.Instance.FishRefuse();
         }
 

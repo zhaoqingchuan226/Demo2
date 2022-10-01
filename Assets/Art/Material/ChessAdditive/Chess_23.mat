@@ -89,13 +89,14 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Roughness: 0
+    - _Roughness: 0.37
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     - __dirty: 0
+    - _isDust: 0
     - _isMRAE: 1
     - _isNormal: 0
     m_Colors:

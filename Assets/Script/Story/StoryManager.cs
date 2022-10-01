@@ -148,6 +148,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         foreach (var NPC in NPCs)
         {
             NPCs_HasFound.Add(NPC);
+            EvaluateManager.Instance.NPC_Favor_Dic.Add(NPC, 0);
         }
 
 
@@ -176,6 +177,11 @@ public partial class StoryManager : MonoSingleton<StoryManager>
             NPC_GameObj.SetActive(false);
         }
         sm.gameObject.SetActive(true);
+
+        foreach (var N in NPCs_HasFound)
+        {
+            print(N.isKnown);
+        }
     }
     IEnumerator Sit()
     {
@@ -563,6 +569,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
                 if (NPC_HasFound.plots[i].JudgeCondition())
                 {
                     plotsThisWeek.Add(NPC_HasFound.plots[i]);
+                    EvaluateManager.Instance.NPC_Favor_Dic[NPC_HasFound.plots[i].owner]++;
                     NPC_HasFound.plots.Remove(NPC_HasFound.plots[i]);//已经体验过的剧情不会重复出现
                     break;//一个NPC一周只有一段剧情，这里为了防止一个NPC一周两段剧情
                 }
@@ -1021,7 +1028,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
 
     public void Speak_Teach(string s, string owner = "B")//黑衣人根据视角使用不用dialog对话框
     {
-        Debug.Log(CameraManager.Instance.cb.ActiveVirtualCamera.Name);
+
         if (owner == "B")
         {
             if (CameraManager.Instance.cb.ActiveVirtualCamera.Name != "BlackCam" && CameraManager.Instance.cb.ActiveVirtualCamera.Name != "FreeCam")

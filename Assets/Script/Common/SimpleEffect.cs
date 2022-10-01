@@ -140,8 +140,9 @@ public class SimpleEffect : MonoBehaviour
     public void RestartParticleSystem(GameObject g)
     {
         ParticleSystem p = g.GetComponent<ParticleSystem>();
-        p.Pause();
+        p.Stop();
         p.Play();
+    
     }
     public IEnumerator Buff()//buff别人会变色
     {

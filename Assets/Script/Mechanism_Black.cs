@@ -32,7 +32,6 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         spiritualHealthAverage = Mechanism.Instance.functionEffectBuffer.physicalHealth;
         workAbilityAverage = Mechanism.Instance.functionEffectBuffer.workAbility;
         KPIAverage = Mechanism.Instance.functionEffectBuffer.KPI;
-  
     }
     /*
         void CreatCardAnimation_Black()

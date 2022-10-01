@@ -136,6 +136,7 @@ public class LAC_Tree_Control : MonoSingleton<LAC_Tree_Control>
         {
             pm_stone.Stop();
             pm_stone.Play();
+            AudioManager.Instance.PlayClip("ChangeColor");
             StartCoroutine(PostUpgrade());
         }
 

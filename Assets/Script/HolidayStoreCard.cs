@@ -30,7 +30,7 @@ public class HolidayStoreCard : MonoBehaviour, IPointerClickHandler
         }
         else if (PlayerData.Instance.playerMoney < price && !isSell)
         {
-            Mechanism.Instance.SignAll_Update("你没有财富啊没有财富");
+            HolidayStore.Instance.  dialog_business.SetDiaglog("你没有财富啊没有财富");
         }
 
     }

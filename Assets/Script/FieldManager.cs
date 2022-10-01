@@ -77,7 +77,7 @@ public class FieldManager : MonoSingleton<FieldManager>
     [HideInInspector] public bool isFlower_Overload = false;//血蔷薇，降低白天消耗，增加晚上收益;
     [HideInInspector] public bool isBook_Cthugha = false;//禁忌书，月末给卡;
     [HideInInspector] public bool isMouse = false;//高手的鼠标;
-     [HideInInspector] public bool isKnife_HuiJie = false;//绘阶刀;
+    [HideInInspector] public bool isKnife_HuiJie = false;//绘阶刀;
     [HideInInspector] public int Counter_HuiJie = 0;//绘阶刀计数;
     [HideInInspector] public int Level_HuiJie = 0;//绘阶刀等级，累积五次计数后，计数清零，等级+1;
     //棋子台词区
@@ -167,7 +167,7 @@ public class FieldManager : MonoSingleton<FieldManager>
         SetDic(11, 0.2f, 0, "没有实力的家伙才会去靠人际", "chess");
 
         SetDic(12, 0.5f, 1, "把我和这种家伙绑在一起，我很难受", "1_3");
-        SetDic(12, 0.1f, 0, "呕1", "chess");
+        SetDic(12, 0.1f, 0, "呕", "chess");
         SetDic(12, 0.1f, 0, "太难受了！", "chess");
         SetDic(12, 0.1f, 0, "分开我们！", "chess");
         SetDic(12, 0.1f, 0, "别拧我的脑子！", "chess");
@@ -249,21 +249,21 @@ public class FieldManager : MonoSingleton<FieldManager>
         SetDic(30, 1f, 0, "为了鱼人", "chess");
 
         SetDic(31, 0.5f, 1f, "是时候摆人一道了！", "1_3");
-        SetDic(31, 0.1f, 0, "这是为别人好，当然，最重要的是为你好", "chess");
-        SetDic(31, 0.1f, 0, "偶尔举报一下，一周绝不超过两次！", "chess");
-        SetDic(31, 0.1f, 0, "清除所有的异己", "chess");
+        SetDic(31, 0.2f, 0, "这是为别人好，当然，最重要的是为你好", "1_3");
+        SetDic(31, 0.2f, 0, "偶尔举报一下，一周绝不超过两次！", "1_3");
+        SetDic(31, 0.2f, 0, "清除所有的异己", "1_3");
 
         SetDic(32, 0.5f, 1f, "掠夺！", "1_3");
-        SetDic(32, 1f, 0f, "你的绩效归我了", "chess");
+        SetDic(32, 0.2f, 0f, "他们的绩效都是你的！", "1_3");
 
         SetDic(33, 0.5f, 1f, "不必亲自动手，我来教你借刀杀人！", "1_3");
-        SetDic(33, 1f, 0f, "拿起搅屎棍，我们动手吧！", "chess");
+        SetDic(33, 0.2f, 0f, "拿起搅屎棍，我们动手吧！", "1_3");
 
         SetDic(35, 0.5f, 1f, "我前辈的最高战绩，就是毒死过一位董事长", "1_3");
-        SetDic(35, 0.1f, 0f, "开盖有奖，再来一瓶", "chess");
+        SetDic(35, 0.2f, 0f, "开盖有奖，再来一瓶", "1_3");
 
         SetDic(36, 0.5f, 1f, "我说我都能干，领导当真了", "1_3");
-        SetDic(36, 1f, 0f, "给你两张牌，祝你好运", "chess");
+        SetDic(36, 0.2f, 0f, "给你两张牌，祝你好运", "1_3");
 
 
         SetDic(37, 0.5f, 1f, "嘘......你想对付和你关系差的同事吗", "1_3");

@@ -411,7 +411,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-           SettingsManager.Instance.OnClickSettingButton();
+            SettingsManager.Instance.OnClickSettingButton();
         }
 
 
@@ -1763,6 +1763,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 {
                     if (!isTop)//三花聚顶第一帧
                     {
+                        AudioManager.Instance.PlayClip("Sparkle");
                         isTop = true;
                         CardPGs_3[1].SetActive(false);
                         CardPGs_3[2].SetActive(false);
@@ -1966,6 +1967,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             //发工资了
             int salary = Mathf.Min(PlayerData.Instance.KPI * 10, PlayerData.Instance.postLevel * 10000);
             salary = (salary / 1000) * 1000;//确保单笔最少1000
+            EvaluateManager.Instance.month_Salary[(week / 4) - 1] = salary;
             StartCoroutine(LACControl.Instance.Butt(salary));
             // Debug.Log(salary + "Salary");
             CameraManager.Instance.SetVirtualCam("LacCam", 0.25f);
@@ -2258,12 +2260,13 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     //     }
     //     SignAll.text = signAll;
     // }
-
+    public GameObject jewel_Weekend;//周末宝石的颜色
     void PostUpgrade(int NextLevel)
     {
         PlayerData.Instance.postLevel += 1;
         PlayerData.Instance.postLevelText.text = PlayerData.Instance.postLevel.ToString();
         LAC_Tree_Control.Instance.Stone(true);//更新宝石颜色
+        PlayerData.Instance.player_AI_Cha.workAbilityMatChangeColor();
 
         // GameObject sign = Instantiate(SignPrefab, PostUpgradeGroup.transform);
         // sign.GetComponent<TextMeshProUGUI>().text = "岗位升级到T" + NextLevel.ToString();
@@ -2418,7 +2421,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         bool isDead = false;
         if (
             (!FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth <= 0 || PlayerData.Instance.spiritualHealth <= 0))
-            || (FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth < -50 || PlayerData.Instance.spiritualHealth < -50))
+            || (FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth < -20 || PlayerData.Instance.spiritualHealth < -20))
             )
         {
             isDead = true;
@@ -2440,8 +2443,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         //锁血
         else if ((FieldManager.Instance.isUnDeath &&
-        (PlayerData.Instance.physicalHealth >= -50 && PlayerData.Instance.physicalHealth <= 0
-        || PlayerData.Instance.spiritualHealth >= -50 && PlayerData.Instance.spiritualHealth <= 0)))
+        (PlayerData.Instance.physicalHealth >= -20 && PlayerData.Instance.physicalHealth <= 0
+        || PlayerData.Instance.spiritualHealth >= -20 && PlayerData.Instance.spiritualHealth <= 0)))
         {
             PlayerData.Instance.physicalHealth = Mathf.Min(10, PlayerData.Instance.physicalHealthMax);
             PlayerData.Instance.spiritualHealth = Mathf.Min(10, PlayerData.Instance.spiritualHealthMax);
@@ -2639,7 +2642,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         int KPI_Last = Mechanism.Instance.KPIAverage;//上个月最后一周的平均水平
 
 
-        if (week <= 1 + 2 * 4)//前二个月，疯涨
+        if (week <= 1 + 4 * 4)//前二个月，疯涨
         {//1.4 2
             int KPINeed_NextMonth_Min = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_1_Min, 4));//和摸鱼的生存难度有关
             int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_1_Max, 4));//和猝死的生存难度有关   //(int)(KPINeed_EveryMonth * 2f * (1 + envirRollValue / 2000));

@@ -14,6 +14,7 @@ public class GiveUpButton : MonoBehaviour, IPointerClickHandler
     {
         animator.SetTrigger("21");
         Mechanism.Instance.OnClickGiveUpButton();
+        AudioManager.Instance.PlayClip("Swishing0");
     }
 
 }

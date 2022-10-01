@@ -190,7 +190,7 @@ public class TeachManager : MonoSingleton<TeachManager>
                 AddWord("花开三朵，各表一枝，不同分支将走向不同结局");
                 // AddWord("领导让你们提前一个晚上来上班，就是让你们好好制定下一周的计划");
                 // AddWord("到底是谁定的这条破规则？");
-                // AddWord("首先排除你的领导雨田军");
+                // AddWord("首先排除你的领导雨田君");
                 SetGuide(ExecuteButton, true);
                 break;
             /*OK*/

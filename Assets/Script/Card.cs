@@ -242,6 +242,7 @@ public partial class Card
         }
         else
         {
+            EvaluateManager.Instance.AddEffectCard(this);
             Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this].GetComponent<CardDisplayPersonalGame>().FX();
             if (this.executeQueue == 12)
             {
@@ -1037,7 +1038,6 @@ public partial class Card
                     break;
                 case "W":
                     n = 1f + (float)FieldManager.Instance.Level_HuiJie * 0.1f;
-                    Debug.Log("已增益" + n);
                     break;
                 default: break;
             }
