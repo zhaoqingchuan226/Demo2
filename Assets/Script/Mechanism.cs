@@ -7,15 +7,18 @@ using TMPro;
 public enum PlayState
 {
     MainMenu,//主界面
-    Black,//黑衣人动画
+    BeginAni,//黑衣人动画
     Chess,//玩家游玩部分
-    Story,//
+    // Story,//
 }
 
 //单次开始后的阶段
 public enum Phase
 {
-    Start,
+    ChooseTarget,
+    Map,
+    Library,
+    Start,//进入roll 的界面但是没有开始roll
     CreatCardAnimation,
     Calculate,
     TripletReward,
@@ -23,6 +26,7 @@ public enum Phase
     HolidayStore,
     KPITest,//检测游戏胜利失败的环节
     WeekendMeeting,
+    ChooseCard,//三选一卡牌
 }
 
 public struct FunctionEffect
@@ -35,14 +39,14 @@ public struct FunctionEffect
 
 public class FunctionEffectEx//连轴专用
 {
-    public int physicalHealthAdd;
-    public int spiritualHealthAdd;
-    public int workAbilityAdd;
-    public int KPIAdd;
-    public int physicalHealthMulti;
-    public int spiritualHealthMulti;
-    public int workAbilityMulti;
-    public int KPIMulti;
+    public float physicalHealthAdd;
+    public float spiritualHealthAdd;
+    public float workAbilityAdd;
+    public float KPIAdd;
+    public float physicalHealthMulti;
+    public float spiritualHealthMulti;
+    public float workAbilityMulti;
+    public float KPIMulti;
 
     public FunctionEffectEx()
     {
@@ -170,6 +174,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     // public float buffTime = 0.1f;//一次buff的时间
     // public float AI_Debuff_Time = 1f;//queue12的AIdebuff卡牌的Assign动画时间
     public float NormalCard_Time = 1.2f;//queue10的正常卡牌的Assign动画时间
+    public float DebuffAITime = 1.5f;
     public float GiveTime = 1f;//数值最后的位移时间
     public float PlayerDataChangeTime = 2;//UI上玩家数据改变的时间
     public GameObject textPrefab;
@@ -220,7 +225,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     public float KPI_Up_PerWeek_1_Max;
     public float KPI_Up_PerWeek_9_Min;
     public float KPI_Up_PerWeek_9_Max;
-
+    public int fast_Month_Count = 5;//飞速增长KPI需求的月数
 
 
     private void Awake()
@@ -236,7 +241,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         // HolidayPannel.SetActive(false);
         // Scene.SetActive(true);
         MeshRenderer mr = StartButton.GetComponent<MeshRenderer>();
-        phase = Phase.Start;
+
         buttonActive = true;
         globalUI.SetActive(false);
         chessBoard.SetActive(true);
@@ -247,7 +252,9 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     private void Start()
     {
-        KPINeed_EveryMonthText.text = KPINeed_EveryMonth.ToString();
+        EnterPhase(Phase.ChooseTarget);
+
+        // KPINeed_EveryMonthText.text = KPINeed_EveryMonth.ToString();
         // AI_Debuff_Sign_Pannel.SetActive(false);
         Warning_Panel.SetActive(false);
         BackMainMenuButton.SetActive(false);
@@ -257,10 +264,10 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         // {
         //     TeachManager.Instance.SetGuide(StartButton, true);
         // }
-        TeachManager.Instance.SetGuide(ExecuteButton, true);
+        // TeachManager.Instance.SetGuide(ExecuteButton, true);
         UpdateMechanism();//PlayerData中playerCards数组拷贝给本类中的playerCards，并根据时间分好组
         TripletCards = new int[150];
-
+        StartCoroutine(ChessBoardMove());
         // TeachManager.Instance.TeachEventTrigger("开头介绍");
     }
 
@@ -277,8 +284,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         // {
         phase = Phase.CreatCardAnimation;
         //！
-        // CameraManager.Instance.SetVirtualCam("ChessCam");ir
-        // // CameraManager.Instance.SetVirtualCam("ChessFeatureCam");
+
+
         // CameraManager.Instance.SetVirtualCamFollow(roots[0]);
         // }
 
@@ -319,7 +326,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         //     button.gameObject.SetActive(buttonActive);
         // }
 
-        // phase = Phase.CreatCardAnimation;
+
 
         //初始化FuncEffect
 
@@ -355,10 +362,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         functionEffectBuffer = default;//Black
 
         isFirstTriplet = true;
+        isFirstStory = true;
         isTripleyFXPlayed = false;
         isFirstWeekendMeeting = true;
-        isFirstChooseCardButton = true;
-        isFirstHolidayStore = true;
+
+
         isAudioPlayed = false;
         isFirstCreatAnimation = true;
         isFirstOpenMouth = true;
@@ -371,7 +379,9 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     }
     public void OnClickContinue()
     {
-        Mechanism.Instance.phase++;
+        StoryManager.Instance.GetPlotThisWeek();
+        MapManager.Instance.ChangeMistPoint();
+        EnterPhase(Phase.Map);
     }
 
     // public void Rotate_RotatePannel()
@@ -384,11 +394,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         while (true)
         {
             animationTimer += Time.deltaTime;
-            if (animationTimer > 2.5f)
+            if (animationTimer > 2 * DebuffAITime + 0.5f)
             {
                 animationTimer = 0;
-                // phase = Phase.CreatCardAnimation;
-                // CameraManager.Instance.SetVirtualCam("ChessFeatureCam");
+
+
                 // CameraManager.Instance.SetVirtualCamFollow(roots[0]);
                 isAISendShit = false;
                 yield break;
@@ -400,7 +410,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     {
         globalUI.SetActive(!globalUI.activeInHierarchy);
     }
-
+    bool isFirstStory = true;
     private void Update()
     {
 
@@ -415,19 +425,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
 
 
-        if (playState == PlayState.MainMenu)
-        {
 
-        }
-        else if (playState == PlayState.Black)
-        {
-
-        }
-        else if (playState == PlayState.Story)
-        {
-
-        }
-        else if (playState == PlayState.Chess)
+        if (playState == PlayState.Chess)
         {
             if (phase == Phase.CreatCardAnimation)
             {
@@ -444,8 +443,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             }
             else if (phase == Phase.Story)
             {
-                playState = PlayState.Story;
-                StoryManager.Instance.StartPlot();
+                if (isFirstStory)
+                {
+                    StoryManager.Instance.StartPlot();
+                    isFirstStory = false;
+                }
             }
             else if (phase == Phase.HolidayStore)
             {
@@ -453,20 +455,16 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 {
                     isFirstHolidayStore = false;
                     float r = Random.Range(0, 1f);
-                    if ((r < 0.3334f && week > 3) || week == 3)//第三周必第一次 之后每周刷出的概率为25%
+                    // if ((r < 0.3334f && week > 3) || week == 3)//第三周必第一次 之后每周刷出的概率为25%
+                    // {
+                    // holidayStorePanel.SetActive(true);
+                    HolidayStore.Instance.OpenStore();
+                    if (TeachManager.Instance.isFirstHolidayStore)
                     {
-                        // holidayStorePanel.SetActive(true);
-                        HolidayStore.Instance.OpenStore();
-                        if (TeachManager.Instance.isFirstHolidayStore)
-                        {
-                            TeachManager.Instance.TeachEventTrigger_Delay("假日商店介绍", 1.1f);
-                            TeachManager.Instance.isFirstHolidayStore = false;
-                        }
+                        TeachManager.Instance.TeachEventTrigger_Delay("假日商店介绍", 1.1f);
+                        TeachManager.Instance.isFirstHolidayStore = false;
                     }
-                    else
-                    {
-                        phase++;
-                    }
+
                 }
 
             }
@@ -478,12 +476,16 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             {
                 WeekendMeeting();
             }
+            else if (phase == Phase.ChooseCard)
+            {
+                ChooseCard();
+            }
             else if (phase == Phase.Start && buttonActive == false && isAISendShit == false)//第二周及其以后，第一次进入Start阶段
             {
                 buttonActive = true;
                 // Rotate_RotatePannel();
 
-                WeekendMeetingAll.Instance.Close();
+
                 AIMechanism.Instance.AI_Exchange_OnClickButton();
                 AI_Debuff_BUff_Text.text = null;
                 AI_Debuff_BUff_Text2.text = null;
@@ -507,14 +509,10 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
                 StartButton.GetComponent<ClickButton>().Start_2_Continue();
                 TeachManager.Instance.SetGuide(StartButton, true);
-                TeachManager.Instance.SetGuide(ExecuteButton, true);
+                // TeachManager.Instance.SetGuide(ExecuteButton, true);
 
                 PlayerData.Instance.UpdateDataToUI_Weekday();
-                if (week % 4 == 1 && week != 1)//月初
-                {
-                    UpdateKPINeedEveryMonth();
-                    SkullControl.Instance.GenerateEyeBall(0);//生成眼球
-                }
+
 
                 //黑衣人提示周数和月数
                 string blackWords = weekText.text + "开始了";
@@ -537,10 +535,10 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
 
 
-    public void PhaseAddAdd()
-    {
-        phase++;
-    }
+    // public void PhaseAddAdd()
+    // {
+    //     phase++;
+    // }
 
     //生成卡牌并且播放动画
     float Timer_fish = 0f;
@@ -591,7 +589,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             if (animationCounter == 21 || (playerCards_Night.Count == 0 && playerCards_Noon.Count == 0 && playerCards_Others.Count == 0))//第二十次循环结束或者卡抽光了
             {
                 animationCounter = 0;
-                // CameraManager.Instance.SetVirtualCam("ChessCam");
+
                 phase = Phase.Calculate;
                 FishControler.Instance.Open_Close_All();
                 FishControler.Instance.Mouth();
@@ -841,15 +839,15 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 AudioManager.Instance.PlayClip("recover0");
                 if (DeltaAll == DeltaAlls[0])//P
                 {
-                    StartCoroutine(LACControl.Instance.SetWeight("P", 100 * (Mathf.Clamp(functionEffectBuffer.physicalHealth + PlayerData.Instance.physicalHealth, 0, PlayerData.Instance.physicalHealthMax) - Mathf.Max(PlayerData.Instance.physicalHealth, 0)) / PlayerData.Instance.physicalHealthMax));
+                    StartCoroutine(LACControl.Instance.SetWeight("P", 100 * (PlayerData.Instance.physicalHealth + functionEffectBuffer.physicalHealth) / PlayerData.Instance.physicalHealthMax));// 100 * (Mathf.Clamp(functionEffectBuffer.physicalHealth + PlayerData.Instance.physicalHealth, 0, PlayerData.Instance.physicalHealthMax) - Mathf.Max(PlayerData.Instance.physicalHealth, 0)) / PlayerData.Instance.physicalHealthMax)
                 }
                 else if (DeltaAll == DeltaAlls[1])//S
                 {
-                    StartCoroutine(LACControl.Instance.SetWeight("S", 100 * (Mathf.Clamp(functionEffectBuffer.spiritualHealth + PlayerData.Instance.spiritualHealth, 0, PlayerData.Instance.spiritualHealthMax) - Mathf.Max(PlayerData.Instance.spiritualHealth, 0)) / PlayerData.Instance.spiritualHealthMax));
+                    StartCoroutine(LACControl.Instance.SetWeight("S", 100 * (PlayerData.Instance.spiritualHealth+functionEffectBuffer.spiritualHealth) / PlayerData.Instance.spiritualHealthMax));
                 }
                 else if (DeltaAll == DeltaAlls[3])//K
                 {
-                    StartCoroutine(LACControl.Instance.SetWeight("K", 100 * (Mathf.Clamp(functionEffectBuffer.KPI + PlayerData.Instance.KPI, 0, KPINeed_EveryMonth) - Mathf.Min(PlayerData.Instance.KPI, KPINeed_EveryMonth)) / KPINeed_EveryMonth));
+                    StartCoroutine(LACControl.Instance.SetWeight("K", 100 * (PlayerData.Instance.KPI+functionEffectBuffer.KPI) / need_ThisMonth.K));
                 }
                 else if (DeltaAll == DeltaAlls[2])//W
                 {
@@ -945,7 +943,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                     // {
                     //     KPIText.color = Color.yellow;
                     // }
-                    KPIText.text = "KPI：" + ((int)Mathf.Lerp(playerData_Last.KPI, playerData_Last.KPI + functionEffectBuffer.KPI, lerpFactor)).ToString() + "/" + KPINeed_EveryMonth.ToString();
+                    KPIText.text = "KPI：" + ((int)Mathf.Lerp(playerData_Last.KPI, playerData_Last.KPI + functionEffectBuffer.KPI, lerpFactor)).ToString() + "/" + need_ThisMonth.K.ToString();
                 }
             }
         }
@@ -989,15 +987,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 isFirstGive = true;
                 LACControl.Instance.SetFace(true);
 
-                //在这里检测KPI是否达标，并发射眼球
-                if (!isKPIThisMonthOK && PlayerData.Instance.KPI >= KPINeed_EveryMonth)
-                {
-                    isKPIThisMonthOK = true;
-                    PlayerData.Instance.KPILifeChange(+1);
-                    //播放眼球弹射动画
-                    SkullControl.Instance.EmitEye_Ani();
-                    SkullControl.Instance.O_C_Button(true);
-                }
+
+
+
+
+
 
                 if (TeachManager.Instance.isFirstAssignOver)
                 {
@@ -1033,6 +1027,40 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
 
     }
+
+
+    public void TargetTest()//月末检查是否达到目标
+    {
+        if (week % 4 == 0)
+        {
+            if (!isKPIThisMonthOK && need_ThisMonth.TestIsOK())// PlayerData.Instance.KPI >= KPINeed_EveryMonth
+            {
+                isKPIThisMonthOK = true;
+                PlayerData.Instance.KPILifeChange(+1);
+                //播放眼球弹射动画
+                SkullControl.Instance.EmitEye_Ani();
+                SkullControl.Instance.O_C_Button(true);
+            }
+            SkullControl.Instance.dialog_skull_left.SetDiaglog(need_ThisMonth.results);
+        }
+        else
+        {
+            bool b = need_ThisWeek.TestIsOK();
+            string s = need_ThisWeek.results;
+            if (b)//如果达标了，那就发奖金
+            {
+                int award = 1000 * (week / 4 + 1);//月数
+                s += "，获得了" + award.ToString() + "元奖金";
+                //发奖金函数，可能要延迟，因为拉奥孔会转
+                LACControl.Instance.StartCoroutine(LACControl.Instance.GenerateCoin(award, true));
+            }
+
+            SkullControl.Instance.dialog_skull_left.SetDiaglog(s);
+        }
+
+    }
+
+
     public AnimationCurve DeltaAllScale;
     // IEnumerator DeltaAllMoveAndDie(string s, Vector3 destPos, float timer = 0)//左边的delta值向下移动，最终消失
     // {
@@ -1255,7 +1283,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             float time = NormalCard_Time;//其他队列的卡牌都是NormalCard_Time，而12队列的捉弄AI卡牌时间会长一点
             if (animationCounter == 12)
             {
-                time *= 2;
+                time = 2 * DebuffAITime;
             }
 
             if (animationTimer > time)
@@ -1285,7 +1313,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 }
                 else//连轴
                 {
-                    Vector3 localPosAdd = new Vector3(0, 0.3f, 0);
+                    Vector3 localPosAdd = new Vector3(0, 0.3f * 0.0465f, 0);
                     if (animationCounter == 20)
                     {
                         card.DWCardEffect();
@@ -1392,6 +1420,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                         GameObject cardPG2 = CreatCardConnect(ref playerCards_Times_Less11, ref playerCards_Times, card.posNum);
                         Card card2 = cardPG2.GetComponent<CardDisplayPersonalGame>().card;
                         card2.functionEffectEx = card.functionEffectEx;//传承functionEffectEx
+                        Debug.Log(card2.functionEffectEx.KPIMulti.ToString() + card2.title);
                         cardPersonalGamePrefabs_CurrentQueue.Insert(0, cardPG2);
                     }
                 }
@@ -1414,7 +1443,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         animationTimer = NormalCard_Time - 0.01f;
         if (animationCounter == 12)
         {
-            animationTimer = 2 * NormalCard_Time - 0.01f;
+            animationTimer = 2 * DebuffAITime - 0.01f;
         }
     }
 
@@ -1636,7 +1665,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             textPrefabList.Add(TextPrefab);//而textPrefabList是单个CardGameObject上的TextPrefab的集合
         }
     }
-    void CreatText8(string playerData, ref Vector3 localPosAdd, Card card, GameObject CardGameObject, ref int value, string type)//type是加还是乘
+    void CreatText8(string playerData, ref Vector3 localPosAdd, Card card, GameObject CardGameObject, ref float value, string type)//type是加还是乘
     {
         if (!isPlayCreatText)
         {
@@ -1657,11 +1686,11 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             //正负修正
             if (value >= 0)
             {
-                Text.text += "+" + value.ToString();
+                Text.text += "+" + ((int)value).ToString();
             }
             else
             {
-                Text.text += value.ToString();
+                Text.text += ((int)value).ToString();
             }
         }
 
@@ -1860,7 +1889,17 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
     }
 
-
+    void DelayContinue()
+    {
+        StartCoroutine(DC());
+    }
+    IEnumerator DC()
+    {
+        yield return new WaitForSeconds(0.81f);
+        StartButton.GetComponent<ClickButton>().Start_2_Continue();
+        TeachManager.Instance.SetGuide(StartButton, true);
+        yield break;
+    }
     bool isTripleyFXPlayed = false;//三连特效是否已经播放
     //三连奖励
     void TripletReward()
@@ -1877,8 +1916,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             PlayerData.Instance.SortCards();
 
             isFirstTriplet = false;
-            StartButton.GetComponent<ClickButton>().Start_2_Continue();
-            TeachManager.Instance.SetGuide(StartButton, true);
+            DelayContinue();
             return;
         }
         if (isTripleyFXPlayed)
@@ -1930,10 +1968,13 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             AIMechanism.Instance.AI_Exchange_WeekendMeeting();//计算AI数据和所有对象的排名,并给AI改UI
             PlayerData.Instance.UpdateDataToUI_Weekday();//更新数据到UI
                                                          // AIMechanism.Instance.CalculateKPITop();//计算这周最高的KPI数值
-
-
+            ExecuteButton.GetComponent<ClickButton>().JudgeUpgrade();
         }
 
+
+    }
+    void ChooseCard()
+    {
         if (!isFirstChooseCardButton)//如果按下了选择卡牌按钮
         {
             if (isChoose == false && chooseTimes > 0)
@@ -1965,7 +2006,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             }
 
             //发工资了
-            int salary = Mathf.Min(PlayerData.Instance.KPI * 10, PlayerData.Instance.postLevel * 10000);
+            int salary = Mathf.Min(PlayerData.Instance.KPI * 50, PlayerData.Instance.postLevel * 3000);
             salary = (salary / 1000) * 1000;//确保单笔最少1000
             EvaluateManager.Instance.month_Salary[(week / 4) - 1] = salary;
             StartCoroutine(LACControl.Instance.Butt(salary));
@@ -1973,7 +2014,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             CameraManager.Instance.SetVirtualCam("LacCam", 0.25f);
             // PlayerData.Instance.ChangeMoney(salary);
             SignAll_Update("月末发薪水，你的财富增加了" + salary.ToString());
-            StartCoroutine(LACControl.Instance.SetWeight("K", -100 * (Mathf.Clamp01(PlayerData.Instance.KPI / (float)KPINeed_EveryMonth))));
+            StartCoroutine(LACControl.Instance.SetWeight("K",0));
             PlayerData.Instance.KPI = 0;
             playerData_Last.KPI = 0;
             PlayerData.Instance.KPIText.text = "0";
@@ -2032,8 +2073,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         id_spiritualHealths_Last.Add(5, PlayerData.Instance.spiritualHealth);
 
         //
-        LACControl.Instance.StartCoroutine(LACControl.Instance.SetWeight("P", 100f * (Mathf.Clamp((int)(recoverRate * PlayerData.Instance.physicalHealthMax) + PlayerData.Instance.physicalHealth, 0, PlayerData.Instance.physicalHealthMax) - Mathf.Max(PlayerData.Instance.physicalHealth, 0)) / (float)PlayerData.Instance.physicalHealthMax));
-        LACControl.Instance.StartCoroutine(LACControl.Instance.SetWeight("S", 100f * (Mathf.Clamp((int)(recoverRate * PlayerData.Instance.spiritualHealthMax) + PlayerData.Instance.spiritualHealth, 0, PlayerData.Instance.spiritualHealthMax) - Mathf.Max(PlayerData.Instance.spiritualHealth, 0)) / (float)PlayerData.Instance.spiritualHealthMax));
+        LACControl.Instance.StartCoroutine(LACControl.Instance.SetWeight("P", 100f *(recoverRate * PlayerData.Instance.physicalHealthMax + PlayerData.Instance.physicalHealth) / PlayerData.Instance.physicalHealthMax));
+        LACControl.Instance.StartCoroutine(LACControl.Instance.SetWeight("S", 100f *(recoverRate * PlayerData.Instance.spiritualHealthMax + PlayerData.Instance.spiritualHealth) / PlayerData.Instance.spiritualHealthMax));
 
 
         FieldManager.Instance.OverFillP += Mathf.Max(0, PlayerData.Instance.physicalHealth + (int)(recoverRate * PlayerData.Instance.physicalHealthMax) - PlayerData.Instance.physicalHealthMax);
@@ -2079,19 +2120,44 @@ public partial class Mechanism : MonoSingleton<Mechanism>
                 // PlayerData.Instance.spiritualHealthText.color =Color.blue;
                 LACControl.Instance.SetFace();
                 animationTimer = 0;
-                week++;
+                if (FieldManager.Instance.isWeekStop)//时光旅行卡的一次性时停
+                {
+                    FieldManager.Instance.isWeekStop = false;
+                }
+                else
+                {
+                    week++;
+                }
+
                 weekText.text = "第" + (((week - 1) / 4) + 1).ToString() + "月第" + ((week - 1) % 4 + 1).ToString() + "周";
 
 
 
-                phase = Phase.Start;
+
 
                 ClickButton cb_Execute = ExecuteButton.GetComponent<ClickButton>();
-                cb_Execute.font.text = "选择卡牌";
+                cb_Execute.font.text = "岗位升级";
 
                 ClickButton cb_Pass = PassButton.GetComponent<ClickButton>();
                 cb_Pass.font.text = "跳过";
                 cb_Pass.ButtonRecover();
+
+
+                if (week % 4 == 1 && week != 1)//月初
+                {
+                    UpdateKPINeedEveryMonth();
+                    SkullControl.Instance.GenerateEyeBall(0);//生成眼球
+                    EnterPhase(Phase.ChooseTarget);
+                }
+                else
+                {
+                    MapManager.Instance.OpenMap();
+                    EnterPhase(Phase.Map);
+                }
+
+
+
+
 
                 yield break;
             }
@@ -2151,7 +2217,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
     public void OnClickChooseCardButton()//在点击选择卡牌按钮的时候,获得三次选择次数,isFirstChooseCardButton为false;点击后button将不可用
     {
         chooseTimes += 2;
-        isFirstChooseCardButton = false;
+        isFirstChooseCardButton = false;//选择卡牌的按钮被点击了
+        EnterPhase(Phase.ChooseCard);
         // ChooseButton.SetActive(false);
     }
     public void OnClickPostUpgradeButton()//点击岗位升级按钮
@@ -2328,7 +2395,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         isFirstKPITest2 = true;//消灭眼球的动画
         isFirstKPITest3 = true;
         timer_KPITest = 0f;
-        phase++;
+        // phase++;
+        EnterPhase(Phase.WeekendMeeting);
     }
 
     //死因
@@ -2362,7 +2430,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         {
             isFirstKPITest = false;
 
-            //先检测有没有死亡，如果死亡，那就没有后面的时期了
+            //先检测有没有死亡，如果死亡，那就没有后面的事情了
             isGameOver = TestifDead();
             if (isGameOver)
             {
@@ -2382,28 +2450,38 @@ public partial class Mechanism : MonoSingleton<Mechanism>
 
         }
 
-        // }
         if (timer_KPITest >= EyeAniTime)
         {
-            //这是额外要扣的
-            //这里面自动会扣KPI和烧眼球，且如果游戏结束，那就会自动弹出对话框
+            //每周每月的目标检测
             if (isFirstKPITest2)
             {
                 isFirstKPITest2 = false;
+                TargetTest();
+            }
+
+        }
+
+
+        if (timer_KPITest >= 2 * EyeAniTime)
+        {
+            //这是额外要扣的
+            //这里面自动会扣KPI和烧眼球，且如果游戏结束，那就会自动弹出对话框
+            if (isFirstKPITest3)
+            {
+                isFirstKPITest3 = false;
                 if (week % 4 == 0)
                 {
                     isGameOver = ISKPIOK();
                 }
                 else
                 {
-                    timer_KPITest = 2 * EyeAniTime;
+                    timer_KPITest = 3 * EyeAniTime;
                 }
             }
 
         }
-        if (timer_KPITest >= 2 * EyeAniTime)
+        if (timer_KPITest >= 3 * EyeAniTime)
         {
-
             if (!isGameOver)
             {
                 NextPart();
@@ -2421,7 +2499,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         bool isDead = false;
         if (
             (!FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth <= 0 || PlayerData.Instance.spiritualHealth <= 0))
-            || (FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth < -20 || PlayerData.Instance.spiritualHealth < -20))
+            || (FieldManager.Instance.isUnDeath && (PlayerData.Instance.physicalHealth < -30 || PlayerData.Instance.spiritualHealth < -30))
             )
         {
             isDead = true;
@@ -2443,8 +2521,8 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
         //锁血
         else if ((FieldManager.Instance.isUnDeath &&
-        (PlayerData.Instance.physicalHealth >= -20 && PlayerData.Instance.physicalHealth <= 0
-        || PlayerData.Instance.spiritualHealth >= -20 && PlayerData.Instance.spiritualHealth <= 0)))
+        (PlayerData.Instance.physicalHealth >= -30 && PlayerData.Instance.physicalHealth <= 0
+        || PlayerData.Instance.spiritualHealth >= -30 && PlayerData.Instance.spiritualHealth <= 0)))
         {
             PlayerData.Instance.physicalHealth = Mathf.Min(10, PlayerData.Instance.physicalHealthMax);
             PlayerData.Instance.spiritualHealth = Mathf.Min(10, PlayerData.Instance.spiritualHealthMax);
@@ -2470,14 +2548,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             // isGameOver = true;
             isOpenPanel = true;
         }
-        // else if (PlayerData.Instance.KPI < KPINeed_EveryMonth)
-        // {
-        //     isGameOver = KPILifeReduceSign(false);
-        // }
-        // if (PlayerData.Instance.KPILife > 0)
-        // {
-        //     //+ PlayerData.Instance.KPILife.ToString() + "次"
-        // }
+
         if (PlayerData.Instance.KPILife == 0)
         {
             warningText.text += "所有眼球都烧光了，随后你将成为它的饲料......";
@@ -2642,7 +2713,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         int KPI_Last = Mechanism.Instance.KPIAverage;//上个月最后一周的平均水平
 
 
-        if (week <= 1 + 4 * 4)//前二个月，疯涨
+        if (week <= 1 + 4 * fast_Month_Count)//前二个月，疯涨
         {//1.4 2
             int KPINeed_NextMonth_Min = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_1_Min, 4));//和摸鱼的生存难度有关
             int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_1_Max, 4));//和猝死的生存难度有关   //(int)(KPINeed_EveryMonth * 2f * (1 + envirRollValue / 2000));
@@ -2654,7 +2725,7 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             int KPINeed_NextMonth_Max = (int)(KPINeed_EveryMonth * Mathf.Pow(KPI_Up_PerWeek_9_Max, 4));//(int)(KPINeed_EveryMonth * 1.2f * (1 + envirRollValue / 2000));
             KPINeed_EveryMonth = Mathf.Clamp((int)(KPI_Last * 4 * Mathf.Pow(KPI_Up_PerWeek_9_Min, 4)), KPINeed_NextMonth_Min, KPINeed_NextMonth_Max);
         }
-        KPINeed_EveryMonthText.text = KPINeed_EveryMonth.ToString();
+
     }
 
     void DelayState()
@@ -2690,11 +2761,13 @@ public partial class Mechanism : MonoSingleton<Mechanism>
             TeachManager.Instance.TeachEventTrigger_Delay("开头介绍", 1.1f);
         }
 
-        CameraManager.Instance.SetVirtualCam("BlackCam");
+
+
+
         // if (isBeginBlack)//播完动画后开头有黑幕
         // {
         //     // CameraManager.Instance.Chess_Cam_BlackFade();
-        //     // CameraManager.Instance.SetVirtualCam("ChessCam", 0f);//瞬间切换
+
         //     // StoryManager.Instance.Stranger_SitSofa();
         // }
         // else
@@ -2751,6 +2824,75 @@ public partial class Mechanism : MonoSingleton<Mechanism>
         }
     }
 
+    public void EnterPhase(Phase p)
+    {
+        if (phase != p)
+        {
+            ExitPhase(phase);//先离开当前phase
+        }
+        phase = p;
+        switch (p)
+        {
+            case Phase.Start:
+                CameraManager.Instance.SetVirtualCam("BlackCam");
+                StartCoroutine(ChessBoardMove(true));
+                break;
+            case Phase.Map:
+                CameraManager.Instance.SetVirtualCam("ChessCam", 0.5f);
 
+                StartCoroutine(MapManager.Instance.MapMove(true));
+                break;
+            case Phase.KPITest:
+                CameraManager.Instance.SetVirtualCam("BlackCam", 0.25f);
+                break;
+            case Phase.WeekendMeeting:
+                CameraManager.Instance.SetVirtualCam("WeekendCam", 0.25f);
+                break;
+            case Phase.Story:
+                CameraManager.Instance.SetVirtualCam("BlackCam", 0.25f);
+                break;
+            case Phase.ChooseTarget:
+                CameraManager.Instance.SetVirtualCam("ChessCam", 0.5f);
+                TargetChooseManager.Instance.Open();
+                break;
+            default:
+                break;
+        }
+
+
+    }
+    public void ExitPhase(Phase p)
+    {
+        switch (p)
+        {
+            case Phase.TripletReward:
+                StartCoroutine(ChessBoardMove());
+                break;
+            case Phase.Map:
+                StartCoroutine(MapManager.Instance.MapMove());
+                break;
+            case Phase.HolidayStore:
+                HolidayStore.Instance.CloseStore();
+                isFirstHolidayStore = true;
+                break;
+            case Phase.ChooseCard:
+                isFirstChooseCardButton = true;
+                break;
+            case Phase.WeekendMeeting:
+                WeekendMeetingAll.Instance.Close();
+                break;
+            default:
+                break;
+        }
+    }
+    [HideInInspector] public Need need_ThisMonth;
+    public NeedDisplay nd_thisMonth;
+    [HideInInspector] public Need need_ThisWeek;
+    public void UpdateND(Need need)
+    {
+        need_ThisMonth = need;
+        nd_thisMonth.need = need_ThisMonth;
+        nd_thisMonth.Show();
+    }
 
 }

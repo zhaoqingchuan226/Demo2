@@ -217,14 +217,16 @@ namespace PinYinSpell
         public static string MakePinYin(string strChinese, SpellOptions options)
         {
             string[] pinyin = _PinYinSplit;
+            // return "bbbb";
             Encoding encoding = Encoding.GetEncoding("GB2312");
-
+            // return "bbbb";
+            // DebugManager.Instance.AddDebugThings("GB2312");
             byte[] local = encoding.GetBytes(strChinese);
-
+            // DebugManager.Instance.AddDebugThings("strChinese");
             int i = 0;
             StringBuilder result = new StringBuilder();
             string tmp = "";
-
+            //  DebugManager.Instance.AddDebugThings("tmp");
             while (i < local.Length)
             {
                 // 是否为GBK 字符
@@ -289,7 +291,7 @@ namespace PinYinSpell
                                 }
                                 else
                                 {
-                                    if (index < pinyin.Length&&index>=0)
+                                    if (index < pinyin.Length && index >= 0)
                                     {
                                         tmp = pinyin[index];
                                     }
@@ -328,6 +330,7 @@ namespace PinYinSpell
                 }
 
             }
+            // DebugManager.Instance.AddDebugThings(result.ToString());//这个函数没有被用？
             return result.ToString();
         }
 
@@ -348,6 +351,7 @@ namespace PinYinSpell
                     sb.Append(c);
                 }
             }
+            // DebugManager.Instance.AddDebugThings(sb.ToString());
             return sb.ToString();
         }
     }

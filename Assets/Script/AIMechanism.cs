@@ -401,7 +401,7 @@ public class AIData//对应PlayerData
     {
         // int week = Mechanism.Instance.week;
         float n;
-        if (Mechanism.Instance.week <= 1 + 4 * 4)
+        if (Mechanism.Instance.week <= 1 + 4 * Mechanism.Instance.fast_Month_Count)
         {
             n = (Mechanism.Instance.KPI_Up_PerWeek_1_Min + Mechanism.Instance.KPI_Up_PerWeek_1_Max) / 2;
         }
@@ -851,10 +851,7 @@ public class AIMechanism : MonoSingleton<AIMechanism>//对应Mechanism
             {
                 AIRemove(AIDatas_Temp[i], "排名过于靠后");
             }
-            // else if (AIDatas_Temp[i].KPI < Mechanism.Instance.KPINeed_EveryMonth * (5 - AIDatas_Temp[i].joinWeek % 4))//*(5-AIDatas_Temp[i].joinWeek)是为了保证月中来的AI不至于被光速淘汰
-            // {
-            //     AIRemove(AIDatas_Temp[i], "未达成本月KPI");
-            // }
+            
         }
 
     }

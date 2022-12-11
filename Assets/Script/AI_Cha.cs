@@ -87,7 +87,7 @@ public class AI_Cha : MonoBehaviour
             dialog_Mini = Mini.GetComponent<Dialog>();
         }
     }
-
+    Coroutine last_co = null;
     //!!!!!!!!!!!!!!Chess!!!!!!!!!!!!!!
     public void Mini_BeDebuffed(int id1)//布偶被debuff的动画 //id是卡牌的id
     {
@@ -122,7 +122,8 @@ public class AI_Cha : MonoBehaviour
             animator_Box.SetTrigger("Open");
         }
 
-        Speak(id1);
+        DelaySpeak(id1);
+
         //确定头
 
         if (aI_Cha_Type == AI_Cha_Type.AI)
@@ -133,8 +134,12 @@ public class AI_Cha : MonoBehaviour
         //升起来落下去的协程动画
         if (AI_Mini != null)//领导有的时候不会播放
         {
-            StopAllCoroutines();
-            StartCoroutine(AI_Mini_Move());
+            if (last_co != null)
+            {
+                StopCoroutine(last_co);
+            }
+
+            last_co = StartCoroutine(AI_Mini_Move());
         }
 
 
@@ -160,9 +165,10 @@ public class AI_Cha : MonoBehaviour
 
         while (true)
         {
-            if (timer > 2.4f)
+            if (timer > (2 * Mechanism.Instance.DebuffAITime - 0.04f))
             {
                 animator_Box.SetTrigger("Close");//关盒子
+                AI_Mini.transform.localPosition = originPos;
                 if (AI_Mini != null)
                 {
                     Destroy(AI_Mini);
@@ -171,12 +177,23 @@ public class AI_Cha : MonoBehaviour
                 yield break;
             }
             timer += Time.deltaTime;
-            float factor = timer / 2.4f;
+            float factor = timer / (2 * Mechanism.Instance.DebuffAITime - 0.04f);
             AI_Mini.transform.localPosition = originPos + new Vector3(0, anic_MiniMove.Evaluate(factor) * 0.1f, 0);
             yield return null;
         }
     }
-
+    void DelaySpeak(int id1)
+    {
+        StartCoroutine(Delay_Speak(id1));
+    }
+    IEnumerator Delay_Speak(int id1)
+    {
+        Debug.Log("DelaySpeak0");
+        yield return new WaitForSeconds(Mechanism.Instance.DebuffAITime / 2);
+        Debug.Log("DelaySpeak1");
+        Speak(id1);
+        yield break;
+    }
     void Speak(int id1)
     {
         if (aI_Cha_Type == AI_Cha_Type.Leader)
@@ -299,7 +316,7 @@ public class AI_Cha : MonoBehaviour
         animator_Box.SetTrigger("Open");
         //模型动画
         StartCoroutine(AI_Mini_Move());
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(Mechanism.Instance.DebuffAITime);
         Speak_SendShit(card.id);
         if (se != null)
         {
@@ -381,7 +398,7 @@ public class AI_Cha : MonoBehaviour
         }
         else if (aI_Cha_Type == AI_Cha_Type.Player)
         {
-            n =PlayerData.Instance.postLevel;
+            n = PlayerData.Instance.postLevel;
         }
         switch (n)
         {
@@ -513,7 +530,7 @@ public class AI_Cha : MonoBehaviour
             //新来的
             for (var i = 0; i < NewAiNames.Count; i++)
             {
-                s += NewAiNames[i] + "复活了，并换了一个人格";
+                s += NewAiNames[i] + "复活了，并换了一个人格" + "\r\n";
                 NewAiNames.Remove(NewAiNames[i]);
             }
 
@@ -522,7 +539,7 @@ public class AI_Cha : MonoBehaviour
 
             for (int i = 0; i < names.Count; i++)
             {
-                s += names[i] + "因" + names_reasons_Dic[names[i]] + "离开了";
+                s += names[i] + "因" + names_reasons_Dic[names[i]] + "离开了" + "\r\n";
                 names_reasons_Dic.Remove(names[i]);
             }
 
@@ -596,7 +613,7 @@ public class AI_Cha : MonoBehaviour
                 if (timer > T)
                 {
                     timer = 0;
-                    WeekendMeetingAll.Instance.weekendPhase = weekendPhase.Start;
+                    WeekendMeetingAll.Instance.weekendPhase = weekendPhase.PostUpgrade;
                 }
             }
 

@@ -23,7 +23,7 @@ PlayerData_OnlyData //仅数字数据
 public class PlayerData : MonoSingleton<PlayerData>
 {
     [HideInInspector] public int playerMoney;//必然是1000的倍数
-    public TextMeshProUGUI playerMoney_Text;
+    public TextMeshPro playerMoney_Text;
 
     public List<Card> playerCards = new List<Card>();
 
@@ -49,6 +49,7 @@ public class PlayerData : MonoSingleton<PlayerData>
     public GameObject spiritualHealthWarning1;//精力值不足提醒-黄
     public GameObject physicalHealthWarning2;//生命值不足提醒-红
     public GameObject spiritualHealthWarning2;//精力值不足提醒-红
+
 
 
     public TextMeshPro spiritualHealthText;
@@ -148,7 +149,7 @@ public class PlayerData : MonoSingleton<PlayerData>
             string[] elements = dataRow.Split(',');
             if (elements[0] == "money")
             {
-                LACControl.Instance.StartCoroutine(LACControl.Instance.GenerateCoin(int.Parse(elements[1]),false));
+                LACControl.Instance.StartCoroutine(LACControl.Instance.GenerateCoin(int.Parse(elements[1]), false));
             }
             else if (elements[0] == "card")
             {
@@ -445,7 +446,7 @@ public class PlayerData : MonoSingleton<PlayerData>
         physicalHealthText.text = "体力：" + physicalHealth.ToString() + "/" + physicalHealthMax.ToString();
         spiritualHealthText.text = "精力：" + spiritualHealth.ToString() + "/" + spiritualHealthMax.ToString();
         workAbilityText.text = "能力：" + workAbility.ToString();
-        KPIText.text = "KPI：" + KPI.ToString() + "/" + Mechanism.Instance.KPINeed_EveryMonth.ToString();
+        KPIText.text = "KPI：" + KPI.ToString() + "/" + Mechanism.Instance.need_ThisMonth.K.ToString();
         rangkingText.text = ranking.ToString();
         JudgeRankingColor(ranking, rangkingText, KPIText);
         postLevelText.text = postLevel.ToString();
@@ -568,7 +569,7 @@ public class PlayerData : MonoSingleton<PlayerData>
     public void ChangeMoney(int value)
     {
         playerMoney = Mathf.Max(0, playerMoney + value);
-        playerMoney_Text.text = playerMoney.ToString();
+        playerMoney_Text.text = "金钱：" + playerMoney.ToString();
     }
 
     public void PSWarning()
@@ -613,6 +614,7 @@ public class PlayerData : MonoSingleton<PlayerData>
             spiritualHealthText.gameObject.SetActive(false);
             workAbilityText.gameObject.SetActive(false);
             KPIText.gameObject.SetActive(false);
+            playerMoney_Text.gameObject.SetActive(false);
         }
         else
         {
@@ -621,6 +623,7 @@ public class PlayerData : MonoSingleton<PlayerData>
             spiritualHealthText.gameObject.SetActive(true);
             workAbilityText.gameObject.SetActive(true);
             KPIText.gameObject.SetActive(true);
+            playerMoney_Text.gameObject.SetActive(true);
         }
     }
     public void O_C_Text(string s)

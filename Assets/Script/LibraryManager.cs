@@ -182,6 +182,7 @@ public class LibraryManager : MonoSingleton<LibraryManager>
     // }
     public void OpenLibrary()
     {
+        CardStore.Instance.AutoReDesAllCards();
         StartCoroutine(Mechanism.Instance.ChessBoardMove());
         isOpen = true;
         libraryPanel.SetActive(true);
@@ -217,7 +218,7 @@ public class LibraryManager : MonoSingleton<LibraryManager>
         }
         else
         {
-            CameraManager.Instance.SetVirtualCam("BlackCam");
+            CameraManager.Instance.SetVirtualCam("BlackCam");//可能会出问题
         }
 
         TeachManager.Instance.SetGuide(this.gameObject, false);

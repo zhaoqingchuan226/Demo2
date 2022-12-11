@@ -19,10 +19,10 @@ public class MainBlur2 : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    // void Update()
+    // {
 
-    }
+    // }
   
   
     private void OnRenderImage(RenderTexture src, RenderTexture dest)

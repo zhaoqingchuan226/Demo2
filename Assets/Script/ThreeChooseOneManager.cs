@@ -35,6 +35,7 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
     [HideInInspector] public bool isFirstChoose = true;//三次三连中，第一次三连为true//三次平时选择中，第一次为true
     public void Open()//触发函数，相当于enabled
     {
+        CardStore.Instance.AutoReDesAllCards();
         if (FieldManager.Instance.isMouse && !FieldManager.Instance.isTripletReward)
         {
             isFirstCard16 = true;
@@ -44,27 +45,26 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
         FieldManager.Instance.isSpeakIn1_3 = false;
         if (isFirstChoose)
         {
-            WeekendMeetingAll.Instance.weekendPhase = weekendPhase.Else;
+            // WeekendMeetingAll.Instance.weekendPhase = weekendPhase.Else;
 
             giveUpButton.SetActive(true);
             isFirstChoose = false;
             // Mechanism.Instance.ForceChessboardOut(true);
-            if (Mechanism.Instance.phase != Phase.WeekendMeeting)//三连这么玩
+            if (Mechanism.Instance.phase == Phase.TripletReward)//三连这么玩
             {
                 Mechanism.Instance.StartCoroutine(Mechanism.Instance.ChessBoardMove());
             }
-            else//周末选牌会移动周末的场景
-            {
-                StartCoroutine(WeekendMeetingAll.Instance.HolidayStoreMove());
-            }
+            // else//周末选牌会移动周末的场景
+            // {
+            //     StartCoroutine(WeekendMeetingAll.Instance.WeekendMeetingMove());
+            // }
 
             CameraManager.Instance.SetVirtualCam("ChessCam");
         }
 
 
         // StoryManager.Instance.Stranger_SitDesk();//坐过来
-        // CameraManager.Instance.SetVirtualCam("BlackCam");//看人
-        // CameraManager.Instance.SetVirtualCamLookAt(CameraManager.Instance.Stranger_Abdomen);//看腹部
+
         PanelAll.SetActive(true);
         cards_LV1.Clear();
         cards_LV2.Clear();
@@ -285,7 +285,6 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
     {
         if (isExitGame == false)
         {
-
             cardGroup.SetActive(false);
             currentCardAmount = 0;
             for (int i = 0; i < card3_1Prefabs.Count; i++)
@@ -309,25 +308,22 @@ public class ThreeChooseOneManager : MonoSingleton<ThreeChooseOneManager>
             //棋盘移动
             if (Mechanism.Instance.chooseTimes == 0)
             {
-                // Mechanism.Instance.ForceChessboardOut(false);
-                if (Mechanism.Instance.phase != Phase.WeekendMeeting)//周末选择的时候不需要拉回棋盘
+
+                if (Mechanism.Instance.phase == Phase.TripletReward)
                 {
                     Mechanism.Instance.StartCoroutine(Mechanism.Instance.ChessBoardMove(true));
+                    CameraManager.Instance.SetVirtualCam("BlackCam");
                 }
                 else
                 {
-                    StartCoroutine(WeekendMeetingAll.Instance.HolidayStoreMove(true));
+                    Mechanism.Instance.EnterPhase(Phase.Map);
                 }
 
-                CameraManager.Instance.BackLastCamera(0.5f);
+
                 giveUpButton.SetActive(false);
                 isFirstChoose = true;
 
-                if (Mechanism.Instance.phase == Phase.WeekendMeeting)//周末选完牌之后，npc会说我要升职了
-                {
-                    WeekendMeetingAll.Instance.weekendPhase = weekendPhase.PostUpgrade;
 
-                }
             }
         }
 

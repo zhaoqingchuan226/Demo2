@@ -23,6 +23,14 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
 
     Animator animator;//闸门专用
 
+    void Update()
+    {
+        if (font.text == "继续")
+        {
+           
+        }
+    }
+
     void Awake()
     {
         // if(font.text=="开始")
@@ -190,7 +198,6 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
         if (font.text == "开始")
         {
             font.text = "继续";
-
         }
         else if (font.text == "继续")
         {
@@ -233,7 +240,6 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
                 ClickButton cb = obj.GetComponent<ClickButton>();
                 cb.font.text = "新的一周";
                 TeachManager.Instance.SetGuide(obj, true);
-
             }
             StartCoroutine(Execute_Skip_Recover(0.1f, font.text));
         }
@@ -241,13 +247,17 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
 
     public void OnClickSkip(List<GameObject> objs)
     {
-        if (TeachManager.Instance.isFirstUpgrade || TeachManager.Instance.isFirstUpgrade)
+
+        if (TeachManager.Instance.isGuide && TeachManager.Instance.isFirstUpgrade)
         {
             return;
         }
+
         if (!isPressed && font.text == "新的一周")
         {
+
             Mechanism.Instance.OnClickNextWeekButton();
+
             JustPress();
             StartCoroutine(Execute_Skip_Recover(Mechanism.Instance.PlayerDataChangeTime + 0.8f, font.text));
         }
@@ -262,7 +272,34 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
         }
     }
 
+    public void JudgeUpgrade()//检测是否能够升级岗位
+    {
+        if (font.text == "岗位升级")
+        {
+            if (PlayerData.Instance.postLevel < 5)
+            {
+                if (PlayerData.Instance.workAbility >= Mechanism.Instance.postUpgradeNeeds[PlayerData.Instance.postLevel - 1])
+                {
+                    TeachManager.Instance.SetGuide(this.gameObject, true);
+                }
+                else
+                {
+                    foreach (var obj in EffectObjs)
+                    {
+                        TeachManager.Instance.SetGuide(obj, true);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var obj in EffectObjs)
+                {
+                    TeachManager.Instance.SetGuide(obj, true);
+                }
+            }
+        }
 
+    }
 
     IEnumerator Execute_Skip_Recover(float interval, string fontTextNow)
     {
@@ -283,27 +320,7 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
                     font.text = "岗位升级";
 
 
-                    if (PlayerData.Instance.postLevel < 5)
-                    {
-                        if (PlayerData.Instance.workAbility >= Mechanism.Instance.postUpgradeNeeds[PlayerData.Instance.postLevel - 1])
-                        {
-                            TeachManager.Instance.SetGuide(this.gameObject, true);
-                        }
-                        else
-                        {
-                            foreach (var obj in EffectObjs)
-                            {
-                                TeachManager.Instance.SetGuide(obj, true);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var obj in EffectObjs)
-                        {
-                            TeachManager.Instance.SetGuide(obj, true);
-                        }
-                    }
+
                 }
                 else if (font.text == "选择遗物")
                 {
@@ -409,7 +426,7 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
     //     LibraryManager.Instance.UpdateLibrary();
     //     FishControler.Instance.Open_Close_All();
     //     FishControler.Instance.Mouth();
-    //     CameraManager.Instance.SetVirtualCam("LibraryCam");
+
     // }
     // public void CloseLibrary()
     // {
@@ -425,7 +442,7 @@ public class ClickButton : MonoBehaviour, IPointerDownHandler
 
     //     FishControler.Instance.Open_Close_All();
     //     FishControler.Instance.Mouth();
-    //     CameraManager.Instance.SetVirtualCam("BlackCam");
+
     //     TeachManager.Instance.SetGuide(this.gameObject, false);
     // }
     IEnumerator DelayIntro()

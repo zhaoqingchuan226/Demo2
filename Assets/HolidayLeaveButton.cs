@@ -5,9 +5,8 @@ using UnityEngine.EventSystems;
 using TMPro;
 public class HolidayLeaveButton : MonoBehaviour, IPointerClickHandler
 {
-   public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-       
-        HolidayStore.Instance.CloseStore();
+        Mechanism.Instance.EnterPhase(Phase.Map);
     }
 }

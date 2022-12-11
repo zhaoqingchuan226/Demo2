@@ -177,7 +177,7 @@ public class TeachManager : MonoSingleton<TeachManager>
             case "能力介绍":
                 AddWord("哦，这位性感先生头上是什么？", "M");
                 AddWord(@"是一棵""卡牌树""，它周末将给予你果实");
-                AddWord(@"你可以用卡牌中的""能力""来培养它，它将结出更高等级的果实");
+                AddWord(@"你可以用卡牌产生的""能力""来培养它，它将结出更高等级的果实");
                 // AddWord("变大？类似⚪起吗？", "M");
                 // AddWord("随你怎么理解");
                 SetGuide(player_W, true);
@@ -204,7 +204,7 @@ public class TeachManager : MonoSingleton<TeachManager>
                 AddWord("等你能力值到了一定程度，可以升级岗位");
                 AddWord("也就是升级你的卡牌树");
                 AddWord("可惜，现在能力还不够");
-                AddWord("不知道你到2级要多久呢");
+                AddWord("不知道你从T1初级员工到T2中级员工，需要要多久");
                 SetGuide(player_W, true);
                 SetGuide(playe_Level, true);
                 SetGuide(ExecuteButton, true);

@@ -14,6 +14,7 @@ public class SkullControl : MonoSingleton<SkullControl>
     float eyeLightOriginIntensity;
 
     public Dialog dialog_skull_right;
+    public Dialog dialog_skull_left;
     //！！！按下按钮！！！
     public void O_C_Button(bool b)
     {
@@ -143,7 +144,7 @@ public class SkullControl : MonoSingleton<SkullControl>
                 if (timer > 2 * FlyTime)
                 {
                     g.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                      dialog_skull_right.SetDiaglog("眼球得到了，光芒变强了");
+                    dialog_skull_right.SetDiaglog("绩效达标了，眼球得到了，光芒变强了");
                     JudgeLightIntensityByKPILife();
                     yield break;
                 }
@@ -247,7 +248,7 @@ public class SkullControl : MonoSingleton<SkullControl>
                 eyeLight.intensity = eyeLightOriginIntensity * 1f;
                 break;
             case 3:
-                eyeLight.intensity = eyeLightOriginIntensity * 1.3f;
+                eyeLight.intensity = eyeLightOriginIntensity * 1.2f;
                 break;
             default:
                 break;

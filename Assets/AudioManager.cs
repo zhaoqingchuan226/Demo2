@@ -52,7 +52,10 @@ public class AudioManager : MonoSingleton<AudioManager>
         LoadAudio("ChangeColor");
         LoadAudio("Sparkle");
         LoadAudio("Swishing0");
-       
+        LoadAudio("KPI0");
+        LoadAudio("KPI1");
+        LoadAudio("KPI2");
+        LoadAudio("KPI3");
     }
 
     // void Update()

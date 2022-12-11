@@ -68,12 +68,13 @@ public class HolidayStoreProp : MonoBehaviour, IPointerClickHandler
                 PlayerData.Instance.ChangeProperty("W", 50);
                 break;
             case 7:
-                Mechanism.Instance.week = Mathf.Max(1, Mechanism.Instance.week - 1);
+                // Mechanism.Instance.week = Mathf.Max(1, Mechanism.Instance.week - 1);
+                FieldManager.Instance.isWeekStop = true;
                 Mechanism.Instance.weekText.text = Mechanism.Instance.week.ToString();
                 break;
             case 8:
-                Mechanism.Instance.KPINeed_EveryMonth = Mathf.Max(0, Mechanism.Instance.KPINeed_EveryMonth - 100);
-                Mechanism.Instance.KPINeed_EveryMonthText.text = Mechanism.Instance.KPINeed_EveryMonth.ToString();
+                Mechanism.Instance.need_ThisMonth.K = Mathf.Max(0, Mechanism.Instance.need_ThisMonth.K  - 100);
+                Mechanism.Instance.KPINeed_EveryMonthText.text =  Mechanism.Instance.need_ThisMonth.K .ToString();
                 break;
             case 9:
                 List<Card> cardsAll = new List<Card>();

@@ -158,7 +158,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         // {
         //     foreach (var plot in NPC.plots)
         //     {
-        //         Debug.Log(plot.id);
+        //        
         //     }
         // }
 
@@ -178,10 +178,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         }
         sm.gameObject.SetActive(true);
 
-        foreach (var N in NPCs_HasFound)
-        {
-            print(N.isKnown);
-        }
+
     }
     IEnumerator Sit()
     {
@@ -308,7 +305,6 @@ public partial class StoryManager : MonoSingleton<StoryManager>
                 {
                     if (isFirstThisPlotPhase)
                     {
-                        Debug.Log("Begin");
                         StoryAll.SetActive(true);
                         asidePannel.SetActive(true);
                         StartCoroutine(OpenAsidePanel(0f, true));
@@ -489,6 +485,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
 
     public void StartPlot()//触发所有剧情的函数
     {
+    
         if (period == Period.绝境后)
         {
             return;
@@ -548,7 +545,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
         // // }
         // Debug.Log(week.ToString() + StoryManager.Instance.period); 
         UpdataUI();
-        GetPlotThisWeek();//获取这周要发生的剧情
+        //获取这周要发生的剧情
         ExecutePlotThisWeek();//执行这周要发生的剧情
     }
     void UpdataUI()
@@ -559,7 +556,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
 
 
 
-    void GetPlotThisWeek()//找到这周可能发生的事件,添加进入
+    public void GetPlotThisWeek()//找到这周可能发生的事件,添加进入
     {
         plotsThisWeek.Clear();
         foreach (var NPC_HasFound in NPCs_HasFound)
@@ -600,8 +597,9 @@ public partial class StoryManager : MonoSingleton<StoryManager>
             }
             else//如果什么剧情都没有
             {
-                Mechanism.Instance.phase++;
-                Mechanism.Instance.playState = PlayState.Chess;
+                Mechanism.Instance.EnterPhase(Phase.Map);
+                // Mechanism.Instance.phase++;
+                // Mechanism.Instance.playState = PlayState.Chess;
             }
 
 
@@ -614,9 +612,10 @@ public partial class StoryManager : MonoSingleton<StoryManager>
 
     public void EndPlot()//给signal用的
     {
-        Mechanism.Instance.phase++;
-        Mechanism.Instance.playState = PlayState.Chess;
-        CameraManager.Instance.SetVirtualCam("BlackCam");
+        // Mechanism.Instance.phase++;
+        Mechanism.Instance.EnterPhase(Phase.Map);
+        // Mechanism.Instance.playState = PlayState.Chess;
+        // CameraManager.Instance.SetVirtualCam("BlackCam");
     }
 
     void SendReward()
@@ -694,7 +693,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
     {
         return "获得了 " + cardAmount.ToString() + "张" + "“" + cardName + "”";
     }
-    IEnumerator OpenRewardPanel(string s, float openTime = 3f, float timer = 0)
+   public IEnumerator OpenRewardPanel(string s, float openTime = 3f, float timer = 0)
     {
         RewardPanel.SetActive(true);
         RewardText.text = s;
@@ -789,7 +788,6 @@ public partial class StoryManager : MonoSingleton<StoryManager>
                     {
                         condis.Add(elements[j]);
                     }
-
                 }
 
                 //台词们
@@ -972,7 +970,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
 
     public void BeginAni()//开场动画
     {
-        Mechanism.Instance.playState = PlayState.Black;
+        Mechanism.Instance.playState = PlayState.BeginAni;
         SetPlayableAsset("Begin2");
         pd.Play();
     }
@@ -990,7 +988,7 @@ public partial class StoryManager : MonoSingleton<StoryManager>
             SetPlayableAsset("KPIKill");
             pd.Play();
         }
-        // Mechanism.Instance.playState = PlayState.Black;
+
 
     }
 

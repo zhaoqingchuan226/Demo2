@@ -22,6 +22,8 @@ public class cardDialog
 //这个单例是用来统计各种奇奇怪怪的，会被卡牌的condi或者func用到的属性的
 public class FieldManager : MonoSingleton<FieldManager>
 {
+    //prop区
+    [HideInInspector] public bool isWeekStop = false;
     //卡牌区
     [HideInInspector]
     public bool isTripletReward = false;

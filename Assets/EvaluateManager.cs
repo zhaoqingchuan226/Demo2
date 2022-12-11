@@ -30,6 +30,7 @@ public class EvaluateManager : MonoSingleton<EvaluateManager>
     public GameObject duilian;//死亡对联
     public Sprite alive;
     public Sprite die;
+    [Range(0, 1f)] public float Trigger_difficulty = 1;//触发特殊描述的难度
     private void Awake()
     {
         ResetCardType_Amout_Dic();
@@ -47,19 +48,19 @@ public class EvaluateManager : MonoSingleton<EvaluateManager>
 
 
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            OpenEvaluation_Panel();
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            CloseEvaluation_Panel();
-        }
+    // void Update()
+    // {
+    //     // if (Input.GetKeyDown(KeyCode.A))
+    //     // {
+    //     //     OpenEvaluation_Panel();
+    //     // }
+    //     // else if (Input.GetKeyDown(KeyCode.D))
+    //     // {
+    //     //     CloseEvaluation_Panel();
+    //     // }
 
 
-    }
+    // }
     public void OpenEvaluation_Panel(int t = 0)
     {
         switch (t)
@@ -221,13 +222,13 @@ public class EvaluateManager : MonoSingleton<EvaluateManager>
             n += month_Salary[i];
         }
         n /= Mathf.Max(1, Mechanism.Instance.week / 4);//常提拔美丽端庄的女士，成为公司公关的中流砥柱
-        if (n >= 11000)
+        if (n >= 8000)
         {
             s += "    " + PlayerData.Instance.Name + "极其富裕且乐善好施，常帮助洗浴中心的失足妇女走出贫困，改邪归正。";
         }
-        if (n >= 50000)
+        else if (n >= 3000)
         {
-            s += "    " + PlayerData.Instance.Name + "经济条件不错，年纪轻轻轻松月入过万。常出席于富人的party上，拾起掉落的戒指、项链、耳环。";
+            s += "    " + PlayerData.Instance.Name + "经济条件不错，年纪轻轻一个月工资就超过三千。常出席于富人的party上，拾起掉落的戒指、项链、耳环。";
         }
         else
         {
@@ -241,7 +242,7 @@ public class EvaluateManager : MonoSingleton<EvaluateManager>
         string ss = null;
         for (var i = 0; i < 3; i++)
         {
-            if (CardType_Amout_Dic[types_rank[i]] >= 3)
+            if (CardType_Amout_Dic[types_rank[i]] >= 4)
             {
                 switch (i)
                 {
@@ -298,7 +299,7 @@ public class EvaluateManager : MonoSingleton<EvaluateManager>
     {
         if (CardID_EffectTimes_Dic.ContainsKey(cardid))
         {
-            if (CardID_EffectTimes_Dic[cardid] >= triggerTimes)
+            if (CardID_EffectTimes_Dic[cardid] >= (int)(triggerTimes * Trigger_difficulty))
             {
                 ss += CardID_EffectTimes_Dic[cardid].ToString() + "次" + des;
                 ss += "；";
@@ -398,7 +399,7 @@ public class EvaluateManager : MonoSingleton<EvaluateManager>
                 s += "    愿：" + PlayerData.Instance.Name + "先生一路走好！这个小盒才是你永远的家。";
                 break;
             case EvaluateType.开除:
-                s += "    祝" + PlayerData.Instance.Name + "王大宝先生前途无量，流落街头，爱埋哪埋哪。";
+                s += "    祝" + PlayerData.Instance.Name + "先生前途无量，流落街头，爱埋哪埋哪。";
                 break;
             case EvaluateType.胜利:
                 s += "    祝" + PlayerData.Instance.Name + "先生事业有成，前程似锦。请相信公司永远是你的家。";

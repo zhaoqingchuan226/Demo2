@@ -177,11 +177,11 @@ public class LAC_Tree_Control : MonoSingleton<LAC_Tree_Control>
     }
 
 
-    void Update()
-    {
-        // CalculateFactors();
-        // leaves_Test.transform.localScale=Vector3.Lerp(Vector3.zero,Vector3.one,factors[1]);
-    }
+    // void Update()
+    // {
+    //     // CalculateFactors();
+    //     // leaves_Test.transform.localScale=Vector3.Lerp(Vector3.zero,Vector3.one,factors[1]);
+    // }
 
 
     public IEnumerator SetTree(int deltaW, float timer = 0)

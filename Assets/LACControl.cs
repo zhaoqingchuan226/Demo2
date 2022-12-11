@@ -84,7 +84,7 @@ public class LACControl : MonoSingleton<LACControl>
     // }
 
 
-    public IEnumerator SetWeight(string s, float deltaWeight, float timer = 0)
+    public IEnumerator SetWeight(string s, float destWeight, float timer = 0)
     {
 
         SkinnedMeshRenderer sm = null;
@@ -109,31 +109,34 @@ public class LACControl : MonoSingleton<LACControl>
         }
 
         float originWeight = sm.GetBlendShapeWeight(0);
+        Debug.Log(originWeight);
+        Debug.Log(destWeight);
         while (true)
         {
             timer += Time.deltaTime;
             if (timer > setWeightTime)
             {
                 timer = 0;
-                sm.SetBlendShapeWeight(0, Mathf.Min(deltaWeight + originWeight, 100));
+                sm.SetBlendShapeWeight(0, Mathf.Clamp(destWeight, 0, 100));
                 sm.GetComponent<SkinnedMeshRenderer>().material.SetFloat("_EmisIntensity", 0);
                 yield break;
             }
             float factor = 0;
-            if (deltaWeight > 0)
-            {
-                factor = ac_larger.Evaluate(timer / setWeightTime);
-            }
-            else
-            {
-                factor = ac_smaller.Evaluate(timer / setWeightTime);
-            }
-            float weight = Mathf.Lerp(originWeight, deltaWeight + originWeight, factor);
+            factor = ac_larger.Evaluate(timer / setWeightTime);
+            // if (deltaWeight > 0)
+            // {
+            //     factor = ac_larger.Evaluate(timer / setWeightTime);
+            // }
+            // else
+            // {
+            //     factor = ac_smaller.Evaluate(timer / setWeightTime);
+            // }
+            float weight = Mathf.Lerp(originWeight, destWeight, factor);
             sm.SetBlendShapeWeight(0, weight);
             // currentAdditive.transform.localScale = new Vector3(factor, factor, factor) * scaleSize;
             Material mat = sm.GetComponent<SkinnedMeshRenderer>().material;
             mat.SetFloat("_EmisIntensity", ac_Emis.Evaluate(timer / setWeightTime));
-            float crackFactor = Mathf.Lerp(30, 0, Mathf.Clamp01((deltaWeight + originWeight) / 50f));   //crackFactor=20,weight=0;crackFactor=0,weight=50
+            float crackFactor = Mathf.Lerp(30, 0, Mathf.Clamp01((destWeight) / 50f));   //crackFactor=20,weight=0;crackFactor=0,weight=50
             mat.SetFloat("_DetailNormalScale", crackFactor);
 
             // if (s == "P" || s == "S")

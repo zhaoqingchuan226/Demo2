@@ -39,7 +39,6 @@ public class CameraManager : MonoSingleton<CameraManager>
             if (vcam.name == "ChessCam")
             {
                 ChessCam = vcam.GetComponent<CinemachineVirtualCamera>();
-
             }
             else if (vcam.name == "BlackCam")
             {
@@ -48,11 +47,20 @@ public class CameraManager : MonoSingleton<CameraManager>
         }
     }
 
-
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.L))
+    //     {
+    //         CameraShake(0.2f, 2);
+    //     }
+    // }
 
     public void SetVirtualCam(string camName, float SwicthTime)
     {
-
+       
         bool isChange = false;
         foreach (var vcam in vcams)
         {
@@ -80,6 +88,7 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     public void SetVirtualCam(string camName)
     {
+
         bool isChange = false;
         foreach (var vcam in vcams)
         {
@@ -221,6 +230,40 @@ public class CameraManager : MonoSingleton<CameraManager>
             mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, factor);
             yield return null;
         }
+    }
+    Coroutine last_co = null;
+    public void CameraShake(float time, float scale)
+    {
+        if (last_co != null)
+        {
+            StopCoroutine(last_co);
+        }
+
+        if (currentVirtualCamera != null)
+        {
+            last_co = StartCoroutine(Shake(currentVirtualCamera.gameObject, time, scale));
+        }
+    }
+    public AnimationCurve anic_Shake;
+    public IEnumerator Shake(GameObject Cam, float time, float scale)
+    {
+        float t = 0;
+        Vector3 originPos = Cam.transform.localPosition;
+        while (true)
+        {
+            t += Time.deltaTime;
+            if (timer > time)
+            {
+                t = 0;
+                Cam.transform.localPosition = originPos;
+                yield break;
+            }
+            float factor = t / time;
+            Cam.transform.localPosition = originPos + new Vector3(0, 0, -scale * anic_Shake.Evaluate(factor) * 0.01f);
+            yield return null;
+        }
+
+
     }
 
 }

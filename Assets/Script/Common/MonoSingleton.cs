@@ -10,7 +10,7 @@ public class MonoSingleton<T> : MonoBehaviour where T:MonoBehaviour
         get
         {
             if (instance == null)
-            { instance = FindObjectOfType<T>();}
+            { instance = FindObjectOfType<T>();}//返回一个已加载的T的对象
             return instance;
         }
     }

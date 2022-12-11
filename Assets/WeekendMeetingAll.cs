@@ -25,7 +25,7 @@ public class WeekendMeetingAll : MonoSingleton<WeekendMeetingAll>
 
     // void Update()
     // {
-    //     Debug.Log(weekendPhase);
+  
     // }
 
     public void Open()
@@ -33,24 +33,24 @@ public class WeekendMeetingAll : MonoSingleton<WeekendMeetingAll>
         L.SetActive(true);
         CameraManager.Instance.SetVirtualCam("WeekendCam", 0.5f);
 
-        // Mechanism.Instance.ForceChessboardOut(true);
-        StartCoroutine(Mechanism.Instance.ChessBoardMove());
+     
+        // StartCoroutine(Mechanism.Instance.ChessBoardMove());
 
-        // backGround.SetActive(true);
-        StartCoroutine(HolidayStoreMove());
+      
+        StartCoroutine(WeekendMeetingMove());
     }
 
     public void Close()
     {
         L.SetActive(false);
-        CameraManager.Instance.SetVirtualCam("BlackCam", 0.5f);
+        
 
         // Mechanism.Instance.ForceChessboardOut(false);
-        StartCoroutine(Mechanism.Instance.ChessBoardMove(true));
+        // StartCoroutine(Mechanism.Instance.ChessBoardMove(true));
 
-        StartCoroutine(HolidayStoreMove(true));
+        StartCoroutine(WeekendMeetingMove(true));
     }
-    public IEnumerator HolidayStoreMove(bool isReverse = false)
+    public IEnumerator WeekendMeetingMove(bool isReverse = false)
     {
         float timer = 0;
         Vector3 originPos = backGround.transform.localPosition;

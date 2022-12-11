@@ -444,5 +444,19 @@ public class CardStore : MonoSingleton<CardStore>
         return new Card(cards_Forbiden[Random.Range(0, cards_Forbiden.Count)]);
     }
 
+    public void AutoReDesAllCards()//重新更新所有卡牌的描述
+    {
+        foreach (var card in CardStore.Instance.cards)
+        {
+            card.AutoDescription();
+        }
+
+        foreach (var card in PlayerData.Instance.playerCards)
+        {
+            card.AutoDescription();
+        }
+    }
 }
+
+
 

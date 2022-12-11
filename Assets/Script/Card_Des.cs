@@ -4,17 +4,19 @@ using UnityEngine;
 
 public partial class Card
 {
-    [HideInInspector] public string cardInfor;
+    [HideInInspector]
+    public string cardInfor;
+
     public void AutoDescription()
     {
         this.description = null;
-
+        this.P = 0;
+        this.S = 0;
         //自动生成Condi描述文本
         AutoDescription_Condition();
 
         //自动生成Funcs描述文本
         AutoDescription_Funcs();
-
 
         AutoCardInfor();
         // if (this.description != null)
@@ -31,13 +33,12 @@ public partial class Card
     {
         string des = null;
         des += "<size=3>" + this.finalTitle.ToString() + "：\r\n" + "</size>";
-        
+
         des += "\r\n";
         //时间
         des += "出现时间：" + times;
         des += "\r\n";
         des += "\r\n";
-
 
         if (creator != null)
         {
@@ -84,7 +85,6 @@ public partial class Card
             des += "当你成为领导后，你就有资格去劝退某些同事";
         }
         cardInfor = des;
-
     }
 
     void AutoDescription_Condition()
@@ -119,7 +119,6 @@ public partial class Card
         }
     }
 
-
     void AutoDescription_Funcs()
     {
         string des = null;
@@ -131,7 +130,7 @@ public partial class Card
         List<string> elements2 = new List<string>();
         List<float> elements3 = new List<float>();
 
-        Dictionary<string, int> FuncName_Counter_Dic = new Dictionary<string, int>();//用于检测次方法执行过几次
+        Dictionary<string, int> FuncName_Counter_Dic = new Dictionary<string, int>(); //用于检测次方法执行过几次
 
         //初始操作
         foreach (var func in functions)
@@ -183,24 +182,21 @@ public partial class Card
         //P+PA
         Func_P(ref des, elements0, elements1, elements2, elements3, FuncName_Counter_Dic);
 
-
         //Px//Pb Pdb
         List<string> funcs_Buff = new List<string>();
         string range_Buff = null;
         foreach (var e in elements0)
         {
-            if (e == "Px" || e == "Sx" || e == "Wx" || e == "Kx" ||
-            e == "Pb" || e == "Sb" || e == "Wb" || e == "Kb" ||
-            e == "Pdb" || e == "Sdb" || e == "Wdb" || e == "Kdb")
+            if (e == "Px" || e == "Sx" || e == "Wx" || e == "Kx" || e == "Pb" || e == "Sb" || e == "Wb" || e == "Kb" || e == "Pdb" || e == "Sdb" || e == "Wdb" || e == "Kdb"
+            )
             {
-                int n = elements0.IndexOf(e);//这边不用加FuncNameCounter(f, FuncName_Counter_Dic)
+                int n = elements0.IndexOf(e); //这边不用加FuncNameCounter(f, FuncName_Counter_Dic)
                 funcs_Buff.Add(e);
                 if (range_Buff == null)
                 {
                     range_Buff = AutoRange(elements2[n]);
                 }
             }
-
         }
         if (funcs_Buff.Count > 0)
         {
@@ -249,22 +245,15 @@ public partial class Card
             des += "\r\n";
         }
 
-
-
-
-
-
-
         //C连轴
         List<string> funcs_Connect = new List<string>();
         foreach (var e in elements0)
         {
-            if (e == "CP" || e == "CS" || e == "CW" || e == "CK"
-                           || e == "CPx" || e == "CSx" || e == "CWx" || e == "CKx")
+            if (e == "CP" || e == "CS" || e == "CW" || e == "CK" || e == "CPx" || e == "CSx" || e == "CWx" || e == "CKx"
+            )
             {
                 funcs_Connect.Add(e);
             }
-
         }
         if (funcs_Connect.Count > 0)
         {
@@ -272,7 +261,10 @@ public partial class Card
 
             for (var i = 0; i < funcs_Connect.Count; i++)
             {
-                int n = elements0.IndexOf(funcs_Connect[i], FuncNameCounter(funcs_Connect[i], FuncName_Counter_Dic));
+                int n = elements0.IndexOf(
+                    funcs_Connect[i],
+                    FuncNameCounter(funcs_Connect[i], FuncName_Counter_Dic)
+                );
                 string s = null;
                 if (funcs_Connect[i].Contains("P"))
                 {
@@ -309,16 +301,12 @@ public partial class Card
             des += "\r\n";
         }
 
-
-
         //A
         foreach (var e in elements0)
         {
             if (e == "A")
             {
-
                 int n = elements0.IndexOf(e, FuncNameCounter(e, FuncName_Counter_Dic));
-
 
                 if (elements1[n] == "Add")
                 {
@@ -326,13 +314,25 @@ public partial class Card
                 }
                 else if (elements1[n] == "Mul")
                 {
-                    des += "使" + Auto_PA_Property(elements2[n]) + AutoValue(elements3[n], "FloatMulti");
+                    des +=
+                        "使"
+                        + Auto_PA_Property(elements2[n])
+                        + AutoValue(elements3[n], "FloatMulti");
                 }
                 else if (elements1[n] == "Addby")
                 {
-                    string[] pros = elements2[n].Split('_', System.StringSplitOptions.RemoveEmptyEntries);
+                    string[] pros = elements2[n].Split(
+                        '_',
+                        System.StringSplitOptions.RemoveEmptyEntries
+                    );
                     // Debug.Log(pros[0]);
-                    des += "使" + Auto_PA_Property(pros[0]) + "增加" + AutoValue(elements3[n], "FloatAdd") + "x" + Auto_PA_Property(pros[1]);
+                    des +=
+                        "使"
+                        + Auto_PA_Property(pros[0])
+                        + "增加"
+                        + AutoValue(elements3[n], "FloatAdd")
+                        + "x"
+                        + Auto_PA_Property(pros[1]);
                 }
                 des += "\r\n";
             }
@@ -344,7 +344,11 @@ public partial class Card
             if (e == "TR_UP1")
             {
                 int n = elements0.IndexOf(e, FuncNameCounter(e, FuncName_Counter_Dic));
-                des += "使" + AutoRange(elements2[n]) + AutoSpecialCard((int)elements3[n]) + "卡牌随机升级为高一个等级的随机卡牌";
+                des +=
+                    "使"
+                    + AutoRange(elements2[n])
+                    + AutoSpecialCard((int)elements3[n])
+                    + "卡牌随机升级为高一个等级的随机卡牌";
                 des += "\r\n";
             }
         }
@@ -359,7 +363,6 @@ public partial class Card
                 des += "\r\n";
             }
         }
-
 
         //U
         foreach (var e in elements0)
@@ -415,14 +418,24 @@ public partial class Card
         string Obj_AIBuff = null;
         foreach (var e in elements0)
         {
-            if (e == "AI_Px" || e == "AI_Sx" || e == "AI_Wx" || e == "AI_Kx" ||
-            e == "AI_Pb" || e == "AI_Sb" || e == "AI_Wb" || e == "AI_Kb" ||
-            e == "AI_Pdb" || e == "AI_Sdb" || e == "AI_Wdb" || e == "AI_Kdb"
-            || e == "AI_PMx"
-            || e == "AI_F"
+            if (
+                e == "AI_Px"
+                || e == "AI_Sx"
+                || e == "AI_Wx"
+                || e == "AI_Kx"
+                || e == "AI_Pb"
+                || e == "AI_Sb"
+                || e == "AI_Wb"
+                || e == "AI_Kb"
+                || e == "AI_Pdb"
+                || e == "AI_Sdb"
+                || e == "AI_Wdb"
+                || e == "AI_Kdb"
+                || e == "AI_PMx"
+                || e == "AI_F"
             )
             {
-                int n = elements0.IndexOf(e);//这边不用加FuncNameCounter(f, FuncName_Counter_Dic)
+                int n = elements0.IndexOf(e); //这边不用加FuncNameCounter(f, FuncName_Counter_Dic)
                 funcs_AIBuff.Add(e);
                 if (Obj_AIBuff == null)
                 {
@@ -436,7 +449,10 @@ public partial class Card
 
             for (var i = 0; i < funcs_AIBuff.Count; i++)
             {
-                int n = elements0.IndexOf(funcs_AIBuff[i], FuncNameCounter(funcs_AIBuff[i], FuncName_Counter_Dic));
+                int n = elements0.IndexOf(
+                    funcs_AIBuff[i],
+                    FuncNameCounter(funcs_AIBuff[i], FuncName_Counter_Dic)
+                );
                 string s = null;
                 if (funcs_AIBuff[i].Contains("PM"))
                 {
@@ -458,7 +474,6 @@ public partial class Card
                 {
                     s = "K";
                 }
-
 
                 if (funcs_AIBuff[i].Contains("x"))
                 {
@@ -489,9 +504,6 @@ public partial class Card
             des += "\r\n";
         }
 
-
-
-
         //AI_Rem
         foreach (var e in elements0)
         {
@@ -503,7 +515,6 @@ public partial class Card
             }
         }
 
-
         //怠惰
         if (this.executeQueue == 18)
         {
@@ -512,7 +523,7 @@ public partial class Card
 
         //DW
         List<string> funcs_DW = new List<string>();
-        Dictionary<string, int> FuncName_Counter_DW_Dic = new Dictionary<string, int>();//用于检测次方法执行过几次
+        Dictionary<string, int> FuncName_Counter_DW_Dic = new Dictionary<string, int>(); //用于检测次方法执行过几次
 
         foreach (var func in functions)
         {
@@ -531,7 +542,10 @@ public partial class Card
             List<float> DW_elements3 = new List<float>();
             foreach (var func in funcs_DW)
             {
-                string[] DW_elements = func.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
+                string[] DW_elements = func.Split(
+                    '|',
+                    System.StringSplitOptions.RemoveEmptyEntries
+                );
                 if (DW_elements.Length > 0)
                 {
                     DW_elements0.Add(DW_elements[0]);
@@ -540,47 +554,79 @@ public partial class Card
                     DW_elements3.Add(float.Parse(DW_elements[3]));
                 }
             }
-            Func_P(ref des, DW_elements0, DW_elements1, DW_elements2, DW_elements3, FuncName_Counter_DW_Dic);
+            Func_P(
+                ref des,
+                DW_elements0,
+                DW_elements1,
+                DW_elements2,
+                DW_elements3,
+                FuncName_Counter_DW_Dic
+            );
         }
-
 
         //最后的加
         this.description += des;
     }
 
-    void Func_P(ref string des, List<string> elements0, List<string> elements1, List<string> elements2, List<float> elements3,
-    Dictionary<string, int> FuncName_Counter_Dic)
+    void Func_P(
+        ref string des,
+        List<string> elements0,
+        List<string> elements1,
+        List<string> elements2,
+        List<float> elements3,
+        Dictionary<string, int> FuncName_Counter_Dic,
+        bool isDW = false
+    )
     {
         foreach (var e in elements0)
         {
+            string s=null;
             if (e == "P" || e == "S" || e == "W" || e == "K")
             {
                 int n = elements0.IndexOf(e, FuncNameCounter(e, FuncName_Counter_Dic));
-                des += AutoPSWK(e);// AutoValue(elements3[n], "IntAdd")
-
-                if (elements3[n] >= 0)
+                if (e == "W" || e == "K")
                 {
-                    des += "+" + Mathf.Floor(elements3[n] * (1 + addLevelPower * this.addLevel)).ToString();
-                }
-                else
-                {
-                    des += Mathf.Floor(elements3[n]).ToString();
-                }
+                    s += AutoPSWK(e); // AutoValue(elements3[n], "IntAdd")
 
+                    if (elements3[n] >= 0)
+                    {
+                        s += "+" + Mathf.Floor(elements3[n] * (1 + addLevelPower * this.addLevel)).ToString();
+                    }
+                    else
+                    {
+                        s += Mathf.Floor(elements3[n]).ToString();
+                    }
+                }
+                else if (e == "P")
+                {
+                    this.P = (int)Mathf.Floor(elements3[n]);
+                }
+                else if (e == "S")
+                {
+                    this.S = (int)Mathf.Floor(elements3[n]);
+                }
 
                 foreach (var f in elements0)
                 {
+                    if (f == "WA" && e == "W" || f == "KA" && e == "K")
+                    {
+                        s += "，";
+                    }
                     if (f == "PA" && e == "P" || f == "SA" && e == "S" || f == "WA" && e == "W" || f == "KA" && e == "K")
                     {
                         int o = elements0.IndexOf(f) + FuncNameCounter(f, FuncName_Counter_Dic);
-                        des += "，受" + AutoValue(elements3[o], "FloatAdd") + "倍的" + Auto_PA_Property(elements2[o]) + "加成";
+                        s += "额外增加" + AutoValue(elements3[o], "FloatAdd") + "倍" + Auto_PA_Property(elements2[o]) + "的" + AutoPSWK(e) + Auto_PA_Property_Exist(elements2[o], elements3[o]);
                     }
                 }
-                des += "\r\n";
+                if(s!=null)
+                {
+                    des+=s+"\r\n";
+                }
+                
+
             }
         }
     }
-
 
     int FuncNameCounter(string e, Dictionary<string, int> FuncName_Counter_Dic)
     {
@@ -638,13 +684,13 @@ public partial class Card
             s += v.ToString();
         }
 
-
         return s;
     }
-    string Auto_PA_Property(string property)//PA的property //A的property
+
+    string Auto_PA_Property(string property) //PA的property //A的property
     {
         string s = null;
-        s += "<color=red>";
+        s += "<color=#FFB100>";
         switch (property)
         {
             case "LV":
@@ -731,6 +777,71 @@ public partial class Card
         s += "</color>";
         return s;
     }
+
+    string Auto_PA_Property_Exist(string property, float value) //(已增加15点) //value是倍数
+    {
+        string s = null;
+        s += "<color=#FFB100>";
+        switch (property)
+        {
+            case "LV":
+                s += "（当前增加" + (int)(this.addLevel * value) + "）";
+                break;
+            case "ET18":
+                s += "（当前增加" + (int)(FieldManager.Instance.ET18 * value) + "）";
+                break;
+            case "ET42":
+                s += "（当前增加" + (int)(FieldManager.Instance.ET42 * value) + "）";
+                break;
+            case "W":
+                s += "（当前增加" + (int)(PlayerData.Instance.workAbility * value) + "）";
+                break;
+            case "PM":
+                s += "（当前增加" + (int)(PlayerData.Instance.physicalHealthMax * value) + "）";
+                break;
+            case "SM":
+                s += "（当前增加" + (int)(PlayerData.Instance.spiritualHealth * value) + "）";
+                break;
+            case "PO":
+                s += "（当前增加" + (int)(FieldManager.Instance.OverFillP * value) + "）";
+                break;
+            case "SO":
+                s += "（当前增加" + (int)(FieldManager.Instance.OverFillS * value) + "）";
+                break;
+            case "FA":
+                s += "（当前增加" + (int)(PlayerData.Instance.favorAll * value) + "）";
+                break;
+            case "ER":
+                s += "（当前增加" + (int)(Mechanism.Instance.envirRollValue * value) + "）";
+                break;
+            case "FishP":
+                s += "（当前增加" + (int)(FieldManager.Instance.FishPeopleAll * value) + "）";
+                break;
+            case "PC":
+                s += "（当前增加" + (int)(PlayerData.Instance.playerCards.Count * value) + "）";
+                break;
+            case "T":
+                s += "（当前增加" + (int)(this.TimeCounter * value) + "）";
+                break;
+            case "Ka1AIKa1":
+                s += "（当前增加" + (int)(FieldManager.Instance.Ka1AIKa1 * value) + "）";
+                break;
+            case "KAll":
+                s += "（当前增加" + (int)(FieldManager.Instance.KPIAll * value) + "）";
+                break;
+            case "L":
+                s += "（当前增加" + (int)(this.life * value) + "）";
+                break;
+            case "DC":
+                s += "（当前增加" + (int)(FieldManager.Instance.DestroyCard * value) + "）";
+                break;
+            default:
+                break;
+        }
+        s += "</color>";
+        return s;
+    }
+
     string AutoRange(string range)
     {
         if (range == "1")
@@ -767,7 +878,8 @@ public partial class Card
         }
         return "错误";
     }
-    void AutoTrimEndString(string ori, string s)//ori是要被切的大段文字，s是要被切除的尾部字符串
+
+    void AutoTrimEndString(string ori, string s) //ori是要被切的大段文字，s是要被切除的尾部字符串
     {
         if (ori != null)
         {
@@ -777,6 +889,7 @@ public partial class Card
             }
         }
     }
+
     string AutoPSWK(string property)
     {
         string s = null;
@@ -809,10 +922,7 @@ public partial class Card
     string AutoSpecialCard(int id)
     {
         string s = null;
-        if (id == 0)
-        {
-
-        }
+        if (id == 0) { }
         else if (id < 10000)
         {
             foreach (var card in CardStore.Instance.cards)
@@ -825,7 +935,6 @@ public partial class Card
         }
         else if (id < 20000)
         {
-
             foreach (var card in CardStore.Instance.Colourless_Cards)
             {
                 if (card.id == id)
@@ -834,7 +943,7 @@ public partial class Card
                 }
             }
         }
-        else//>20000特殊卡牌
+        else //>20000特殊卡牌
         {
             if (id == 20000)
             {
@@ -911,8 +1020,6 @@ public partial class Card
         return s;
     }
 
-
-
     public void AutoTitle()
     {
         if (this.addLevel > 0)
@@ -924,5 +1031,4 @@ public partial class Card
             this.finalTitle = this.title;
         }
     }
-
 }

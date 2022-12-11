@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 //此脚本挂载在card prefab上
 //用于将Card中的数据赋予给UI
 public enum CardPG_Type
@@ -11,6 +12,7 @@ public enum CardPG_Type
     HolidayStore,
     Choose1_3
 }
+
 public class CardDisplayPersonalGameLibrary : MonoBehaviour
 {
     public CardPG_Type cardPG_Type;
@@ -22,21 +24,31 @@ public class CardDisplayPersonalGameLibrary : MonoBehaviour
 
     public float generateTime = 0.2f;
 
-    public GameObject sphereCenterPos;//球心位置
-    [HideInInspector] public int posNum;
-    [HideInInspector] public GameObject currentAdditive;
+    public GameObject sphereCenterPos; //球心位置
+
+    [HideInInspector]
+    public int posNum;
+
+    [HideInInspector]
+    public GameObject currentAdditive;
     GameObject quality;
     GameObject action;
     TextMeshPro titleText;
     TextMeshPro desText;
+    TextMeshPro PText;
+    TextMeshPro SText;
     GameObject info_obj;
     TextMeshPro infoText;
     public GameObject NEW;
+
     // public bool isHolidayStore = false;//是否是商店中的卡牌
     GameObject buy_fx;
-    [HideInInspector] public float delatTime;//1_3专用
-    public AnimationCurve anic_Down;//三选一界面坠落的动画
-    public bool isDownAni = false;//初始落下的动画
+
+    [HideInInspector]
+    public float delatTime; //1_3专用
+    public AnimationCurve anic_Down; //三选一界面坠落的动画
+    public bool isDownAni = false; //初始落下的动画
+
     void Start()
     {
         currentAdditive = null;
@@ -59,10 +71,11 @@ public class CardDisplayPersonalGameLibrary : MonoBehaviour
             slabStone = ThreeChooseOneManager.Instance.slabStones_obj[posNum];
         }
 
-
         action = slabStone.transform.Find("ShortSlabStone_2").gameObject;
         quality = slabStone.transform.Find("ShortSlabStone_3").gameObject;
         titleText = slabStone.transform.Find("Title").gameObject.GetComponent<TextMeshPro>();
+        PText = slabStone.transform.Find("P").gameObject.GetComponent<TextMeshPro>();
+        SText = slabStone.transform.Find("S").gameObject.GetComponent<TextMeshPro>();
         desText = slabStone.transform.Find("Des").gameObject.GetComponent<TextMeshPro>();
         info_obj = slabStone.transform.Find("LongSlabStone").gameObject;
         infoText = info_obj.transform.Find("FunDes").gameObject.GetComponent<TextMeshPro>();
@@ -73,29 +86,34 @@ public class CardDisplayPersonalGameLibrary : MonoBehaviour
             StartCoroutine(Down());
         }
     }
+
     public void PlayBuyFx()
     {
         buy_fx.GetComponent<Animator>().SetTrigger("Play");
     }
-    void ShowCard()//将Card中的数据赋予给UI
+
+    void ShowCard() //将Card中的数据赋予给UI
     {
         JudgeActionColor(card.actionType);
         JudgeQualityColor(card);
         JudgeAdditive(card);
         titleText.text = card.finalTitle;
         desText.text = card.description;
+        PText.text=card.P.ToString();
+         SText.text=card.S.ToString();
         infoText.text = card.cardInfor;
         if (cardPG_Type == CardPG_Type.Libaray)
         {
             NEW.SetActive(card.isNew);
         }
-
     }
+
     public void ShowCardInfo(bool b)
     {
         info_obj.SetActive(b);
     }
-    public void JudgeAdditive(Card card1)//delayTime是用来缓解一下次生成过多的prefab而造成的卡顿
+
+    public void JudgeAdditive(Card card1) //delayTime是用来缓解一下次生成过多的prefab而造成的卡顿
     {
         if (currentAdditive != null)
         {
@@ -163,6 +181,8 @@ public class CardDisplayPersonalGameLibrary : MonoBehaviour
     {
         titleText.text = null;
         desText.text = null;
+        PText.text=null;
+        SText.text=null;
         quality.GetComponent<MeshRenderer>().material.color = Color.white;
         action.GetComponent<MeshRenderer>().material = mats[2];
     }
@@ -182,7 +202,9 @@ public class CardDisplayPersonalGameLibrary : MonoBehaviour
                 yield break;
             }
             float factor = anic_Down.Evaluate((timer - delatTime) / generateTime);
-            transform.localPosition = destPos + new Vector3(0.15f * (1 - factor), 0.5f * (1 - factor), 0.15f * (1 - factor));
+            transform.localPosition =
+                destPos
+                + new Vector3(0.15f * (1 - factor), 0.5f * (1 - factor), 0.15f * (1 - factor));
             yield return null;
         }
     }

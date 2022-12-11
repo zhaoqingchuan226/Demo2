@@ -11,7 +11,9 @@ public partial class Card
     public string finalTitle = null; //最终卡名
 
     public string description = "描述的内容";
-    public string funDes;//有趣的介绍
+    public int P; //卡面上显示的消耗
+    public int S; //卡面上显示的消耗
+    public string funDes; //有趣的介绍
 
     public string times = "上中下";
 
@@ -24,8 +26,7 @@ public partial class Card
     public int addLevel = 0;
     float addLevelPower = 0.5f;
 
-    public Color
-        qualityColor = new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
+    public Color qualityColor = new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
 
     //行动的动静状态和行动颜色
     public enum ActionType
@@ -60,24 +61,23 @@ public partial class Card
 
     public int lifeMax; //出现n次后消失
 
-    public int life;//TD自爆用
-    public bool isAlive = true;//触发亡语用
+    public int life; //TD自爆用
+    public bool isAlive = true; //触发亡语用
 
     //T计次数器
     public int TimeCounter = 0;
 
     //卡牌是否生效，如果没有，则直接跳过此卡牌的assign结算时间
-    public bool isEffect = false;//所有函数中只要生效过一次就不会跳过
+    public bool isEffect = false; //所有函数中只要生效过一次就不会跳过
 
-
-    public Card()
-    {
-    }
+    public Card() { }
 
     public Card(Card card)
     {
         this.id = card.id;
         this.title = card.title;
+        this.P = card.P;
+        this.S = card.S;
         this.description = card.description;
         this.qualityLevel = card.qualityLevel;
         this.actionType = card.actionType;
@@ -92,28 +92,24 @@ public partial class Card
         this.funDes = card.funDes;
         this.cardInfor = card.cardInfor;
 
-        switch (this.qualityLevel //灰绿蓝紫橙
+        switch (
+            this.qualityLevel //灰绿蓝紫橙
         )
         {
             case 1:
-                this.qualityColor =
-                    new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
+                this.qualityColor = new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
                 break;
             case 2:
-                this.qualityColor =
-                    new Color(175f / 255f, 239f / 255f, 96f / 255f, 1);
+                this.qualityColor = new Color(175f / 255f, 239f / 255f, 96f / 255f, 1);
                 break;
             case 3:
-                this.qualityColor =
-                    new Color(35f / 255f, 130f / 255f, 236f / 255f, 1);
+                this.qualityColor = new Color(35f / 255f, 130f / 255f, 236f / 255f, 1);
                 break;
             case 4:
-                this.qualityColor =
-                    new Color(179f / 255f, 33f / 255f, 180f / 255f, 1);
+                this.qualityColor = new Color(179f / 255f, 33f / 255f, 180f / 255f, 1);
                 break;
             case 5:
-                this.qualityColor =
-                    new Color(255f / 255f, 195f / 255f, 50f / 255f, 1);
+                this.qualityColor = new Color(255f / 255f, 195f / 255f, 50f / 255f, 1);
                 break;
         }
 
@@ -166,28 +162,24 @@ public partial class Card
         this.executeQueue = executeQueue1;
         this.type = type1;
         this.funDes = funDes1;
-        switch (this.qualityLevel //灰绿蓝紫橙
+        switch (
+            this.qualityLevel //灰绿蓝紫橙
         )
         {
             case 1:
-                this.qualityColor =
-                    new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
+                this.qualityColor = new Color(210f / 255f, 210f / 255f, 210f / 255f, 1);
                 break;
             case 2:
-                this.qualityColor =
-                    new Color(175f / 255f, 239f / 255f, 96f / 255f, 1);
+                this.qualityColor = new Color(175f / 255f, 239f / 255f, 96f / 255f, 1);
                 break;
             case 3:
-                this.qualityColor =
-                    new Color(35f / 255f, 130f / 255f, 236f / 255f, 1);
+                this.qualityColor = new Color(35f / 255f, 130f / 255f, 236f / 255f, 1);
                 break;
             case 4:
-                this.qualityColor =
-                    new Color(179f / 255f, 33f / 255f, 180f / 255f, 1);
+                this.qualityColor = new Color(179f / 255f, 33f / 255f, 180f / 255f, 1);
                 break;
             case 5:
-                this.qualityColor =
-                    new Color(255f / 255f, 195f / 255f, 50f / 255f, 1);
+                this.qualityColor = new Color(255f / 255f, 195f / 255f, 50f / 255f, 1);
                 break;
         }
 
@@ -195,15 +187,13 @@ public partial class Card
             this.actionType == ActionType.Dynamic //红
         )
         {
-            this.actionColor =
-                new Color(239f / 255f, 101f / 255f, 96f / 255f, 1);
+            this.actionColor = new Color(239f / 255f, 101f / 255f, 96f / 255f, 1);
         }
         else if (
             this.actionType == ActionType.Static //蓝
         )
         {
-            this.actionColor =
-                new Color(110f / 255f, 195f / 255f, 255f / 255f, 1);
+            this.actionColor = new Color(110f / 255f, 195f / 255f, 255f / 255f, 1);
         }
         else
         {
@@ -216,7 +206,6 @@ public partial class Card
 
         //自动生成标题finalTitle
         AutoTitle();
-
     }
 
     public void CardEffect() //传入影响的card列表List<Card> AffectCard
@@ -243,7 +232,9 @@ public partial class Card
         else
         {
             EvaluateManager.Instance.AddEffectCard(this);
-            Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this].GetComponent<CardDisplayPersonalGame>().FX();
+            Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this]
+                .GetComponent<CardDisplayPersonalGame>()
+                .FX();
             if (this.executeQueue == 12)
             {
                 foreach (var AIData in AIDatas_Debuff)
@@ -251,12 +242,11 @@ public partial class Card
                     AIMechanism.Instance.AI_Chas[AIData.AIid].Mini_BeDebuffed(this.id);
                     AIMechanism.Instance.Leader.Mini_BeDebuffed(this.id);
                 }
-
             }
         }
     }
 
-    public void DWCardEffect()//亡语卡牌的效果 //亡语的触发不受condi控制
+    public void DWCardEffect() //亡语卡牌的效果 //亡语的触发不受condi控制
     {
         foreach (var func in functions)
         {
@@ -264,7 +254,6 @@ public partial class Card
             {
                 ExecuteFunction(func);
             }
-
         }
     }
 
@@ -273,8 +262,7 @@ public partial class Card
         bool isTDExist = false;
         foreach (var func in functions)
         {
-            string[] elements =
-                func.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
+            string[] elements = func.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
             if (elements.Length > 0)
             {
                 if (elements[0] == "TD")
@@ -286,17 +274,13 @@ public partial class Card
             }
         }
 
-        if (isTDExist)
-        {
-        }
+        if (isTDExist) { }
         else
         {
             this.lifeMax = 0;
             this.life = this.lifeMax;
         }
     }
-
-
 
     //！！！！！！！！！condi区！！！！！！！！！
     public bool JudgeCondition(string condi)
@@ -311,8 +295,7 @@ public partial class Card
         }
         else
         {
-            string[] elements =
-                condi.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
+            string[] elements = condi.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
             if (
                 elements.Length > 0 //如果是空的，那elements的长度一定为0
             )
@@ -340,10 +323,10 @@ public partial class Card
                     return b;
                 }
                 else if (
-                    elements[0] == "PP" ||
-                    elements[0] == "SP" ||
-                    elements[0] == "WP" ||
-                    elements[0] == "KP"
+                    elements[0] == "PP"
+                    || elements[0] == "SP"
+                    || elements[0] == "WP"
+                    || elements[0] == "KP"
                 )
                 {
                     bool b = PSWK_PercentageTest(elements[0], range, value); //这个range是< >这种
@@ -353,6 +336,7 @@ public partial class Card
         }
         return false; //默认返回false
     }
+
     bool ExistAI(int num)
     {
         if (AIMechanism.Instance.CalculateAIDataCount() >= num)
@@ -364,6 +348,7 @@ public partial class Card
             return false;
         }
     }
+
     bool Exist(List<Card> originCards, string range, float value)
     {
         List<Card> allCards = new List<Card>();
@@ -393,7 +378,7 @@ public partial class Card
             }
             return b;
         }
-        else if (n == 20001)//存在至少一张 一级红
+        else if (n == 20001) //存在至少一张 一级红
         {
             bool b = false;
             foreach (var card in allCards)
@@ -430,8 +415,8 @@ public partial class Card
             if (range == "<")
             {
                 if (
-                    PlayerData.Instance.physicalHealth <
-                    PlayerData.Instance.physicalHealthMax * value
+                    PlayerData.Instance.physicalHealth
+                    < PlayerData.Instance.physicalHealthMax * value
                 )
                 {
                     return true;
@@ -444,8 +429,8 @@ public partial class Card
             else if (range == ">")
             {
                 if (
-                    PlayerData.Instance.physicalHealth >
-                    PlayerData.Instance.physicalHealthMax * value
+                    PlayerData.Instance.physicalHealth
+                    > PlayerData.Instance.physicalHealthMax * value
                 )
                 {
                     return true;
@@ -512,10 +497,7 @@ public partial class Card
                         {
                             continue;
                         }
-                        if (
-                            (i - 1) / 4 == (originCard.posNum - 1) / 4 &&
-                            i > originCard.posNum
-                        )
+                        if ((i - 1) / 4 == (originCard.posNum - 1) / 4 && i > originCard.posNum)
                         {
                             SearchCard(i, allCards);
                         }
@@ -543,7 +525,6 @@ public partial class Card
     {
         if (num > 0 && num < 21)
         {
-
             foreach (var card in Mechanism.Instance.cardList)
             {
                 if (card.posNum == num)
@@ -551,7 +532,6 @@ public partial class Card
                     allCards.Add(card);
                 }
             }
-
         }
     }
 
@@ -569,8 +549,8 @@ public partial class Card
             SearchCard(num - 4 + i * 4, allCardsTemp);
         }
         if (
-            (int)Mathf.Floor((float)(num - 2) / (float)4) ==
-            (int)Mathf.Floor((float)(num - 1) / (float)4) //如果上一卡牌与此卡牌同列
+            (int)Mathf.Floor((float)(num - 2) / (float)4)
+            == (int)Mathf.Floor((float)(num - 1) / (float)4) //如果上一卡牌与此卡牌同列
         )
         {
             for (int i = 0; i < 3; i++)
@@ -579,8 +559,7 @@ public partial class Card
             }
         }
         if (
-            (int)Mathf.Floor((float)num / (float)4) ==
-            (int)Mathf.Floor((float)(num - 1) / (float)4) //如果下一卡牌与此卡牌同列
+            (int)Mathf.Floor((float)num / (float)4) == (int)Mathf.Floor((float)(num - 1) / (float)4) //如果下一卡牌与此卡牌同列
         )
         {
             for (int i = 0; i < 3; i++)
@@ -596,8 +575,7 @@ public partial class Card
             case 1: //随机选取一个元素
                 if (allCardsTemp.Count > 0)
                 {
-                    allCards
-                        .Add(allCardsTemp[Random.Range(0, allCardsTemp.Count)]);
+                    allCards.Add(allCardsTemp[Random.Range(0, allCardsTemp.Count)]);
                 }
                 break;
             default:
@@ -618,8 +596,8 @@ public partial class Card
             SearchCard(num - 8 + i * 4, allCards);
         }
         if (
-            (int)Mathf.Floor((float)(num - 2) / (float)4) ==
-            (int)Mathf.Floor((float)(num - 1) / (float)4)
+            (int)Mathf.Floor((float)(num - 2) / (float)4)
+            == (int)Mathf.Floor((float)(num - 1) / (float)4)
         )
         {
             for (int i = 0; i < 5; i++)
@@ -628,8 +606,8 @@ public partial class Card
             }
         }
         if (
-            (int)Mathf.Floor((float)(num - 3) / (float)4) ==
-            (int)Mathf.Floor((float)(num - 1) / (float)4)
+            (int)Mathf.Floor((float)(num - 3) / (float)4)
+            == (int)Mathf.Floor((float)(num - 1) / (float)4)
         )
         {
             for (int i = 0; i < 5; i++)
@@ -638,8 +616,7 @@ public partial class Card
             }
         }
         if (
-            (int)Mathf.Floor((float)num / (float)4) ==
-            (int)Mathf.Floor((float)(num - 1) / (float)4)
+            (int)Mathf.Floor((float)num / (float)4) == (int)Mathf.Floor((float)(num - 1) / (float)4)
         )
         {
             for (int i = 0; i < 5; i++)
@@ -648,8 +625,8 @@ public partial class Card
             }
         }
         if (
-            (int)Mathf.Floor((float)(num + 1) / (float)4) ==
-            (int)Mathf.Floor((float)(num - 1) / (float)4)
+            (int)Mathf.Floor((float)(num + 1) / (float)4)
+            == (int)Mathf.Floor((float)(num - 1) / (float)4)
         )
         {
             for (int i = 0; i < 5; i++)
@@ -661,10 +638,8 @@ public partial class Card
 
     void SearchCardAll(List<Card> allCards)
     {
-
         allCards.AddRange(Mechanism.Instance.cardList);
         allCards.Remove(this);
-
     }
 
     void FindAllCards_PorpertyRange(
@@ -838,8 +813,9 @@ public partial class Card
 
     void BeBuffed(Card card)
     {
-        GameObject cardPersonalGamePrefab =
-            Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[card];
+        GameObject cardPersonalGamePrefab = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[
+            card
+        ];
         SimpleEffect se = cardPersonalGamePrefab.GetComponent<SimpleEffect>();
         if (se.isBebuffed == false)
         {
@@ -849,13 +825,16 @@ public partial class Card
 
     void Buff(Card card)
     {
-        GameObject cardPersonalGamePrefab = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[card];
+        GameObject cardPersonalGamePrefab = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[
+            card
+        ];
         SimpleEffect se = cardPersonalGamePrefab.GetComponent<SimpleEffect>();
         if (se.isBuff == false)
         {
             se.StartCoroutine(se.Buff());
         }
     }
+
     void TDEffect()
     {
         GameObject cardPG_Des = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this];
@@ -865,6 +844,7 @@ public partial class Card
             se.StartCoroutine(se.TD());
         }
     }
+
     void DestroyEffect(List<Card> cards, Color color) //卡牌销毁特效
     {
         GameObject cardPG_Des = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[this];
@@ -894,8 +874,7 @@ public partial class Card
     //！！！！！！！！！计算区！！！！！！！！！
     public void ExecuteFunction(string func)
     {
-        string[] elements =
-            func.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
+        string[] elements = func.Split('|', System.StringSplitOptions.RemoveEmptyEntries);
         if (
             elements.Length > 0 //如果是空的，那elements的长度一定为0
         )
@@ -916,50 +895,43 @@ public partial class Card
                     originCards.Add(this);
                 }
 
-                if (funcName.Contains("DW"))//如果是DW，那么就去头，比如 DW_P → P
+                if (funcName.Contains("DW")) //如果是DW，那么就去头，比如 DW_P → P
                 {
-                    string[] eles = funcName.Split('_', System.StringSplitOptions.RemoveEmptyEntries);
+                    string[] eles = funcName.Split(
+                        '_',
+                        System.StringSplitOptions.RemoveEmptyEntries
+                    );
                     funcName = eles[1];
                 }
 
                 //！！！！！！！根据函数的类型，填充对象 范围 值！！！！！！！
-                if (
-                    funcName == "P" ||
-                    funcName == "S" ||
-                    funcName == "W" ||
-                    funcName == "K"
-                )
+                if (funcName == "P" || funcName == "S" || funcName == "W" || funcName == "K")
                 {
                     BaseAdd(funcName, originCards, range, value);
                 }
                 else if (
-                    funcName == "PA" ||
-                    funcName == "SA" ||
-                    funcName == "WA" ||
-                    funcName == "KA"
+                    funcName == "PA" || funcName == "SA" || funcName == "WA" || funcName == "KA"
                 )
                 {
                     BaseAddAdd(funcName, originCards, range, value);
                 }
                 else if (funcName == "A")
                 {
-
                     AdjustPorperty(elements[1], range, value);
-
                 }
                 else if (
-                    funcName == "Px" ||
-                    funcName == "Sx" ||
-                    funcName == "Wx" ||
-                    funcName == "Kx" ||
-                    funcName == "Pb" ||
-                    funcName == "Sb" ||
-                    funcName == "Wb" ||
-                    funcName == "Kb" ||
-                    funcName == "Pdb" ||
-                    funcName == "Sdb" ||
-                    funcName == "Wdb" ||
-                    funcName == "Kdb"
+                    funcName == "Px"
+                    || funcName == "Sx"
+                    || funcName == "Wx"
+                    || funcName == "Kx"
+                    || funcName == "Pb"
+                    || funcName == "Sb"
+                    || funcName == "Wb"
+                    || funcName == "Kb"
+                    || funcName == "Pdb"
+                    || funcName == "Sdb"
+                    || funcName == "Wdb"
+                    || funcName == "Kdb"
                 )
                 {
                     BuffDebuffMulti(funcName, originCards, range, value);
@@ -970,15 +942,11 @@ public partial class Card
                 }
                 else if (funcName == "D")
                 {
-
                     DestroyCard(funcName, originCards, range, value);
-
                 }
                 else if (funcName == "TD")
                 {
-
                     TimesDestroyCard(value);
-
                 }
                 else if (funcName == "TR_UP1")
                 {
@@ -986,21 +954,15 @@ public partial class Card
                 }
                 else if (funcName == "I")
                 {
-
                     InstantiateCard(funcName, originCards, range, value);
-
                 }
                 else if (funcName == "U")
                 {
-
                     UpgradeCard(originCards, range, value);
-
                 }
                 else if (funcName == "F")
                 {
-
                     Fortunate(value);
-
                 }
                 else if (funcName == "T")
                 {
@@ -1013,19 +975,15 @@ public partial class Card
             } //如果func和AI有关
             else
             {
-
                 ExecuteFunctionAI(elements);
-
             }
         }
     }
 
-
-    float FieldBuffValue(float value, string pro)//由场地buff造成的数值倍率
+    float FieldBuffValue(float value, string pro) //由场地buff造成的数值倍率
     {
-
         float n = 1;
-        if (value >= 0)//表增益
+        if (value >= 0) //表增益
         {
             switch (pro)
             {
@@ -1039,10 +997,11 @@ public partial class Card
                 case "W":
                     n = 1f + (float)FieldManager.Instance.Level_HuiJie * 0.1f;
                     break;
-                default: break;
+                default:
+                    break;
             }
         }
-        else//表消耗
+        else //表消耗
         {
             switch (pro)
             {
@@ -1057,21 +1016,16 @@ public partial class Card
                         n -= 0.2f;
                     }
                     break;
-                default: break;
+                default:
+                    break;
             }
-
         }
         n = Mathf.Max(0, n);
         return n;
     }
 
     //P S W K
-    void BaseAdd(
-        string funcName,
-        List<Card> originCards,
-        string range,
-        float value
-    )
+    void BaseAdd(string funcName, List<Card> originCards, string range, float value)
     {
         List<Card> allCards = new List<Card>();
         FindAllCards(originCards, range, allCards); //根据原始卡牌和范围，找到所有作用的对象
@@ -1088,19 +1042,34 @@ public partial class Card
                 switch (funcName)
                 {
                     case "P":
-                        allCard.functionEffect.physicalHealth +=
-                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.physicalHealthMulti + functionEffectEx.physicalHealthAdd) * FieldBuffValue(value, "P"));
+                        allCard.functionEffect.physicalHealth += (int)(
+                            (
+                                (value * (1 + addLevelPower * this.addLevel))
+                                    * functionEffectEx.physicalHealthMulti
+                                + functionEffectEx.physicalHealthAdd
+                            ) * FieldBuffValue(value, "P")
+                        );
                         functionEffectEx.Initialize("P");
                         break;
 
                     case "S":
-                        allCard.functionEffect.spiritualHealth +=
-                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.spiritualHealthMulti + functionEffectEx.spiritualHealthAdd) * FieldBuffValue(value, "S"));
+                        allCard.functionEffect.spiritualHealth += (int)(
+                            (
+                                (value * (1 + addLevelPower * this.addLevel))
+                                    * functionEffectEx.spiritualHealthMulti
+                                + functionEffectEx.spiritualHealthAdd
+                            ) * FieldBuffValue(value, "S")
+                        );
                         functionEffectEx.Initialize("S");
                         break;
                     case "W":
-                        allCard.functionEffect.workAbility +=
-                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.workAbilityMulti + functionEffectEx.workAbilityAdd) * FieldBuffValue(value, "W"));
+                        allCard.functionEffect.workAbility += (int)(
+                            (
+                                (value * (1 + addLevelPower * this.addLevel))
+                                    * functionEffectEx.workAbilityMulti
+                                + functionEffectEx.workAbilityAdd
+                            ) * FieldBuffValue(value, "W")
+                        );
                         functionEffectEx.Initialize("W");
                         if (FieldManager.Instance.isKnife_HuiJie)
                         {
@@ -1110,13 +1079,42 @@ public partial class Card
                                 FieldManager.Instance.Counter_HuiJie = 0;
                                 FieldManager.Instance.Level_HuiJie++;
                             }
-                            Debug.Log(FieldManager.Instance.Level_HuiJie + "级" + FieldManager.Instance.Counter_HuiJie + "计数");
+                            Debug.Log(
+                                FieldManager.Instance.Level_HuiJie
+                                    + "级"
+                                    + FieldManager.Instance.Counter_HuiJie
+                                    + "计数"
+                            );
                         }
                         break;
                     case "K":
-                        allCard.functionEffect.KPI +=
-                            (int)(((value * (1 + addLevelPower * this.addLevel)) * functionEffectEx.KPIMulti + functionEffectEx.KPIAdd) * FieldBuffValue(value, "K"));
+                        allCard.functionEffect.KPI += (int)(
+                            (
+                                (value * (1 + addLevelPower * this.addLevel))
+                                    * functionEffectEx.KPIMulti
+                                + functionEffectEx.KPIAdd
+                            ) * FieldBuffValue(value, "K")
+                        );
                         functionEffectEx.Initialize("K");
+                        if (allCard.functionEffect.KPI < 50)
+                        {
+                            // AudioManager.Instance.PlayClip("KPI0");
+                        }
+                        else if (allCard.functionEffect.KPI < 100)
+                        {
+                            // AudioManager.Instance.PlayClip("KPI1");
+                            CameraManager.Instance.CameraShake(0.2f, 1);
+                        }
+                        else if (allCard.functionEffect.KPI < 200)
+                        {
+                            // AudioManager.Instance.PlayClip("KPI2");
+                            CameraManager.Instance.CameraShake(0.4f, 3);
+                        }
+                        else
+                        {
+                            CameraManager.Instance.CameraShake(0.8f, 9);
+                            // AudioManager.Instance.PlayClip("KPI3");
+                        }
                         break;
                     default:
                         break;
@@ -1127,13 +1125,19 @@ public partial class Card
                 switch (funcName)
                 {
                     case "P":
-                        allCard.functionEffect.physicalHealth += (int)(value * FieldBuffValue(value, "P"));
+                        allCard.functionEffect.physicalHealth += (int)(
+                            value * FieldBuffValue(value, "P")
+                        );
                         break;
                     case "S":
-                        allCard.functionEffect.spiritualHealth += (int)(value * FieldBuffValue(value, "S"));
+                        allCard.functionEffect.spiritualHealth += (int)(
+                            value * FieldBuffValue(value, "S")
+                        );
                         break;
                     case "W":
-                        allCard.functionEffect.workAbility += (int)(value * FieldBuffValue(value, "W"));
+                        allCard.functionEffect.workAbility += (int)(
+                            value * FieldBuffValue(value, "W")
+                        );
                         break;
                     case "K":
                         allCard.functionEffect.KPI += (int)(value * FieldBuffValue(value, "K"));
@@ -1145,7 +1149,6 @@ public partial class Card
         }
 
         // BuffBebuffedEffect(allCards);
-
     }
 
     //T
@@ -1161,7 +1164,7 @@ public partial class Card
             {
                 foreach (var function in allCard.functions)
                 {
-                    if (function.Contains("T") && !function.Contains("TD"))//只有有计数器的同学，才会加
+                    if (function.Contains("T") && !function.Contains("TD")) //只有有计数器的同学，才会加
                     {
                         b = true;
                     }
@@ -1175,11 +1178,9 @@ public partial class Card
                 allCard.AutoDescription();
                 allCards_Effect.Add(allCard);
             }
-
         }
         BuffBebuffedEffect(allCards_Effect);
     }
-
 
     //L
     void LifeCounter1(string funcName, List<Card> originCards, string range, float value)
@@ -1194,7 +1195,7 @@ public partial class Card
             {
                 foreach (var function in allCard.functions)
                 {
-                    if (function.Contains("TD"))//只有有生命的同学，才会加
+                    if (function.Contains("TD")) //只有有生命的同学，才会加
                     {
                         b = true;
                     }
@@ -1210,13 +1211,9 @@ public partial class Card
         }
         BuffBebuffedEffect(allCards_Effect);
     }
+
     //P/S/W/K+A
-    void BaseAddAdd(
-        string funcName,
-        List<Card> originCards,
-        string reference,
-        float value
-    )
+    void BaseAddAdd(string funcName, List<Card> originCards, string reference, float value)
     {
         isEffect = true;
         float referenceValue = 0;
@@ -1224,9 +1221,13 @@ public partial class Card
         {
             referenceValue = this.addLevel;
         }
-        else if (reference == "LP")//丢失的血量/总血量
+        else if (reference == "LP") //丢失的血量/总血量
         {
-            float n = ((float)PlayerData.Instance.physicalHealthMax - (float)PlayerData.Instance.physicalHealth) / (float)PlayerData.Instance.physicalHealthMax;
+            float n =
+                (
+                    (float)PlayerData.Instance.physicalHealthMax
+                    - (float)PlayerData.Instance.physicalHealth
+                ) / (float)PlayerData.Instance.physicalHealthMax;
             n = Mathf.Clamp01(n);
             referenceValue = n;
         }
@@ -1323,64 +1324,48 @@ public partial class Card
             referenceValue = FieldManager.Instance.universe;
         }
 
-
-
-
         if (funcName == "PA")
         {
-            this.functionEffectEx.physicalHealthAdd += (int)(referenceValue * value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.physicalHealthAdd += (int)(
+                referenceValue * value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "SA")
         {
-            this.functionEffectEx.spiritualHealthAdd += (int)(referenceValue * value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.spiritualHealthAdd += (int)(
+                referenceValue * value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "WA")
         {
-            this.functionEffectEx.workAbilityAdd += (int)(referenceValue * value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.workAbilityAdd += (int)(
+                referenceValue * value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "KA")
         {
-            this.functionEffectEx.KPIAdd +=
-                (int)(referenceValue * value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.KPIAdd += (int)(
+                referenceValue * value * (1 + addLevelPower * this.addLevel)
+            );
         }
     }
 
     //P/S/W/K + x/b/db
-    void BuffDebuffMulti(
-        string funcName,
-        List<Card> originCards,
-        string range,
-        float value
-    )
+    void BuffDebuffMulti(string funcName, List<Card> originCards, string range, float value)
     {
         List<Card> allCards = new List<Card>();
         FindAllCards(originCards, range, allCards);
         List<Card> allCards_PropertyRange = new List<Card>();
         string r = null;
-        if (
-            funcName == "Px" ||
-            funcName == "Sx" ||
-            funcName == "Wx" ||
-            funcName == "Kx"
-        )
+        if (funcName == "Px" || funcName == "Sx" || funcName == "Wx" || funcName == "Kx")
         {
             r = "!=0";
         }
-        else if (
-            funcName == "Pb" ||
-            funcName == "Sb" ||
-            funcName == "Wb" ||
-            funcName == "Kb"
-        )
+        else if (funcName == "Pb" || funcName == "Sb" || funcName == "Wb" || funcName == "Kb")
         {
             r = ">0";
         }
-        else if (
-            funcName == "Pdb" ||
-            funcName == "Sdb" ||
-            funcName == "Wdb" ||
-            funcName == "Kdb"
-        )
+        else if (funcName == "Pdb" || funcName == "Sdb" || funcName == "Wdb" || funcName == "Kdb")
         {
             r = "<0";
         }
@@ -1388,82 +1373,58 @@ public partial class Card
         if (funcName.Contains("P"))
         {
             FindAllCards_PorpertyRange(r, "P", allCards, allCards_PropertyRange);
-            foreach (var card in allCards_PropertyRange)//修改数值
+            foreach (var card in allCards_PropertyRange) //修改数值
             {
-                card.functionEffect.physicalHealth =
-                    (
-                    int
-                    )(card.functionEffect.physicalHealth *
-                    Mathf.Pow(value, (1 + addLevelPower * this.addLevel)));
+                card.functionEffect.physicalHealth = (int)(
+                    card.functionEffect.physicalHealth
+                    * Mathf.Pow(value, (1 + addLevelPower * this.addLevel))
+                );
 
                 Mechanism.Instance.UpdateTextPrefab(card);
-
             }
         }
         else if (funcName.Contains("S"))
         {
-            FindAllCards_PorpertyRange(r,
-            "S",
-            allCards,
-            allCards_PropertyRange);
-            foreach (var
-                card
-                in
-                allCards_PropertyRange //修改数值
+            FindAllCards_PorpertyRange(r, "S", allCards, allCards_PropertyRange);
+            foreach (
+                var card in allCards_PropertyRange //修改数值
             )
             {
-                card.functionEffect.spiritualHealth =
-                    (
-                    int
-                    )(card.functionEffect.spiritualHealth *
-                    Mathf.Pow(value, (1 + addLevelPower * this.addLevel)));
+                card.functionEffect.spiritualHealth = (int)(
+                    card.functionEffect.spiritualHealth
+                    * Mathf.Pow(value, (1 + addLevelPower * this.addLevel))
+                );
 
                 Mechanism.Instance.UpdateTextPrefab(card);
-
             }
         }
         else if (funcName.Contains("W"))
         {
-            FindAllCards_PorpertyRange(r,
-            "W",
-            allCards,
-            allCards_PropertyRange);
-            foreach (var
-                card
-                in
-                allCards_PropertyRange //修改数值
+            FindAllCards_PorpertyRange(r, "W", allCards, allCards_PropertyRange);
+            foreach (
+                var card in allCards_PropertyRange //修改数值
             )
             {
-                card.functionEffect.workAbility =
-                    (
-                    int
-                    )(card.functionEffect.workAbility *
-                    Mathf.Pow(value, (1 + addLevelPower * this.addLevel)));
+                card.functionEffect.workAbility = (int)(
+                    card.functionEffect.workAbility
+                    * Mathf.Pow(value, (1 + addLevelPower * this.addLevel))
+                );
 
                 Mechanism.Instance.UpdateTextPrefab(card);
-
             }
         }
         else if (funcName.Contains("K"))
         {
-            FindAllCards_PorpertyRange(r,
-            "K",
-            allCards,
-            allCards_PropertyRange);
-            foreach (var
-                card
-                in
-                allCards_PropertyRange //修改数值
+            FindAllCards_PorpertyRange(r, "K", allCards, allCards_PropertyRange);
+            foreach (
+                var card in allCards_PropertyRange //修改数值
             )
             {
-                card.functionEffect.KPI =
-                    (
-                    int
-                    )(card.functionEffect.KPI *
-                    Mathf.Pow(value, (1 + addLevelPower * this.addLevel)));
+                card.functionEffect.KPI = (int)(
+                    card.functionEffect.KPI * Mathf.Pow(value, (1 + addLevelPower * this.addLevel))
+                );
 
                 Mechanism.Instance.UpdateTextPrefab(card);
-
             }
         }
 
@@ -1472,7 +1433,6 @@ public partial class Card
             isEffect = true;
             BuffBebuffedEffect(allCards_PropertyRange);
         }
-
     }
 
     //A
@@ -1483,25 +1443,35 @@ public partial class Card
         {
             if (property == "PM")
             {
-                PlayerData.Instance.physicalHealthMax = (int)Mathf.Max(0, PlayerData.Instance.physicalHealthMax + value);
-                PlayerData.Instance.physicalHealth = Mathf.Clamp(PlayerData.Instance.physicalHealth, 0, PlayerData.Instance.physicalHealthMax);
+                PlayerData.Instance.physicalHealthMax = (int)
+                    Mathf.Max(0, PlayerData.Instance.physicalHealthMax + value);
+                PlayerData.Instance.physicalHealth = Mathf.Clamp(
+                    PlayerData.Instance.physicalHealth,
+                    0,
+                    PlayerData.Instance.physicalHealthMax
+                );
             }
             else if (property == "SM")
             {
-                PlayerData.Instance.spiritualHealthMax = (int)Mathf.Max(0, PlayerData.Instance.spiritualHealthMax + value);
-                PlayerData.Instance.spiritualHealth = Mathf.Clamp(PlayerData.Instance.spiritualHealth, 0, PlayerData.Instance.spiritualHealthMax);
+                PlayerData.Instance.spiritualHealthMax = (int)
+                    Mathf.Max(0, PlayerData.Instance.spiritualHealthMax + value);
+                PlayerData.Instance.spiritualHealth = Mathf.Clamp(
+                    PlayerData.Instance.spiritualHealth,
+                    0,
+                    PlayerData.Instance.spiritualHealthMax
+                );
             }
-
-            else if (property == "KN")//KPI需求
+            else if (property == "KN") //KPI需求
             {
-                Mechanism.Instance.KPINeed_EveryMonth = Mathf.Max(Mechanism.Instance.KPINeed_EveryMonth + (int)value, 0);
-                Mechanism.Instance.KPINeed_EveryMonthText.text = Mechanism.Instance.KPINeed_EveryMonth.ToString();
+                Mechanism.Instance.need_ThisMonth.K = Mathf.Max(
+                    Mechanism.Instance.need_ThisMonth.K + (int)value,
+                    0
+                );
+                Mechanism.Instance.KPINeed_EveryMonthText.text =
+                    Mechanism.Instance.need_ThisMonth.K.ToString();
             }
         }
-
-        else if (funcName == "Mul")
-        {
-        }
+        else if (funcName == "Mul") { }
         else if (funcName == "Addby")
         {
             string[] pros = property.Split('_', System.StringSplitOptions.RemoveEmptyEntries);
@@ -1513,20 +1483,37 @@ public partial class Card
                 {
                     if (pro0 == "PM")
                     {
-                        PlayerData.Instance.physicalHealthMax = (int)Mathf.Max(0, PlayerData.Instance.physicalHealthMax + value * FieldManager.Instance.OverFillP);
-                        PlayerData.Instance.physicalHealth = Mathf.Clamp(PlayerData.Instance.physicalHealth, 0, PlayerData.Instance.physicalHealthMax);
+                        PlayerData.Instance.physicalHealthMax = (int)
+                            Mathf.Max(
+                                0,
+                                PlayerData.Instance.physicalHealthMax
+                                    + value * FieldManager.Instance.OverFillP
+                            );
+                        PlayerData.Instance.physicalHealth = Mathf.Clamp(
+                            PlayerData.Instance.physicalHealth,
+                            0,
+                            PlayerData.Instance.physicalHealthMax
+                        );
                     }
                 }
                 else if (pro1 == "SO")
                 {
                     if (pro0 == "SM")
                     {
-                        PlayerData.Instance.spiritualHealthMax = (int)Mathf.Max(0, PlayerData.Instance.spiritualHealthMax + value * FieldManager.Instance.OverFillP);
-                        PlayerData.Instance.spiritualHealth = Mathf.Clamp(PlayerData.Instance.spiritualHealth, 0, PlayerData.Instance.spiritualHealthMax);
+                        PlayerData.Instance.spiritualHealthMax = (int)
+                            Mathf.Max(
+                                0,
+                                PlayerData.Instance.spiritualHealthMax
+                                    + value * FieldManager.Instance.OverFillP
+                            );
+                        PlayerData.Instance.spiritualHealth = Mathf.Clamp(
+                            PlayerData.Instance.spiritualHealth,
+                            0,
+                            PlayerData.Instance.spiritualHealthMax
+                        );
                     }
                 }
             }
-
         }
         isEffect = true;
         Buff(this);
@@ -1537,59 +1524,53 @@ public partial class Card
     {
         if (funcName == "CP")
         {
-            this.functionEffectEx.physicalHealthAdd +=
-                (int)(value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.physicalHealthAdd += (int)(
+                value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "CS")
         {
-            this.functionEffectEx.spiritualHealthAdd +=
-                (int)(value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.spiritualHealthAdd += (int)(
+                value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "CW")
         {
-            this.functionEffectEx.workAbilityAdd +=
-                (int)(value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.workAbilityAdd += (int)(
+                value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "CK")
         {
-            this.functionEffectEx.KPIAdd +=
-                (int)(value * (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.KPIAdd += (int)(value * (1 + addLevelPower * this.addLevel));
         }
         else if (funcName == "CPx")
         {
-            this.functionEffectEx.physicalHealthMulti =
-                (
-                int
-                )(this.functionEffectEx.physicalHealthMulti *
-                value *
-                (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.physicalHealthMulti = (
+                this.functionEffectEx.physicalHealthMulti
+                * value
+                * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "CSx")
         {
-            this.functionEffectEx.spiritualHealthMulti =
-                (
-                int
-                )(this.functionEffectEx.spiritualHealthMulti *
-                value *
-                (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.spiritualHealthMulti = (
+                this.functionEffectEx.spiritualHealthMulti
+                * value
+                * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "CWx")
         {
-            this.functionEffectEx.workAbilityMulti =
-                (
-                int
-                )(this.functionEffectEx.workAbilityMulti *
-                value *
-                (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.workAbilityMulti = (
+                this.functionEffectEx.workAbilityMulti * value * (1 + addLevelPower * this.addLevel)
+            );
         }
         else if (funcName == "CKx")
         {
-            this.functionEffectEx.KPIMulti =
-                (
-                int
-                )(this.functionEffectEx.KPIMulti *
-                value *
-                (1 + addLevelPower * this.addLevel));
+            this.functionEffectEx.KPIMulti = (
+                this.functionEffectEx.KPIMulti * value * (1 + addLevelPower * this.addLevel)
+            );
         }
         isEffect = true;
     }
@@ -1605,11 +1586,11 @@ public partial class Card
         List<Card> allCards_by_n = new List<Card>();
         FindAllSpecialCards(allCards, allCards_by_n, n);
 
-        List<Card> cards_BeDesed = new List<Card>();//需要被消除的卡牌
+        List<Card> cards_BeDesed = new List<Card>(); //需要被消除的卡牌
 
         foreach (var allCard in allCards_by_n)
         {
-            if (!Mechanism.Instance.cardsDestroyedThisTurn.Contains(allCard))//不能让一张卡牌被摧毁多次，不然三连数组会出问题 
+            if (!Mechanism.Instance.cardsDestroyedThisTurn.Contains(allCard)) //不能让一张卡牌被摧毁多次，不然三连数组会出问题
             {
                 if (this.id == 18)
                 {
@@ -1638,15 +1619,15 @@ public partial class Card
             isEffect = true;
             DestroyEffect(cards_BeDesed, Color.red);
         }
-
     }
-    void FindAllSpecialCards(List<Card> allCards, List<Card> allCards_by_n, int n)//专门用来找D和TR的最后一个参数对应的卡牌
+
+    void FindAllSpecialCards(List<Card> allCards, List<Card> allCards_by_n, int n) //专门用来找D和TR的最后一个参数对应的卡牌
     {
-        if (n == 0)//这个操作TD是没有的，TD的最后一个参数是控制时间的
+        if (n == 0) //这个操作TD是没有的，TD的最后一个参数是控制时间的
         {
             allCards_by_n.AddRange(allCards);
         }
-        else if (n < 20000)//1-19999都会查找具体id的卡牌，并摧毁,注意，是所有该id的卡牌
+        else if (n < 20000) //1-19999都会查找具体id的卡牌，并摧毁,注意，是所有该id的卡牌
         {
             {
                 foreach (var card in allCards)
@@ -1658,9 +1639,9 @@ public partial class Card
                 }
             }
         }
-        else//>=20000的特殊卡牌
+        else //>=20000的特殊卡牌
         {
-            if (n == 20001)//如果规定要摧毁随机一张一级红
+            if (n == 20001) //如果规定要摧毁随机一张一级红
             {
                 List<Card> allCard_Temp = new List<Card>();
                 foreach (var card in allCards)
@@ -1674,9 +1655,8 @@ public partial class Card
                 {
                     allCards_by_n.Add(allCard_Temp[Random.Range(0, allCard_Temp.Count)]);
                 }
-
             }
-            if (n == 20012)//如果规定要摧毁所有无色卡
+            if (n == 20012) //如果规定要摧毁所有无色卡
             {
                 List<Card> allCard_Temp = new List<Card>();
                 foreach (var card in allCards)
@@ -1691,7 +1671,6 @@ public partial class Card
         }
     }
 
-
     //TR_UP1 //变化指定，使其成为随机升一级的卡牌  //!!!记住这个老逼一定要在quque6执行
     void TransformCard_UP1(string funcName, List<Card> originCards, string range, float value)
     {
@@ -1703,12 +1682,13 @@ public partial class Card
         List<Card> allCards_by_n = new List<Card>();
         FindAllSpecialCards(allCards, allCards_by_n, n);
 
-
         for (int i = 0; i < allCards_by_n.Count; i++)
         {
             Card allCard = allCards_by_n[i];
-            GameObject allCardGameobject = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[allCard];
-            if (!Mechanism.Instance.cardTransformThisTurn.Contains(allCard))//不能让一张卡牌被变换多次，不然三连数组会出问题 
+            GameObject allCardGameobject = Mechanism.Instance.cards_cardPersonalGamePrefabs_Dic[
+                allCard
+            ];
+            if (!Mechanism.Instance.cardTransformThisTurn.Contains(allCard)) //不能让一张卡牌被变换多次，不然三连数组会出问题
             {
                 Mechanism.Instance.cardTransformThisTurn.Add(allCard);
 
@@ -1721,10 +1701,11 @@ public partial class Card
 
                 int level = Mathf.Min(allCard.qualityLevel + 1, 5);
                 Card newCard = new Card(CardStore.Instance.RandomCard(level, true));
-                CardDisplayPersonalGame cpg = allCardGameobject.GetComponent<CardDisplayPersonalGame>();
+                CardDisplayPersonalGame cpg =
+                    allCardGameobject.GetComponent<CardDisplayPersonalGame>();
                 // cpg.JudgeTitle(newCard);
                 // cpg.JudgeFontSize(newCard);//
-                cpg.JudgeActionColor(newCard.actionType);//改颜色
+                cpg.JudgeActionColor(newCard.actionType); //改颜色
                 cpg.JudgeQualityColor(newCard);
                 cpg.StartCoroutine(cpg.Delay_JudgeAdditive(newCard, Time.deltaTime * i * 3));
                 // cpg.JudgeFlower(newCard);
@@ -1735,8 +1716,6 @@ public partial class Card
                 PlayerData.Instance.playerCards.Add(newCard);
                 PlayerData.Instance.SortCards();
                 // LibraryManager.Instance.UpdateLibrary();
-
-
             }
         }
 
@@ -1745,15 +1724,14 @@ public partial class Card
             isEffect = true;
             BuffBebuffedEffect(allCards_by_n);
         }
-
     }
+
     //TD
     void TimesDestroyCard(float value)
     {
-
         life--;
         this.AutoDescription();
-        if (life > 0 && this.isAlive)//命还在 且 没有被其他卡牌给摧毁
+        if (life > 0 && this.isAlive) //命还在 且 没有被其他卡牌给摧毁
         {
             isEffect = true;
             List<Card> cards_BeDesed = new List<Card>();
@@ -1771,7 +1749,7 @@ public partial class Card
                 List<Card> cards_BeDesed = new List<Card>();
                 cards_BeDesed.Add(this);
                 DestroyEffect(cards_BeDesed, Color.red);
-                FieldManager.Instance.DestroyCard++;
+                // FieldManager.Instance.DestroyCard++;
 
                 PlayerData.Instance.playerCards.Remove(this);
                 this.isAlive = false;
@@ -1785,19 +1763,13 @@ public partial class Card
     }
 
     //I
-    void InstantiateCard(
-        string funcName,
-        List<Card> originCards,
-        string range,
-        float value
-    )
+    void InstantiateCard(string funcName, List<Card> originCards, string range, float value)
     {
         isEffect = true;
 
         List<Card> allCards = new List<Card>();
 
         int amount = int.Parse(range); //I方法的参数三——range是生成此卡牌的数量，value是生成的卡牌id
-
 
         int id = (int)value;
         if (id < 10000)
@@ -1838,22 +1810,25 @@ public partial class Card
                 }
             }
         }
-        else//特殊的卡牌,>=20000
+        else //特殊的卡牌,>=20000
         {
             float interval = 0.05f;
             for (int i = 0; i < amount; i++)
             {
                 Card kidCard;
-                if (id == 20021)//返回一张+1等级的随机卡 若干次
+                if (id == 20021) //返回一张+1等级的随机卡 若干次
                 {
-                    kidCard = CardStore.Instance.RandomCard(Mathf.Min(PlayerData.Instance.postLevel + 1, 5), true);//返回+1等级的随机卡
+                    kidCard = CardStore.Instance.RandomCard(
+                        Mathf.Min(PlayerData.Instance.postLevel + 1, 5),
+                        true
+                    ); //返回+1等级的随机卡
                 }
-                else if (id == 20040)//返回一张 某一个AI的流派卡牌
+                else if (id == 20040) //返回一张 某一个AI的流派卡牌
                 {
                     AIData AIData_r = AIMechanism.Instance.RandomAIData();
                     if (AIData_r != null)
                     {
-                        kidCard = CardStore.Instance.RandomCard_ByType(AIData_r.type);//返回+1等级的随机卡
+                        kidCard = CardStore.Instance.RandomCard_ByType(AIData_r.type); //返回+1等级的随机卡
                     }
                     else
                     {
@@ -1881,7 +1856,7 @@ public partial class Card
         List<int> ids_AlreadyUpgrade = new List<int>(); //已经buff过的卡牌的id，因为九宫格这种卡牌升级中，一个类型的卡牌只能被升级一次
         int level = (int)(value + addLevel * addLevelPower); //level是升的级数，也就是+5时，一次就可以让周围的卡牌升2级
 
-        List<Card> allCards_Effect = new List<Card>();//需要加特效的卡牌
+        List<Card> allCards_Effect = new List<Card>(); //需要加特效的卡牌
 
         foreach (var card in allCards)
         {
@@ -1900,7 +1875,6 @@ public partial class Card
             isEffect = true;
             BuffBebuffedEffect(allCards_Effect);
         }
-
     }
 
     //F

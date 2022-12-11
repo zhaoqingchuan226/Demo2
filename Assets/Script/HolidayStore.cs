@@ -247,7 +247,7 @@ public class HolidayStore : MonoSingleton<HolidayStore>
         {
             isOpen = false;
 
-            CameraManager.Instance.SetVirtualCam("BlackCam");
+ 
             // Mechanism.Instance.ForceChessboardOut(false);
             // StartCoroutine(Mechanism.Instance.ChessBoardMove(true));
             StartCoroutine(HolidayStoreMove(true));
@@ -282,7 +282,6 @@ public class HolidayStore : MonoSingleton<HolidayStore>
                 if (isReverse)
                 {
                     backGround.SetActive(false);
-                    Mechanism.Instance.PhaseAddAdd();
                 }
                 yield break;
             }
